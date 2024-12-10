@@ -12,7 +12,7 @@ export interface User {
     id: string;
     username: string;
     email: string;
-    password: string;
+    hashPassword: string;
     role: 'admin' | 'user';
 };
 
