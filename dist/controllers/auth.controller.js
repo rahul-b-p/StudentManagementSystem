@@ -13,6 +13,7 @@ exports.login = exports.signup = void 0;
 const config_1 = require("../config");
 const services_1 = require("../services");
 const winston_util_1 = require("../utils/winston.util");
+const jwt_1 = require("../config/jwt");
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password, role, username } = req.body;
@@ -44,6 +45,34 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.signup = signup;
-const login = () => {
-};
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password } = req.body;
+        if (typeof email !== 'string' || typeof password !== 'string') {
+            res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
+            return;
+        }
+        const existingUser = yield (0, services_1.findUserByMail)(email);
+        if (!existingUser) {
+            res.status(404).json({ error: "user not found", message: 'Please try to login with a valid mail id' });
+            return;
+        }
+        const isVerifiedPassword = (0, config_1.verifyPassword)(password, existingUser.hashPassword);
+        if (!isVerifiedPassword) {
+            res.status(401).json({ error: "Invalid Password", message: "Please try to request with a valid password" });
+            return;
+        }
+        const AccessToken = yield (0, jwt_1.signAccessToken)(existingUser.id, existingUser.role);
+        const RefreshToken = yield (0, jwt_1.signRefreshToken)(existingUser.id, existingUser.role);
+        res.cookie('jwt', RefreshToken, { httpOnly: true, maxAge: 12 * 30 * 24 * 60 * 60 * 1000 });
+        res.statusMessage = "Login Successfull";
+        res.status(200).json({
+            message: 'Login Successfull',
+            auth: true,
+            AccessToken
+        });
+    }
+    catch (error) {
+    }
+});
 exports.login = login;

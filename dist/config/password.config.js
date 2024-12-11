@@ -30,8 +30,8 @@ const getEncryptedPassword = (password) => __awaiter(void 0, void 0, void 0, fun
 exports.getEncryptedPassword = getEncryptedPassword;
 const verifyPassword = (password, hashPass) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const isCorrectPassword = yield bcrypt_1.default.compare(password, hashPass);
-        return isCorrectPassword;
+        const isVerifiedPassword = yield bcrypt_1.default.compare(password, hashPass);
+        return isVerifiedPassword;
     }
     catch (error) {
         winston_util_1.loggers.error(error);

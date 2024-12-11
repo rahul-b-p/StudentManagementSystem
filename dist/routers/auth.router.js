@@ -6,3 +6,5 @@ const controllers_1 = require("../controllers");
 exports.router = (0, express_1.Router)();
 // signup
 exports.router.post('/signup', controllers_1.signup);
+// login
+exports.router.post('/login', controllers_1.login);
