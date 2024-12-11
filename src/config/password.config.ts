@@ -15,8 +15,8 @@ export const getEncryptedPassword = async (password: string): Promise<string> =>
 
 export const verifyPassword = async (password: string, hashPass: string): Promise<boolean> => {
     try {
-        const isCorrectPassword = await bcrypt.compare(password, hashPass);
-        return isCorrectPassword;
+        const isVerifiedPassword = await bcrypt.compare(password, hashPass);
+        return isVerifiedPassword;
     } catch (error) {
         loggers.error(error);
         throw new Error("An Error occur while password verification");
