@@ -17,8 +17,8 @@ export const findUsers = async (): Promise<User[] | []> => {
 
 export const findUserById = async (id: string) => {
     try {
-        const users = findUsers();
-        const user = (await users).find(item => item.id == id);
+        const users = await findUsers();
+        const user = users.find(item => item.id == id);
         return user ? user : null;
     } catch (error) {
         loggers.error(error);
@@ -28,8 +28,8 @@ export const findUserById = async (id: string) => {
 
 export const findUserByMail = async (email: string): Promise<User | null> => {
     try {
-        const users = findUsers();
-        const user = (await users).find(item => item.email == email);
+        const users = await findUsers();
+        const user = users.find(item => item.email == email);
         return user ? user : null;
     } catch (error) {
         loggers.error(error);
