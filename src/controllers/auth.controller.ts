@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { User, loginBody, signupBody } from "../types";
-import { generateId, getEncryptedPassword, verifyPassword } from "../config";
+import { generateId, getEncryptedPassword, verifyPassword, signAccessToken, signRefreshToken } from "../config";
 import { findUserByMail, insertUser } from "../services";
 import { loggers } from "../utils/winston.util";
-import { signAccessToken, signRefreshToken } from "../config/jwt";
 
 
 

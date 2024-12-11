@@ -42,7 +42,7 @@ const verifyAccessToken = (token) => __awaiter(void 0, void 0, void 0, function*
             throw new Error("Can't Find secret key to sign Access token");
         }
         const result = jsonwebtoken_1.default.verify(token, secretKey);
-        winston_util_1.loggers.info(result);
+        return result;
     }
     catch (error) {
         throw new Error("unauthorized token");

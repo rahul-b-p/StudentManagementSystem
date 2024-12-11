@@ -17,3 +17,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./db.type"), exports);
 __exportStar(require("./request/body.type"), exports);
 __exportStar(require("./request/payload.type"), exports);
+__exportStar(require("./jwt.type"), exports);

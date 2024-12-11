@@ -2,6 +2,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { loggers } from '../../utils/winston.util';
 import { error } from 'console';
 import { config } from 'dotenv';
+import { TokenPayload } from '../../types';
 config()
 
 
@@ -11,7 +12,7 @@ export const signAccessToken = async (id: string, role: 'admin' | 'user'): Promi
         if (!secretKey) {
             throw new Error("Can't Find secret key to sign Access token")
         }
-        const payload: JwtPayload = {
+        const payload: TokenPayload= {
             id, role
         };
         const AccessToken = jwt.sign(payload, secretKey, { expiresIn: '15s' });
@@ -22,14 +23,14 @@ export const signAccessToken = async (id: string, role: 'admin' | 'user'): Promi
     }
 }
 
-export const verifyAccessToken = async (token: string) => {
+export const verifyAccessToken = async (token: string):Promise<TokenPayload> => {
     try {
         const secretKey = process.env.ACCESS_TOKEN_SECRET;
         if (!secretKey){
             throw new Error("Can't Find secret key to sign Access token");
         }
-        const result = jwt.verify(token,secretKey)
-        loggers.info(result);
+        const result = jwt.verify(token, secretKey) as TokenPayload
+        return result;
     } catch (error) {
         throw new Error("unauthorized token");
     }

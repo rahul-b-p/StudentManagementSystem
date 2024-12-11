@@ -13,7 +13,6 @@ exports.login = exports.signup = void 0;
 const config_1 = require("../config");
 const services_1 = require("../services");
 const winston_util_1 = require("../utils/winston.util");
-const jwt_1 = require("../config/jwt");
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password, role, username } = req.body;
@@ -62,8 +61,8 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             res.status(401).json({ error: "Invalid Password", message: "Please try to request with a valid password" });
             return;
         }
-        const AccessToken = yield (0, jwt_1.signAccessToken)(existingUser.id, existingUser.role);
-        const RefreshToken = yield (0, jwt_1.signRefreshToken)(existingUser.id, existingUser.role);
+        const AccessToken = yield (0, config_1.signAccessToken)(existingUser.id, existingUser.role);
+        const RefreshToken = yield (0, config_1.signRefreshToken)(existingUser.id, existingUser.role);
         res.cookie('jwt', RefreshToken, { httpOnly: true, maxAge: 12 * 30 * 24 * 60 * 60 * 1000 });
         res.statusMessage = "Login Successfull";
         res.status(200).json({

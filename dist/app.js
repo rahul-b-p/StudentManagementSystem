@@ -7,11 +7,13 @@ const express_1 = __importDefault(require("express"));
 const dotenv_1 = require("dotenv");
 const winston_util_1 = require("./utils/winston.util");
 const routers_1 = require("./routers");
+const middlewares_1 = require("./middlewares");
 (0, dotenv_1.config)();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 3000;
 app.use(express_1.default.json());
 app.use('/auth', routers_1.authRouter);
+app.use(middlewares_1.JwtAuthMiddleware);
 app.use('/admin', routers_1.adminRouter);
 app.use('/user', routers_1.userRouter);
 app.listen(port, () => {
