@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { User, loginReqBody, signupReqBody } from "../types";
+import { User, loginBody, signupBody } from "../types";
 import { generateId, getEncryptedPassword, verifyPassword } from "../config";
 import { findUserByMail, insertUser } from "../services";
 import { loggers } from "../utils/winston.util";
@@ -7,7 +7,7 @@ import { signAccessToken, signRefreshToken } from "../config/jwt";
 
 
 
-export const signup = async (req: Request<{}, any, signupReqBody>, res: Response) => {
+export const signup = async (req: Request<{}, any, signupBody>, res: Response) => {
     try {
         const { email, password, role, username } = req.body;
         if (typeof email !== 'string' || typeof password !== 'string' || typeof username !== 'string' || role !== 'admin' && role !== 'user') {
@@ -42,7 +42,7 @@ export const signup = async (req: Request<{}, any, signupReqBody>, res: Response
 }
 
 
-export const login = async (req: Request<{}, any, loginReqBody>, res: Response) => {
+export const login = async (req: Request<{}, any, loginBody>, res: Response) => {
     try {
         const { email, password } = req.body;
         if (typeof email !== 'string' || typeof password !== 'string') {

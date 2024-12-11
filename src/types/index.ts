@@ -1,2 +1,3 @@
 export * from './db.type';
-export * from './reqBody.type';
+export * from './request/body.type';
+export * from './request/payload.type';

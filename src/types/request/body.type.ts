@@ -1,11 +1,11 @@
-export interface signupReqBody {
+export interface signupBody {
     username: string;
     email: string;
     password: string;
     role:'admin'|'user';
 }
 
-export interface loginReqBody {
+export interface loginBody {
     email: string;
     password: string;
 }
