@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { User, loginBody, signupBody } from "../types";
-import { generateId, getEncryptedPassword, verifyPassword, signAccessToken, signRefreshToken } from "../config";
-import { findUserByMail, insertUser } from "../services";
+import { generateId, getEncryptedPassword, verifyPassword, signAccessToken, signRefreshToken, verifyRefreshToken } from "../config";
+import { findUserByMail, findUserByRefreshToken, insertUser, updateUserById } from "../services";
 import { loggers } from "../utils/winston.util";
 
 
@@ -40,7 +40,6 @@ export const signup = async (req: Request<{}, any, signupBody>, res: Response) =
     }
 }
 
-
 export const login = async (req: Request<{}, any, loginBody>, res: Response) => {
     try {
         const { email, password } = req.body;
@@ -64,6 +63,9 @@ export const login = async (req: Request<{}, any, loginBody>, res: Response) => 
         const AccessToken = await signAccessToken(existingUser.id, existingUser.role);
         const RefreshToken = await signRefreshToken(existingUser.id, existingUser.role);
 
+        existingUser.refreshToken = RefreshToken;
+        updateUserById(existingUser.id,existingUser)
+
         res.cookie('jwt', RefreshToken, { httpOnly: true, maxAge: 12 * 30 * 24 * 60 * 60 * 1000 });
         res.statusMessage = "Login Successfull";
         res.status(200).json({
@@ -71,7 +73,42 @@ export const login = async (req: Request<{}, any, loginBody>, res: Response) => 
             auth: true,
             AccessToken
         })
-    } catch (error) {
-
+    } catch (error:any) {
+        loggers.error(error);
+        res.status(500).json({ message: "Something went wrong", error: error.message })
     }
 }
+
+export const refreshToken = async (req: Request, res: Response) => {
+    try {
+        const cookies = req.cookies;
+        if (!cookies?.jwt) {
+            res.status(401).json({ error: "refersh token not found on the request" });
+            return;
+        }
+        const RefreshToken: any = cookies.jwt;
+        const existingUser = await findUserByRefreshToken(RefreshToken);
+        if (!existingUser) {
+            res.status(404).json({ error: "Not found a user with requested refresh token" });
+            return;
+        }
+
+        const refreshTokenPayload = await verifyRefreshToken(RefreshToken);
+        if (!refreshTokenPayload) {
+            res.status(401).json({ error: 'Unauthorized Request' });
+            return;
+        }
+
+        if (refreshTokenPayload?.id !== existingUser.id) {
+            res.status(401).json({ error: 'Unauthorized Request' });
+            return;
+        }
+
+        const AccessToken = await signAccessToken(existingUser.id, existingUser.role);
+        res.status(200).json({ AccessToken });
+    } catch (error: any) {
+        loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong while refreshing the token' });
+    }
+}
+

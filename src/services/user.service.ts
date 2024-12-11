@@ -37,6 +37,17 @@ export const findUserByMail = async (email: string): Promise<User | null> => {
     }
 }
 
+export const findUserByRefreshToken = async (refreshToken: string): Promise<User | null> =>{
+    try {
+        const users = await findUsers();
+        const user = users.find(item => item.refreshToken == refreshToken);
+        return user ? user : null;
+    } catch (error) {
+        loggers.error(error);
+        throw new Error("Can't find Users with requested RefreshToken due to an error")
+    }
+}
+
 export const saveUsers = async (newUsers: User[] | []): Promise<boolean> => {
     try {
         const data = await readData();

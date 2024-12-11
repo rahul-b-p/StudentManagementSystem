@@ -14,11 +14,12 @@ export interface User {
     email: string;
     hashPassword: string;
     role: 'admin' | 'user';
+    refreshToken?:string;
 };
 
 export interface JSONDataBase {
     users: User[] | [];
-    students: Student[] | [];
+    students: Student<string[]|[]>[] | [];
 };
 
 

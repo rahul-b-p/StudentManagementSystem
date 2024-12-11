@@ -1,5 +1,20 @@
 {
-  "students": [],
+  "students": [
+    {
+      "id": "e74e7ce06996193b5348357",
+      "userId": "69921096bc46193b3fdf90f",
+      "name": "rahul",
+      "email": "rahul@gmail.com",
+      "age": 20
+    },
+    {
+      "id": "bd2bd14a9588193b53bccfe",
+      "userId": "69921096bc46193b3fdf90f",
+      "name": "abu",
+      "email": "abu@gmail.com",
+      "age": 20
+    }
+  ],
   "users": [
     {
       "id": "0",
@@ -20,7 +35,8 @@
       "username": "user",
       "email": "user@gmail.com",
       "hashPassword": "$2b$10$3t7WQyYCKZzognp8EGB8N.vB8P5JpiCfiCTWR/wRUj0FgAeqPrBRK",
-      "role": "user"
+      "role": "user",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTIxMDk2YmM0NjE5M2IzZmRmOTBmIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MzM5MTQ1NzMsImV4cCI6MTc2NTQ3MjE3M30.48KpAqcUc0URA2qeoRQjCvKLqkvBh2JmZXRzadx4eTY"
     }
   ]
 }

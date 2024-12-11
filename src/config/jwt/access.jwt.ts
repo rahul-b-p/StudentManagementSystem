@@ -1,9 +1,6 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { loggers } from '../../utils/winston.util';
-import { error } from 'console';
-import { config } from 'dotenv';
 import { TokenPayload } from '../../types';
-config()
 
 
 export const signAccessToken = async (id: string, role: 'admin' | 'user'): Promise<string> => {
@@ -15,7 +12,7 @@ export const signAccessToken = async (id: string, role: 'admin' | 'user'): Promi
         const payload: TokenPayload= {
             id, role
         };
-        const AccessToken = jwt.sign(payload, secretKey, { expiresIn: '15s' });
+        const AccessToken = jwt.sign(payload, secretKey, { expiresIn: '1m' });
         return AccessToken;
     } catch (error) {
         loggers.error(error);

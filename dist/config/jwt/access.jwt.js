@@ -15,8 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyAccessToken = exports.signAccessToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const winston_util_1 = require("../../utils/winston.util");
-const dotenv_1 = require("dotenv");
-(0, dotenv_1.config)();
 const signAccessToken = (id, role) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const secretKey = process.env.ACCESS_TOKEN_SECRET;
@@ -26,7 +24,7 @@ const signAccessToken = (id, role) => __awaiter(void 0, void 0, void 0, function
         const payload = {
             id, role
         };
-        const AccessToken = jsonwebtoken_1.default.sign(payload, secretKey, { expiresIn: '15s' });
+        const AccessToken = jsonwebtoken_1.default.sign(payload, secretKey, { expiresIn: '1m' });
         return AccessToken;
     }
     catch (error) {
