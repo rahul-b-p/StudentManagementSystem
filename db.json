@@ -7,6 +7,20 @@
       "password": "admin@123",
       "role": "admin",
       "username": "admin"
+    },
+    {
+      "id": "21eb948161bd193b3f604cb",
+      "username": "Admin",
+      "email": "admin1@gmail.com",
+      "hashPassword": "$2b$10$SjsxHJK9YgOwx8goMUORuOmN.FMfP.8nbmoZl4iMowXF4HwkTUZsy",
+      "role": "admin"
+    },
+    {
+      "id": "69921096bc46193b3fdf90f",
+      "username": "user",
+      "email": "user@gmail.com",
+      "hashPassword": "$2b$10$3t7WQyYCKZzognp8EGB8N.vB8P5JpiCfiCTWR/wRUj0FgAeqPrBRK",
+      "role": "user"
     }
   ]
 }

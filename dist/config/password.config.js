@@ -17,8 +17,9 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const winston_util_1 = require("../utils/winston.util");
 const getEncryptedPassword = (password) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const salt = bcrypt_1.default.genSaltSync(Number(process.env.SALT));
+        const salt = yield bcrypt_1.default.genSalt(Number(process.env.SALT));
         const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
+        winston_util_1.loggers.info(encryptedPassword);
         return encryptedPassword;
     }
     catch (error) {

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.login = exports.signup = void 0;
 const config_1 = require("../config");
 const services_1 = require("../services");
+const winston_util_1 = require("../utils/winston.util");
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password, role, username } = req.body;
@@ -19,9 +20,15 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
             return;
         }
+        const existingUser = yield (0, services_1.findUserByMail)(email);
+        if (existingUser) {
+            res.status(409).json({ message: "user already exists" });
+            return;
+        }
         const hashPassword = yield (0, config_1.getEncryptedPassword)(password);
+        const id = yield (0, config_1.generateId)();
         const newUser = {
-            id: (0, config_1.generateId)(),
+            id,
             username,
             email,
             hashPassword,
@@ -29,10 +36,11 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         };
         yield (0, services_1.insertUser)(newUser);
         res.statusMessage = "Signup Successfull";
-        res.status(200).json({ message: 'New user Account Created', ResponseData: { username, email } });
+        res.status(200).json({ message: 'New user Account Created', ResponseData: { id, username, email } });
     }
     catch (error) {
-        res.send(error);
+        winston_util_1.loggers.error(error);
+        res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 });
 exports.signup = signup;
