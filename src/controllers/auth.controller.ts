@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { User, loginBody, signupBody } from "../types";
-import { generateId, getEncryptedPassword, verifyPassword, signAccessToken, signRefreshToken, verifyRefreshToken } from "../config";
-import { findUserByMail, findUserByRefreshToken, insertUser, updateUserById } from "../services";
+import { generateId, getEncryptedPassword, verifyPassword, signAccessToken, signRefreshToken, verifyRefreshToken, blackListToken } from "../config";
+import { deleteRefreshTokenOfUser, findUserByMail, findUserByRefreshToken, insertUser, updateUserById } from "../services";
 import { loggers } from "../utils/winston.util";
 
 
@@ -109,6 +109,46 @@ export const refreshToken = async (req: Request, res: Response) => {
     } catch (error: any) {
         loggers.error(error);
         res.status(500).json({ message: 'Something went wrong while refreshing the token' });
+    }
+}
+
+export const logout = async (req: Request, res: Response)=>{
+    try {
+        const AccessToken = req.headers.authorization?.split(' ')[1];
+        if (!AccessToken) {
+            res.status(500).json({ error: 'Logout failed due to misssing of access token'});
+            return;
+        };
+
+        const cookies = req.cookies;
+        if (!cookies?.jwt) {
+            res.status(401).json({ error: "refersh token not found on the request" });
+            return;
+        }
+        const RefreshToken: any = cookies.jwt;
+        const existingUser = await findUserByRefreshToken(RefreshToken);
+        if (!existingUser) {
+            res.status(404).json({ error: "Not found a user with requested refresh token" });
+            return;
+        }
+
+        const isBlacklisted = await blackListToken(AccessToken);
+        if (isBlacklisted) {
+            res.status(500).json({ message: 'Failed to blacklist token' });
+            return;  
+        }
+        
+        const isRefreshTokenFoundAndDeleted = await deleteRefreshTokenOfUser(existingUser.id);
+        if (!isRefreshTokenFoundAndDeleted){
+            res.status(404).json({error:"UserId not match with any user to delete this account"});
+            return;
+        }
+
+        res.statusMessage = "Logout Successfull";
+        res.status(200).json({ message: 'Succsessfully completed your logout with invalidation of accesstoken' });
+    } catch (error:any) {
+        loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong while loggging out', error:error.message });
     }
 }
 

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUserById = exports.insertUser = exports.saveUsers = exports.findUserByRefreshToken = exports.findUserByMail = exports.findUserById = exports.findUsers = void 0;
+exports.deleteRefreshTokenOfUser = exports.updateUserById = exports.insertUser = exports.saveUsers = exports.findUserByRefreshToken = exports.findUserByMail = exports.findUserById = exports.findUsers = void 0;
 const winston_util_1 = require("../utils/winston.util");
 const file_service_1 = require("./file.service");
 const findUsers = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -104,3 +104,19 @@ const updateUserById = (id, updatedUser) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.updateUserById = updateUserById;
+const deleteRefreshTokenOfUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield (0, exports.findUserById)(id);
+        if (!user) {
+            return false;
+        }
+        user.refreshToken = undefined;
+        (0, exports.updateUserById)(id, user);
+        return true;
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        throw new Error("Can't  delete Refresh Token Due to Error");
+    }
+});
+exports.deleteRefreshTokenOfUser = deleteRefreshTokenOfUser;

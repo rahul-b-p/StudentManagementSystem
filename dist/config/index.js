@@ -18,3 +18,4 @@ __exportStar(require("./id.config"), exports);
 __exportStar(require("./password.config"), exports);
 __exportStar(require("./jwt/access.jwt"), exports);
 __exportStar(require("./jwt/refresh.jwt"), exports);
+__exportStar(require("./token.config"), exports);

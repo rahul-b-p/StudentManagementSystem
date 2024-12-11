@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.refreshToken = exports.login = exports.signup = void 0;
+exports.logout = exports.refreshToken = exports.login = exports.signup = void 0;
 const config_1 = require("../config");
 const services_1 = require("../services");
 const winston_util_1 = require("../utils/winston.util");
@@ -110,3 +110,42 @@ const refreshToken = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.refreshToken = refreshToken;
+const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const AccessToken = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        if (!AccessToken) {
+            res.status(500).json({ error: 'Logout failed due to misssing of access token' });
+            return;
+        }
+        ;
+        const cookies = req.cookies;
+        if (!(cookies === null || cookies === void 0 ? void 0 : cookies.jwt)) {
+            res.status(401).json({ error: "refersh token not found on the request" });
+            return;
+        }
+        const RefreshToken = cookies.jwt;
+        const existingUser = yield (0, services_1.findUserByRefreshToken)(RefreshToken);
+        if (!existingUser) {
+            res.status(404).json({ error: "Not found a user with requested refresh token" });
+            return;
+        }
+        const isBlacklisted = yield (0, config_1.blackListToken)(AccessToken);
+        if (isBlacklisted) {
+            res.status(500).json({ message: 'Failed to blacklist token' });
+            return;
+        }
+        const isRefreshTokenFoundAndDeleted = yield (0, services_1.deleteRefreshTokenOfUser)(existingUser.id);
+        if (!isRefreshTokenFoundAndDeleted) {
+            res.status(404).json({ error: "UserId not match with any user to delete this account" });
+            return;
+        }
+        res.statusMessage = "Logout Successfull";
+        res.status(200).json({ message: 'Succsessfully completed your logout with invalidation of accesstoken' });
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong while loggging out', error: error.message });
+    }
+});
+exports.logout = logout;

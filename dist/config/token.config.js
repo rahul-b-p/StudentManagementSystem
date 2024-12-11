@@ -12,35 +12,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyAccessToken = exports.signAccessToken = void 0;
+exports.checkTokenBlacklist = exports.blackListToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const winston_util_1 = require("../../utils/winston.util");
-const signAccessToken = (id, role) => __awaiter(void 0, void 0, void 0, function* () {
+const redis_util_1 = __importDefault(require("../utils/redis.util"));
+const winston_util_1 = require("../utils/winston.util");
+const blackListToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const secretKey = process.env.ACCESS_TOKEN_SECRET;
-        if (!secretKey) {
-            throw new Error("Can't Find secret key to sign Access token");
-        }
-        const AccessToken = jsonwebtoken_1.default.sign({ id, role }, secretKey, { expiresIn: '1m' });
-        return AccessToken;
-    }
-    catch (error) {
-        winston_util_1.loggers.error(error);
-        throw new Error("Can't Get Access Token");
-    }
-});
-exports.signAccessToken = signAccessToken;
-const verifyAccessToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const secretKey = process.env.ACCESS_TOKEN_SECRET;
-        if (!secretKey) {
-            throw new Error("Can't Find secret key to sign Access token");
-        }
-        const result = jsonwebtoken_1.default.verify(token, secretKey);
+        const { exp } = jsonwebtoken_1.default.decode(token);
+        const expiresIn = exp - Math.floor(Date.now() / 1000);
+        const result = yield redis_util_1.default.set(token, 'Blacklisted', { 'EX': expiresIn });
         return result;
     }
     catch (error) {
-        throw new Error("unauthorized token");
+        winston_util_1.loggers.error(error);
+        throw new Error("Can't Blacklist Token");
     }
 });
-exports.verifyAccessToken = verifyAccessToken;
+exports.blackListToken = blackListToken;
+const checkTokenBlacklist = (token) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield redis_util_1.default.get(token);
+        return result;
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        throw new Error("Can't check the token now");
+    }
+});
+exports.checkTokenBlacklist = checkTokenBlacklist;

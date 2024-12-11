@@ -37,7 +37,7 @@ export const findUserByMail = async (email: string): Promise<User | null> => {
     }
 }
 
-export const findUserByRefreshToken = async (refreshToken: string): Promise<User | null> =>{
+export const findUserByRefreshToken = async (refreshToken: string): Promise<User | null> => {
     try {
         const users = await findUsers();
         const user = users.find(item => item.refreshToken == refreshToken);
@@ -85,5 +85,20 @@ export const updateUserById = async (id: string, updatedUser: User): Promise<boo
     } catch (error) {
         loggers.error(error);
         throw new Error("Can't update user with given id due to an error");
+    }
+}
+
+export const deleteRefreshTokenOfUser = async (id: string):Promise<boolean> => {
+    try {
+        const user = await findUserById(id);
+        if (!user) {
+            return false;
+        }
+        user.refreshToken = undefined;
+        updateUserById(id,user);
+        return true
+    } catch (error) {
+        loggers.error(error);
+        throw new Error("Can't  delete Refresh Token Due to Error");
     }
 }

@@ -15,12 +15,17 @@ const config_1 = require("../config");
 const JwtAuthMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
-        if (!token) {
+        const AccessToken = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        if (!AccessToken) {
             res.status(400).json({ error: 'Authorization failed due to inavailability of access token', message: 'add your token for authorization' });
             return;
         }
-        const tokenPayload = yield (0, config_1.verifyAccessToken)(token);
+        const isJwtBlacklisted = yield (0, config_1.checkTokenBlacklist)(AccessToken);
+        if (isJwtBlacklisted) {
+            res.status(400).json({ error: 'Invalid token' });
+            return;
+        }
+        const tokenPayload = yield (0, config_1.verifyAccessToken)(AccessToken);
         const { id, role } = tokenPayload;
         req.payload = {
             id,
