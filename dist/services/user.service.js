@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteRefreshTokenOfUser = exports.updateUserById = exports.insertUser = exports.saveUsers = exports.findUserByRefreshToken = exports.findUserByMail = exports.findUserById = exports.findUsers = void 0;
+exports.deleteRefreshTokenOfUser = exports.updateUserById = exports.insertUser = exports.saveUsers = exports.findUsersByrole = exports.findUserByRefreshToken = exports.findUserByMail = exports.findUserById = exports.findUsers = void 0;
 const winston_util_1 = require("../utils/winston.util");
 const file_service_1 = require("./file.service");
 const findUsers = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -60,6 +60,17 @@ const findUserByRefreshToken = (refreshToken) => __awaiter(void 0, void 0, void 
     }
 });
 exports.findUserByRefreshToken = findUserByRefreshToken;
+const findUsersByrole = (role) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const users = yield (0, exports.findUsers)();
+        return users.filter(item => item.role == role);
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        throw new Error("Can't find Users with given role due to an error");
+    }
+});
+exports.findUsersByrole = findUsersByrole;
 const saveUsers = (newUsers) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield (0, file_service_1.readData)();

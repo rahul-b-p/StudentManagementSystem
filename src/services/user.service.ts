@@ -1,7 +1,6 @@
 import { User } from "../types";
 import { loggers } from "../utils/winston.util";
-import { readData, writeData } from "./file.service"
-
+import { readData, writeData } from "./file.service";
 
 
 export const findUsers = async (): Promise<User[] | []> => {
@@ -44,7 +43,17 @@ export const findUserByRefreshToken = async (refreshToken: string): Promise<User
         return user ? user : null;
     } catch (error) {
         loggers.error(error);
-        throw new Error("Can't find Users with requested RefreshToken due to an error")
+        throw new Error("Can't find Users with requested RefreshToken due to an error");
+    }
+}
+
+export const findUsersByrole = async (role:'admin'|'user'):Promise<User[]|[]>=>{
+    try {
+        const users = await findUsers();
+        return users.filter(item=>item.role==role);
+    } catch (error) {
+        loggers.error(error);
+        throw new Error("Can't find Users with given role due to an error");
     }
 }
 

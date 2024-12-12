@@ -9,13 +9,52 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.updateUser = exports.readAllUsers = void 0;
+exports.deleteUser = exports.updateUser = exports.readAllAdmins = exports.readAllUsers = void 0;
 const services_1 = require("../services");
 const winston_util_1 = require("../utils/winston.util");
 const config_1 = require("../config");
-const readAllUsers = () => {
-};
+const readAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const id = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
+        if (!id)
+            throw new Error("Couldn't find payload");
+        const existingUser = yield (0, services_1.findUserById)(id);
+        if (!existingUser) {
+            res.status(404).json({ error: 'Requested with an Invalid UserId' });
+            return;
+        }
+        const users = yield (0, services_1.findUsersByrole)('user');
+        const ResponseData = users.map(({ id, username, email }) => ({ id, email, username }));
+        res.status(200).json({ message: "Found all users", ResponseData });
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
+});
 exports.readAllUsers = readAllUsers;
+const readAllAdmins = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const id = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
+        if (!id)
+            throw new Error("Couldn't find payload");
+        const existingUser = yield (0, services_1.findUserById)(id);
+        if (!existingUser) {
+            res.status(404).json({ error: 'Requested with an Invalid UserId' });
+            return;
+        }
+        const admins = yield (0, services_1.findUsersByrole)('admin');
+        const ResponseData = admins.map(({ id, username, email }) => ({ id, email, username }));
+        res.status(200).json({ message: "Found all users", ResponseData });
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
+});
+exports.readAllAdmins = readAllAdmins;
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {

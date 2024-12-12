@@ -38,7 +38,7 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         };
         yield (0, services_1.insertUser)(newUser);
         res.statusMessage = "Signup Successfull";
-        res.status(200).json({ message: 'New user Account Created', ResponseData: { id, username, email } });
+        res.status(200).json({ message: `New ${role} Account Created`, ResponseData: { id, username, email } });
     }
     catch (error) {
         winston_util_1.loggers.error(error);
