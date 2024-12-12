@@ -1,10 +1,10 @@
 import { NextFunction, Response } from "express";
-import { authBody, customRequestWithPayload } from "../types";
+import { customRequestWithPayload } from "../types";
 import { loggers } from "../utils/winston.util";
 
 
 
-export const checkAdmin  = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
+export const checkAdmin = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
     try {
         const role = req.payload?.role
         if (!role) throw new Error("Can't get the role from jwt payload");
@@ -36,7 +36,7 @@ export const checkUser = async (req: customRequestWithPayload, res: Response, ne
     }
 }
 
-export const adminAuth = async (req: customRequestWithPayload<{}, any, authBody>, res: Response, next: NextFunction) => {
+export const adminAuth = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
     try {
         req.payload = { id: '', role: 'admin' };
         next();
@@ -46,7 +46,7 @@ export const adminAuth = async (req: customRequestWithPayload<{}, any, authBody>
     }
 }
 
-export const userAuth = async (req: customRequestWithPayload<{}, any, authBody>, res: Response, next: NextFunction) => {
+export const userAuth = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
     try {
         req.payload = { id: '', role: 'user' };
         next();

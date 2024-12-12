@@ -12,6 +12,19 @@
       "grades": {
         "physics": 1
       }
+    },
+    {
+      "id": "3638bd3c0092193ba7aaca0",
+      "userId": "69921096bc46193b3fdf90f",
+      "name": "abhi",
+      "email": "abhi@gmail.com",
+      "age": 20,
+      "subjects": [
+        "physics"
+      ],
+      "grades": {
+        "physics": 10
+      }
     }
   ],
   "users": [
@@ -28,7 +41,7 @@
       "email": "user@gmail.com",
       "hashPassword": "$2b$10$5pn1Xy1i88E5v14cJJIvreB4I0JoEXcI7Vz17AaErSPd9fYmsE.ea",
       "role": "user",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTIxMDk2YmM0NjE5M2IzZmRmOTBmIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MzM5OTk5NjYsImV4cCI6MTc0MTc3NTk2Nn0.-rp2CAyvGrLzDjGl7KdExtas7EFkGRkHrsufn_qnzIs"
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTIxMDk2YmM0NjE5M2IzZmRmOTBmIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MzQwMDMwODIsImV4cCI6MTc0MTc3OTA4Mn0.PZEX24dCvm0bUA98bQej8LrL8gRKH_XBka7v4gl8gKE"
     },
     {
       "id": "4c2556bb0db3193b9c72225",
@@ -49,8 +62,14 @@
       "username": "Admin2",
       "email": "Admin2@gmail.com",
       "hashPassword": "$2b$10$HDNjoIj4KkoUeux7BPCf0u92oriS.480Fr4/e2JNs.0HCgQac6rX6",
-      "role": "admin",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjA5MmU4Yzg0MmNmZjE5M2JhMDBhNmJiIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzMzOTk1ODg1LCJleHAiOjE3NDE3NzE4ODV9.G8fTCNhmnlUsdOUu1226yF4GdBxl52QELZ4P9oh-wfs"
+      "role": "admin"
+    },
+    {
+      "id": "4bb1fb7a3316193ba94b1da",
+      "username": "user3",
+      "email": "user3@gmail.com",
+      "hashPassword": "$2b$10$9jpSpLc9fJrz9ww84DOge.aCt5SinREFl5I4IxvcFVBRlAuj8kmIu",
+      "role": "user"
     }
   ]
 }

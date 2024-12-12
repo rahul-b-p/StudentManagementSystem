@@ -3,6 +3,7 @@ import { customRequestWithPayload, updateUserBody, User } from "../types"
 import { findUserById, findUsersByrole, updateUserById } from "../services";
 import { loggers } from "../utils/winston.util";
 import { getEncryptedPassword, verifyPassword } from "../config";
+import { validateUpdateUserBody } from "../validations";
 
 
 
@@ -50,16 +51,18 @@ export const readAllAdmins = async (req: customRequestWithPayload, res: Response
 
 export const updateUser = async (req: customRequestWithPayload<{}, any, updateUserBody>, res: Response) => {
     try {
-        const { currentPassword, updatedPassword, updatedEmail, updatedUsername } = req.body;
-        if (typeof currentPassword !== 'string' || (typeof updatedPassword !== 'string' && typeof updatedEmail !== 'string' && typeof updatedUsername !== 'string')) {
+        const isValidReqBody = validateUpdateUserBody(req.body);
+        if (!isValidReqBody) {
             res.status(400).json({ error: 'Invalid Request Body' });
             return;
         }
 
+        const { currentPassword, updatedPassword, updatedEmail, updatedUsername } = req.body;
+
         const id = req.payload?.id;
         if (!id) throw new Error("Couldn't find payload");
 
-        const existingUser = await findUserById(id)
+        const existingUser = await findUserById(id);
         if (!existingUser) {
             res.status(404).json({ error: 'Requested with an Invalid UserId' });
             return;

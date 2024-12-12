@@ -13,6 +13,7 @@ exports.deleteUser = exports.updateUser = exports.readAllAdmins = exports.readAl
 const services_1 = require("../services");
 const winston_util_1 = require("../utils/winston.util");
 const config_1 = require("../config");
+const validations_1 = require("../validations");
 const readAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
@@ -58,11 +59,12 @@ exports.readAllAdmins = readAllAdmins;
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        const { currentPassword, updatedPassword, updatedEmail, updatedUsername } = req.body;
-        if (typeof currentPassword !== 'string' || (typeof updatedPassword !== 'string' && typeof updatedEmail !== 'string' && typeof updatedUsername !== 'string')) {
+        const isValidReqBody = (0, validations_1.validateUpdateUserBody)(req.body);
+        if (!isValidReqBody) {
             res.status(400).json({ error: 'Invalid Request Body' });
             return;
         }
+        const { currentPassword, updatedPassword, updatedEmail, updatedUsername } = req.body;
         const id = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
         if (!id)
             throw new Error("Couldn't find payload");

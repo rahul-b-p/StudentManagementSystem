@@ -13,17 +13,19 @@ exports.logout = exports.refreshToken = exports.login = exports.signup = void 0;
 const config_1 = require("../config");
 const services_1 = require("../services");
 const winston_util_1 = require("../utils/winston.util");
+const user_validation_1 = require("../validations/user.validation");
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const role = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.role;
         if (!role)
             throw new Error('role not added by middleware');
-        const { email, password, username } = req.body;
-        if (typeof email !== 'string' || typeof password !== 'string' || typeof username !== 'string') {
+        const isValidReqBody = (0, user_validation_1.validateSignupBody)(req.body);
+        if (!isValidReqBody) {
             res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
             return;
         }
+        const { email, password, username } = req.body;
         const existingUser = yield (0, services_1.findUserByMail)(email);
         if (existingUser) {
             res.status(409).json({ message: "user already exists" });
@@ -54,11 +56,12 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const role = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.role;
         if (!role)
             throw new Error('role not added by middleware');
-        const { email, password } = req.body;
-        if (typeof email !== 'string' || typeof password !== 'string') {
+        const isValidReqBody = (0, user_validation_1.validateLoginBody)(req.body);
+        if (!isValidReqBody) {
             res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
             return;
         }
+        const { email, password } = req.body;
         const existingUser = yield (0, services_1.findUserByMail)(email);
         if (!existingUser) {
             res.status(404).json({ error: "user not found", message: 'Please try to login with a valid mail id' });
