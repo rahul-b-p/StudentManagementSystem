@@ -10,7 +10,7 @@
         "physics"
       ],
       "grades": {
-        "physics": 1
+        "physics": 100
       }
     },
     {
@@ -23,7 +23,39 @@
         "physics"
       ],
       "grades": {
-        "physics": 10
+        "physics": 90
+      }
+    },
+    {
+      "id": "e36ca19b1e62193bab7bd46",
+      "userId": "4c2556bb0db3193b9c72225",
+      "name": "abhi",
+      "email": "abhigmail.com",
+      "age": 21,
+      "subjects": [
+        "physics",
+        "chemistry"
+      ],
+      "grades": {
+        "physics": 60,
+        "chemistry": 50
+      }
+    },
+    {
+      "id": "126606b8adc0193babea933",
+      "userId": "4c2556bb0db3193b9c72225",
+      "name": "ben",
+      "email": "ben@gmail.com",
+      "age": 21,
+      "subjects": [
+        "physics",
+        "chemistry",
+        "maths"
+      ],
+      "grades": {
+        "physics": 60,
+        "chemistry": 50,
+        "maths": 65
       }
     }
   ],
@@ -40,15 +72,15 @@
       "username": "User@1",
       "email": "user@gmail.com",
       "hashPassword": "$2b$10$5pn1Xy1i88E5v14cJJIvreB4I0JoEXcI7Vz17AaErSPd9fYmsE.ea",
-      "role": "user",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTIxMDk2YmM0NjE5M2IzZmRmOTBmIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MzQwMDMwODIsImV4cCI6MTc0MTc3OTA4Mn0.PZEX24dCvm0bUA98bQej8LrL8gRKH_XBka7v4gl8gKE"
+      "role": "user"
     },
     {
       "id": "4c2556bb0db3193b9c72225",
       "username": "user2",
       "email": "user2@gmail.com",
       "hashPassword": "$2b$10$Qevug0r46V9Uc5kvy..p.OqQW29PNU6eoLMFFbtiGlIwA1vTuc0kG",
-      "role": "user"
+      "role": "user",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRjMjU1NmJiMGRiMzE5M2I5YzcyMjI1Iiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MzQwMDM4MzgsImV4cCI6MTc0MTc3OTgzOH0.LgrmMxxnkJ1cnqeLctkV4jUtfz_-XGAFysldS3CaEAs"
     },
     {
       "id": "5c574172c1c2193b9fe07dc",

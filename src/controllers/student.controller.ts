@@ -10,7 +10,7 @@ import { validateStudentBody } from "../validations";
 export const createStudent = async (req: customRequestWithPayload<{}, any, studentBody<string[]>>, res: Response) => {
     try {
         
-        const isValidReqBody =validateStudentBody(req.body)
+        const isValidReqBody =await validateStudentBody(req.body)
         
         if (!isValidReqBody) {
             res.status(400).json({ error: 'Invalid Request Body' });

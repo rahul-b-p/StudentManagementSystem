@@ -17,7 +17,7 @@ const validations_1 = require("../validations");
 const createStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        const isValidReqBody = (0, validations_1.validateStudentBody)(req.body);
+        const isValidReqBody = yield (0, validations_1.validateStudentBody)(req.body);
         if (!isValidReqBody) {
             res.status(400).json({ error: 'Invalid Request Body' });
             return;
