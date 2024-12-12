@@ -4,8 +4,8 @@ export interface Student<TSubjects extends readonly string[] = []> {
     name: string;
     age: number;
     email: string;
-    subjects?: TSubjects;
-    grades?: TSubjects extends [] ? never : { [key in TSubjects[number]]?: number };
+    subjects: TSubjects;
+    grades: TSubjects extends [] ? never : { [key in TSubjects[number]]?: number };
 };
 
 export interface User {

@@ -4,7 +4,7 @@ import { readData, writeData } from "./file.service";
 
 
 
-export const findStudents = async (): Promise<Student<string[]|[]>[]> => {
+export const findStudents = async (): Promise<Student<string[]>[]> => {
     try {
         const data = await readData();
         const { students } = data;
@@ -15,7 +15,7 @@ export const findStudents = async (): Promise<Student<string[]|[]>[]> => {
     }
 }
 
-export const findStudentById = async (id: string): Promise<Student<string[]|[]> | null> => {
+export const findStudentById = async (id: string): Promise<Student<string[]> | null> => {
     try {
         const students = await findStudents();
         const student = students.find(item => item.id == id);
@@ -26,7 +26,7 @@ export const findStudentById = async (id: string): Promise<Student<string[]|[]> 
     }
 }
 
-export const findStudentByMail = async (email: string): Promise<Student<string[]|[]> | null> => {
+export const findStudentByMail = async (email: string): Promise<Student<string[]> | null> => {
     try {
         const students = await findStudents();
         const student = students.find(item => item.email == email);
@@ -41,7 +41,7 @@ export const findStudentsByUserId = () => {
 
 }
 
-export const saveStudents = async(newStudents:Student<string[]|[]>[]):Promise<boolean> => {
+export const saveStudents = async(newStudents:Student<string[]>[]):Promise<boolean> => {
     try {
         const data = await readData();
         data.students = newStudents;
@@ -53,7 +53,7 @@ export const saveStudents = async(newStudents:Student<string[]|[]>[]):Promise<bo
     }
 }
 
-export const insertStudents = async (newStudent: Student<string[] | []>): Promise<boolean> => {
+export const insertStudents = async (newStudent: Student<string[]>): Promise<boolean> => {
     try {
         const students: Student<string[] | []>[] = await findStudents();
         students.push(newStudent);

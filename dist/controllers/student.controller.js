@@ -13,13 +13,16 @@ exports.deleteAllStudentsByUser = exports.deleteStudent = exports.updateStudent 
 const winston_util_1 = require("../utils/winston.util");
 const services_1 = require("../services");
 const config_1 = require("../config");
+const validations_1 = require("../validations");
 const createStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        const { name, age, email } = req.body;
-        if (typeof name !== 'string' || typeof age !== 'number' || typeof email !== 'string') {
+        const isValidReqBody = (0, validations_1.validateStudentBody)(req.body);
+        if (!isValidReqBody) {
             res.status(400).json({ error: 'Invalid Request Body' });
+            return;
         }
+        const { name, age, email, subjects, grades } = req.body;
         const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
         if (!userId)
             throw new Error("Couldn't found the payload");
@@ -39,7 +42,7 @@ const createStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         const id = yield (0, config_1.generateId)();
         const newStudent = {
-            id, userId, name, email, age
+            id, userId, name, email, age, subjects, grades
         };
         yield (0, services_1.insertStudents)(newStudent);
         res.statusMessage = "Student Added";

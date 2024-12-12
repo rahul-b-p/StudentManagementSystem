@@ -1,25 +1,17 @@
 {
   "students": [
     {
-      "id": "e74e7ce06996193b5348357",
-      "userId": "69921096bc46193b3fdf90f",
-      "name": "rahul",
-      "email": "rahul@gmail.com",
-      "age": 20
-    },
-    {
-      "id": "bd2bd14a9588193b53bccfe",
+      "id": "b7343c123eac193ba773d9e",
       "userId": "69921096bc46193b3fdf90f",
       "name": "abu",
       "email": "abu@gmail.com",
-      "age": 20
-    },
-    {
-      "id": "08baf4bb75cf193b940f792",
-      "userId": "69921096bc46193b3fdf90f",
-      "name": "ben",
-      "email": "ben@gmail.com",
-      "age": 20
+      "age": 20,
+      "subjects": [
+        "physics"
+      ],
+      "grades": {
+        "physics": 1
+      }
     }
   ],
   "users": [
@@ -36,7 +28,7 @@
       "email": "user@gmail.com",
       "hashPassword": "$2b$10$5pn1Xy1i88E5v14cJJIvreB4I0JoEXcI7Vz17AaErSPd9fYmsE.ea",
       "role": "user",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTIxMDk2YmM0NjE5M2IzZmRmOTBmIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MzM5OTU4NTgsImV4cCI6MTc0MTc3MTg1OH0.sIzNk0mDraGOUHrsqcWu3zkypWrM1-eVa4l3l0Y-j6g"
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTIxMDk2YmM0NjE5M2IzZmRmOTBmIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MzM5OTk5NjYsImV4cCI6MTc0MTc3NTk2Nn0.-rp2CAyvGrLzDjGl7KdExtas7EFkGRkHrsufn_qnzIs"
     },
     {
       "id": "4c2556bb0db3193b9c72225",

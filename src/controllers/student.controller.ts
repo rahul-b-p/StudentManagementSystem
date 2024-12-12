@@ -3,15 +3,21 @@ import { customRequestWithPayload, Student, studentBody } from "../types"
 import { loggers } from "../utils/winston.util";
 import { findStudentByMail, findUserById, insertStudents } from "../services";
 import { generateId } from "../config";
+import { validateStudentBody } from "../validations";
 
 
 
-export const createStudent = async (req: customRequestWithPayload<{}, any, studentBody>, res: Response) => {
+export const createStudent = async (req: customRequestWithPayload<{}, any, studentBody<string[]>>, res: Response) => {
     try {
-        const { name, age, email } = req.body;
-        if (typeof name !== 'string' || typeof age !== 'number' || typeof email !== 'string') {
+        
+        const isValidReqBody =validateStudentBody(req.body)
+        
+        if (!isValidReqBody) {
             res.status(400).json({ error: 'Invalid Request Body' });
+            return;
         }
+
+        const { name, age, email, subjects, grades } = req.body;
 
         const userId = req.payload?.id;
         if (!userId) throw new Error("Couldn't found the payload");
@@ -34,8 +40,8 @@ export const createStudent = async (req: customRequestWithPayload<{}, any, stude
         }
 
         const id = await generateId();
-        const newStudent: Student<[]> = {
-            id, userId, name, email, age
+        const newStudent: Student<typeof subjects> = {
+            id, userId, name, email, age, subjects, grades
         }
 
         await insertStudents(newStudent);
