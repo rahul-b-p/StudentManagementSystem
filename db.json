@@ -28,8 +28,7 @@
       "username": "user",
       "email": "user@gmail.com",
       "hashPassword": "$2b$10$3t7WQyYCKZzognp8EGB8N.vB8P5JpiCfiCTWR/wRUj0FgAeqPrBRK",
-      "role": "user",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTIxMDk2YmM0NjE5M2IzZmRmOTBmIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MzM5NzY3MzQsImV4cCI6MTc2NTUzNDMzNH0.o-nthSTMW3lb8qwSamu1Z8UY1gYU2bRRfRWRNzPiOCI"
+      "role": "user"
     }
   ]
 }

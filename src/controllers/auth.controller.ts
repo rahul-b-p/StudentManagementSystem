@@ -145,6 +145,7 @@ export const logout = async (req: Request, res: Response)=>{
             return;
         }
 
+        res.clearCookie('jwt',{httpOnly:true})
         res.statusMessage = "Logout Successfull";
         res.status(200).json({ message: 'Succsessfully completed your logout with invalidation of accesstoken' });
     } catch (error:any) {

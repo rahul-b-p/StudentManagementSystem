@@ -141,6 +141,7 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             res.status(404).json({ error: "UserId not match with any user to delete this account" });
             return;
         }
+        res.clearCookie('jwt', { httpOnly: true });
         res.statusMessage = "Logout Successfull";
         res.status(200).json({ message: 'Succsessfully completed your logout with invalidation of accesstoken' });
     }
