@@ -16,7 +16,9 @@ const winston_util_1 = require("../utils/winston.util");
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password, role, username } = req.body;
-        if (typeof email !== 'string' || typeof password !== 'string' || typeof username !== 'string' || role !== 'admin' && role !== 'user') {
+        if (!role)
+            throw new Error('role not added by middleware');
+        if (typeof email !== 'string' || typeof password !== 'string' || typeof username !== 'string') {
             res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
             return;
         }

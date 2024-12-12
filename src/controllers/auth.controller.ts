@@ -9,7 +9,8 @@ import { loggers } from "../utils/winston.util";
 export const signup = async (req: Request<{}, any, signupBody>, res: Response) => {
     try {
         const { email, password, role, username } = req.body;
-        if (typeof email !== 'string' || typeof password !== 'string' || typeof username !== 'string' || role !== 'admin' && role !== 'user') {
+        if(!role) throw new Error('role not added by middleware');
+        if (typeof email !== 'string' || typeof password !== 'string' || typeof username !== 'string' ) {
             res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
             return;
         }

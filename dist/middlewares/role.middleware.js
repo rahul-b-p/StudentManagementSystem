@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.user = exports.admin = void 0;
+exports.setUser = exports.setAdmin = exports.userCheck = exports.adminCheck = void 0;
 const winston_util_1 = require("../utils/winston.util");
-const admin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const adminCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const role = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.role;
@@ -29,8 +29,8 @@ const admin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 });
-exports.admin = admin;
-const user = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.adminCheck = adminCheck;
+const userCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const role = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.role;
@@ -48,4 +48,26 @@ const user = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 });
-exports.user = user;
+exports.userCheck = userCheck;
+const setAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        req.body.role = 'admin';
+        next();
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
+});
+exports.setAdmin = setAdmin;
+const setUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        req.body.role = 'user';
+        next();
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
+});
+exports.setUser = setUser;
