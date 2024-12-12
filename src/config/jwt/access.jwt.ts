@@ -10,7 +10,7 @@ export const signAccessToken = async (id: string, role: 'admin' | 'user'): Promi
             throw new Error("Can't Find secret key to sign Access token")
         }
        
-        const AccessToken = jwt.sign({id, role}, secretKey, { expiresIn: '1m' });
+        const AccessToken = jwt.sign({id, role}, secretKey, { expiresIn: '15m' });
         return AccessToken;
     } catch (error) {
         loggers.error(error);

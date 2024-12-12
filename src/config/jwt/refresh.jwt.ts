@@ -10,7 +10,7 @@ export const signRefreshToken = async (id: string, role: 'admin' | 'user'): Prom
         if (!secretKey) {
             throw new Error("Can't Find secret key to sign Access token")
         }
-        const RefreshToken = jwt.sign({ id, role }, secretKey, { expiresIn: '1y' });
+        const RefreshToken = jwt.sign({ id, role }, secretKey, { expiresIn: '90d' });
         return RefreshToken;
     } catch (error) {
         loggers.error(error);
