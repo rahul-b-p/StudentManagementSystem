@@ -57,8 +57,24 @@ exports.createStudent = createStudent;
 const readAllStudents = () => {
 };
 exports.readAllStudents = readAllStudents;
-const readAllStudentsByUser = () => {
-};
+const readAllStudentsByUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
+        if (!userId)
+            throw new Error("Can't get the payload");
+        const existinUser = yield (0, services_1.findUserById)(userId);
+        if (!existinUser) {
+            res.status(404).json({ error: "Invalid User" });
+        }
+        const stuents = yield (0, services_1.findStudentsByUserId)(userId);
+        res.status(200).json({ message: `Found all students added by ${existinUser === null || existinUser === void 0 ? void 0 : existinUser.username}`, ResponseData: stuents });
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
+});
 exports.readAllStudentsByUser = readAllStudentsByUser;
 const updateStudent = () => {
 };

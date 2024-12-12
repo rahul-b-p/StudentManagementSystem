@@ -37,8 +37,14 @@ export const findStudentByMail = async (email: string): Promise<Student<string[]
     }
 }
 
-export const findStudentsByUserId = () => {
-
+export const findStudentsByUserId = async(userId: string): Promise<Student<string[]>[] | []> => {
+    try {
+        const students = await findStudents()
+        return students.filter(item=>item.userId==userId);
+    } catch (error) {
+        loggers.error(error);
+        throw new Error("Can't find students added by the users due to an error");
+    }
 }
 
 export const saveStudents = async(newStudents:Student<string[]>[]):Promise<boolean> => {

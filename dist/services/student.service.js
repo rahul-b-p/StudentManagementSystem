@@ -48,8 +48,16 @@ const findStudentByMail = (email) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.findStudentByMail = findStudentByMail;
-const findStudentsByUserId = () => {
-};
+const findStudentsByUserId = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const students = yield (0, exports.findStudents)();
+        return students.filter(item => item.userId == userId);
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        throw new Error("Can't find students added by the users due to an error");
+    }
+});
 exports.findStudentsByUserId = findStudentsByUserId;
 const saveStudents = (newStudents) => __awaiter(void 0, void 0, void 0, function* () {
     try {

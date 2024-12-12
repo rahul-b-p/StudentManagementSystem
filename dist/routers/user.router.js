@@ -8,3 +8,5 @@ exports.router = (0, express_1.Router)();
 exports.router.put('/update', controllers_1.updateUser);
 // create student
 exports.router.post('/create-student', controllers_1.createStudent);
+// read all students added by user
+exports.router.get('/read-students', controllers_1.readAllStudentsByUser);
