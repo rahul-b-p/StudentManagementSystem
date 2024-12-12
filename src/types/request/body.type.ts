@@ -10,6 +10,13 @@ export interface loginBody {
     password: string;
 }
 
+export interface updateUserBody{
+    currentPassword:string;
+    updatedPassword?:string;
+    updatedUsername?:string;
+    updatedEmail?:string;
+}
+
 export interface studentBody{
     name: string;
     age: number;

@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JwtAuthMiddleware = void 0;
+exports.JwtAuth = void 0;
 const winston_util_1 = require("../utils/winston.util");
 const config_1 = require("../config");
-const JwtAuthMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const JwtAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const AccessToken = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
@@ -22,7 +22,7 @@ const JwtAuthMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         }
         const isJwtBlacklisted = yield (0, config_1.checkTokenBlacklist)(AccessToken);
         if (isJwtBlacklisted) {
-            res.status(400).json({ error: 'Invalid token' });
+            res.status(401).json({ error: 'Unauthorized', message: 'You are requested from unauthorized access' });
             return;
         }
         const tokenPayload = yield (0, config_1.verifyAccessToken)(AccessToken);
@@ -38,4 +38,4 @@ const JwtAuthMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         res.status(401).json({ error: 'Unauthorized', message: 'You are requested from unauthorized access' });
     }
 });
-exports.JwtAuthMiddleware = JwtAuthMiddleware;
+exports.JwtAuth = JwtAuth;

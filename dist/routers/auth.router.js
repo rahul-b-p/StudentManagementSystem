@@ -10,4 +10,4 @@ exports.router.post('/signup', controllers_1.signup);
 // login
 exports.router.post('/login', controllers_1.login);
 // logout not checked
-exports.router.post('/logout', middlewares_1.JwtAuthMiddleware, controllers_1.logout);
+exports.router.post('/logout', middlewares_1.JwtAuth, controllers_1.logout);

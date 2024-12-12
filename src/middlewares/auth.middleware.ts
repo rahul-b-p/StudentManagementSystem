@@ -5,7 +5,7 @@ import { checkTokenBlacklist, verifyAccessToken } from "../config";
 
 
 
-export const JwtAuthMiddleware = async(req: customRequestWithPayload, res: Response, next: NextFunction) => {
+export const JwtAuth = async(req: customRequestWithPayload, res: Response, next: NextFunction) => {
     try {
         const AccessToken = req.headers.authorization?.split(' ')[1];
         if(!AccessToken){
@@ -14,7 +14,7 @@ export const JwtAuthMiddleware = async(req: customRequestWithPayload, res: Respo
         }
         const isJwtBlacklisted = await checkTokenBlacklist(AccessToken);
         if (isJwtBlacklisted) {
-            res.status(400).json({ error: 'Invalid token' });
+            res.status(401).json({ error: 'Unauthorized', message: 'You are requested from unauthorized access' });
             return;
         }
 

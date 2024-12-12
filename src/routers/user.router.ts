@@ -1,7 +1,9 @@
 import { Router } from 'express';
-import { createStudent } from '../controllers';
-
+import { createStudent, updateUser } from '../controllers';
 export const router = Router();
 
+// update user
+router.put('/update', updateUser);
+
 // create student
-router.post('/create-student', createStudent)
+router.post('/create-student',  createStudent);

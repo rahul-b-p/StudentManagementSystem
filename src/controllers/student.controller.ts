@@ -14,10 +14,7 @@ export const createStudent = async (req: customRequestWithPayload<{}, any, stude
         }
 
         const userId = req.payload?.id;
-        if (!userId) {
-            res.status(401).json({ error: 'Requested with an Invalid UserId' });
-            return;
-        }
+        if (!userId) throw new Error("Couldn't found the payload");
 
         const existinUser = await findUserById(userId);
         if (!existinUser) {

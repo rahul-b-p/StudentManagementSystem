@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { login, logout, signup } from '../controllers';
-import { JwtAuthMiddleware } from '../middlewares';
+import { JwtAuth } from '../middlewares';
 
 export const router = Router();
 
@@ -11,4 +11,4 @@ router.post('/signup', signup);
 router.post('/login', login);
 
 // logout not checked
-router.post('/logout',JwtAuthMiddleware,logout);
+router.post('/logout',JwtAuth,logout);

@@ -16,9 +16,9 @@ app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use('/auth', routers_1.authRouter);
 app.use('/refresh', routers_1.refreshRoter);
-app.use(middlewares_1.JwtAuthMiddleware);
-app.use('/admin', routers_1.adminRouter);
-app.use('/user', routers_1.userRouter);
+app.use(middlewares_1.JwtAuth);
+app.use('/admin', middlewares_1.admin, routers_1.adminRouter);
+app.use('/user', middlewares_1.user, routers_1.userRouter);
 app.listen(port, () => {
     winston_util_1.loggers.info(`Server Running at http://localhost:${port}`);
 });

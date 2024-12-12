@@ -21,10 +21,8 @@ const createStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             res.status(400).json({ error: 'Invalid Request Body' });
         }
         const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
-        if (!userId) {
-            res.status(401).json({ error: 'Requested with an Invalid UserId' });
-            return;
-        }
+        if (!userId)
+            throw new Error("Couldn't found the payload");
         const existinUser = yield (0, services_1.findUserById)(userId);
         if (!existinUser) {
             res.status(404).json({ error: 'Requested with an Invalid UserId' });

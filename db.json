@@ -13,6 +13,13 @@
       "name": "abu",
       "email": "abu@gmail.com",
       "age": 20
+    },
+    {
+      "id": "08baf4bb75cf193b940f792",
+      "userId": "69921096bc46193b3fdf90f",
+      "name": "ben",
+      "email": "ben@gmail.com",
+      "age": 20
     }
   ],
   "users": [
@@ -25,9 +32,9 @@
     },
     {
       "id": "69921096bc46193b3fdf90f",
-      "username": "user",
+      "username": "User@1",
       "email": "user@gmail.com",
-      "hashPassword": "$2b$10$3t7WQyYCKZzognp8EGB8N.vB8P5JpiCfiCTWR/wRUj0FgAeqPrBRK",
+      "hashPassword": "$2b$10$5pn1Xy1i88E5v14cJJIvreB4I0JoEXcI7Vz17AaErSPd9fYmsE.ea",
       "role": "user"
     }
   ]
