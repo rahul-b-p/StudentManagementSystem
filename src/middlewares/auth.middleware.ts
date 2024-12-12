@@ -5,11 +5,11 @@ import { checkTokenBlacklist, verifyAccessToken } from "../config";
 
 
 
-export const JwtAuth = async(req: customRequestWithPayload, res: Response, next: NextFunction) => {
+export const JwtAuth = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
     try {
         const AccessToken = req.headers.authorization?.split(' ')[1];
-        if(!AccessToken){
-            res.status(400).json({error:'Authorization failed due to inavailability of access token',message:'add your token for authorization'});
+        if (!AccessToken) {
+            res.status(400).json({ error: 'Authorization failed due to inavailability of access token', message: 'add your token for authorization' });
             return;
         }
         const isJwtBlacklisted = await checkTokenBlacklist(AccessToken);
@@ -19,14 +19,14 @@ export const JwtAuth = async(req: customRequestWithPayload, res: Response, next:
         }
 
 
-        const tokenPayload:TokenPayload = await verifyAccessToken(AccessToken);
-        const {id,role} = tokenPayload;
-        req.payload={
+        const tokenPayload: TokenPayload = await verifyAccessToken(AccessToken);
+        const { id, role } = tokenPayload;
+        req.payload = {
             id,
             role
         }
         next();
-        
+
     } catch (error) {
         loggers.error(error);
         res.status(401).json({ error: 'Unauthorized', message: 'You are requested from unauthorized access' });

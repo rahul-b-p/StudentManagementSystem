@@ -35,7 +35,30 @@
       "username": "User@1",
       "email": "user@gmail.com",
       "hashPassword": "$2b$10$5pn1Xy1i88E5v14cJJIvreB4I0JoEXcI7Vz17AaErSPd9fYmsE.ea",
+      "role": "user",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTIxMDk2YmM0NjE5M2IzZmRmOTBmIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MzM5OTU4NTgsImV4cCI6MTc0MTc3MTg1OH0.sIzNk0mDraGOUHrsqcWu3zkypWrM1-eVa4l3l0Y-j6g"
+    },
+    {
+      "id": "4c2556bb0db3193b9c72225",
+      "username": "user2",
+      "email": "user2@gmail.com",
+      "hashPassword": "$2b$10$Qevug0r46V9Uc5kvy..p.OqQW29PNU6eoLMFFbtiGlIwA1vTuc0kG",
       "role": "user"
+    },
+    {
+      "id": "5c574172c1c2193b9fe07dc",
+      "username": "Admin12",
+      "email": "Admin12@gmail.com",
+      "hashPassword": "$2b$10$OxG54zgFCgcCwJ.OIJP8pOidUoPYkvbFL4uPS0jzpZslEJbKuqEqK",
+      "role": "admin"
+    },
+    {
+      "id": "092e8c842cff193ba00a6bb",
+      "username": "Admin2",
+      "email": "Admin2@gmail.com",
+      "hashPassword": "$2b$10$HDNjoIj4KkoUeux7BPCf0u92oriS.480Fr4/e2JNs.0HCgQac6rX6",
+      "role": "admin",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjA5MmU4Yzg0MmNmZjE5M2JhMDBhNmJiIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzMzOTk1ODg1LCJleHAiOjE3NDE3NzE4ODV9.G8fTCNhmnlUsdOUu1226yF4GdBxl52QELZ4P9oh-wfs"
     }
   ]
 }

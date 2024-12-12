@@ -14,10 +14,12 @@ const config_1 = require("../config");
 const services_1 = require("../services");
 const winston_util_1 = require("../utils/winston.util");
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
-        const { email, password, role, username } = req.body;
+        const role = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.role;
         if (!role)
             throw new Error('role not added by middleware');
+        const { email, password, username } = req.body;
         if (typeof email !== 'string' || typeof password !== 'string' || typeof username !== 'string') {
             res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
             return;
@@ -47,7 +49,11 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.signup = signup;
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
+        const role = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.role;
+        if (!role)
+            throw new Error('role not added by middleware');
         const { email, password } = req.body;
         if (typeof email !== 'string' || typeof password !== 'string') {
             res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
@@ -56,6 +62,10 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const existingUser = yield (0, services_1.findUserByMail)(email);
         if (!existingUser) {
             res.status(404).json({ error: "user not found", message: 'Please try to login with a valid mail id' });
+            return;
+        }
+        if (existingUser.role !== role) {
+            res.status(400).json({ message: 'Invalid Request' });
             return;
         }
         const isVerifiedPassword = (0, config_1.verifyPassword)(password, existingUser.hashPassword);

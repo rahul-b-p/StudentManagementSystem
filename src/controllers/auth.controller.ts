@@ -1,15 +1,16 @@
 import { Request, Response } from "express";
-import { User, authBody } from "../types";
+import { User, authBody, customRequestWithPayload } from "../types";
 import { generateId, getEncryptedPassword, verifyPassword, signAccessToken, signRefreshToken, verifyRefreshToken, blackListToken } from "../config";
 import { deleteRefreshTokenOfUser, findUserByMail, findUserByRefreshToken, insertUser, updateUserById } from "../services";
 import { loggers } from "../utils/winston.util";
 
 
 
-export const signup = async (req: Request<{}, any, authBody>, res: Response) => {
+export const signup = async (req: customRequestWithPayload<{}, any, authBody>, res: Response) => {
     try {
-        const { email, password, role, username } = req.body;
-        if(!role) throw new Error('role not added by middleware');
+        const role = req.payload?.role
+        if (!role) throw new Error('role not added by middleware');
+        const { email, password, username } = req.body;
         if (typeof email !== 'string' || typeof password !== 'string' || typeof username !== 'string' ) {
             res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
             return;
@@ -41,8 +42,10 @@ export const signup = async (req: Request<{}, any, authBody>, res: Response) => 
     }
 }
 
-export const login = async (req: Request<{}, any, authBody>, res: Response) => {
+export const login = async (req: customRequestWithPayload<{}, any, authBody>, res: Response) => {
     try {
+        const role = req.payload?.role
+        if (!role) throw new Error('role not added by middleware');
         const { email, password } = req.body;
         if (typeof email !== 'string' || typeof password !== 'string') {
             res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
@@ -52,6 +55,11 @@ export const login = async (req: Request<{}, any, authBody>, res: Response) => {
         const existingUser = await findUserByMail(email);
         if (!existingUser) {
             res.status(404).json({ error: "user not found", message: 'Please try to login with a valid mail id' });
+            return;
+        }
+
+        if(existingUser.role!==role){
+            res.status(400).json({message:'Invalid Request'});
             return;
         }
 

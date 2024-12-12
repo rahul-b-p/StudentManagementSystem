@@ -1,26 +1,26 @@
-import { NextFunction, Request, Response } from "express";
-import { customRequestWithPayload, signupBody } from "../types";
+import { NextFunction, Response } from "express";
+import { authBody, customRequestWithPayload } from "../types";
 import { loggers } from "../utils/winston.util";
 
 
 
-export const adminCheck = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
+export const checkAdmin  = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
     try {
         const role = req.payload?.role
-        if(!role) throw new Error("Can't get the role from jwt payload");
+        if (!role) throw new Error("Can't get the role from jwt payload");
 
-        if(role == 'admin') next();
-        else{
+        if (role == 'admin') next();
+        else {
             res.status(400).json("Invalid Request");
             return;
         }
-    } catch (error:any) {
+    } catch (error: any) {
         loggers.error(error);
-        res.status(500).json({message:'Something went wrong',error:error.message});
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 }
 
-export const userCheck = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
+export const checkUser = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
     try {
         const role = req.payload?.role
         if (!role) throw new Error("Can't get the role from jwt payload");
@@ -36,19 +36,19 @@ export const userCheck = async (req: customRequestWithPayload, res: Response, ne
     }
 }
 
-export const setAdmin = async (req: Request<{},any,signupBody>, res: Response, next: NextFunction)=>{
+export const adminAuth = async (req: customRequestWithPayload<{}, any, authBody>, res: Response, next: NextFunction) => {
     try {
-        req.body.role='admin';
+        req.payload = { id: '', role: 'admin' };
         next();
-    } catch (error:any) {
+    } catch (error: any) {
         loggers.error(error);
         res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 }
 
-export const setUser = async (req: Request<{}, any, signupBody>, res: Response, next: NextFunction) => {
+export const userAuth = async (req: customRequestWithPayload<{}, any, authBody>, res: Response, next: NextFunction) => {
     try {
-        req.body.role = 'user';
+        req.payload = { id: '', role: 'user' };
         next();
     } catch (error: any) {
         loggers.error(error);

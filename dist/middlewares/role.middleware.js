@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setUser = exports.setAdmin = exports.userCheck = exports.adminCheck = void 0;
+exports.userAuth = exports.adminAuth = exports.checkUser = exports.checkAdmin = void 0;
 const winston_util_1 = require("../utils/winston.util");
-const adminCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const checkAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const role = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.role;
@@ -29,8 +29,8 @@ const adminCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 });
-exports.adminCheck = adminCheck;
-const userCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.checkAdmin = checkAdmin;
+const checkUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const role = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.role;
@@ -48,10 +48,10 @@ const userCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 });
-exports.userCheck = userCheck;
-const setAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.checkUser = checkUser;
+const adminAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        req.body.role = 'admin';
+        req.payload = { id: '', role: 'admin' };
         next();
     }
     catch (error) {
@@ -59,10 +59,10 @@ const setAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 });
-exports.setAdmin = setAdmin;
-const setUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.adminAuth = adminAuth;
+const userAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        req.body.role = 'user';
+        req.payload = { id: '', role: 'user' };
         next();
     }
     catch (error) {
@@ -70,4 +70,4 @@ const setUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 });
-exports.setUser = setUser;
+exports.userAuth = userAuth;

@@ -1,11 +1,5 @@
-export interface signupBody {
+export interface authBody {
     username: string;
-    email: string;
-    password: string;
-    role?: 'admin' | 'user';
-}
-
-export interface loginBody {
     email: string;
     password: string;
 }
