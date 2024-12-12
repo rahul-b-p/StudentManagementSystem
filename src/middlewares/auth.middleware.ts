@@ -29,6 +29,6 @@ export const JwtAuthMiddleware = async(req: customRequestWithPayload, res: Respo
         
     } catch (error) {
         loggers.error(error);
-        res.status(401).json({ error: 'unAuthorized', message: 'You are requested from unauthorized access' });
+        res.status(401).json({ error: 'Unauthorized', message: 'You are requested from unauthorized access' });
     }
 }

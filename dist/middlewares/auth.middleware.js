@@ -35,7 +35,7 @@ const JwtAuthMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     }
     catch (error) {
         winston_util_1.loggers.error(error);
-        res.status(401).json({ error: 'unAuthorized', message: 'You are requested from unauthorized access' });
+        res.status(401).json({ error: 'Unauthorized', message: 'You are requested from unauthorized access' });
     }
 });
 exports.JwtAuthMiddleware = JwtAuthMiddleware;

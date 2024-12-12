@@ -21,7 +21,7 @@ const blackListToken = (token) => __awaiter(void 0, void 0, void 0, function* ()
         const { exp } = jsonwebtoken_1.default.decode(token);
         const expiresIn = exp - Math.floor(Date.now() / 1000);
         const result = yield redis_util_1.default.set(token, 'Blacklisted', { 'EX': expiresIn });
-        return result;
+        return result ? true : false;
     }
     catch (error) {
         winston_util_1.loggers.error(error);
@@ -32,7 +32,7 @@ exports.blackListToken = blackListToken;
 const checkTokenBlacklist = (token) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const result = yield redis_util_1.default.get(token);
-        return result;
+        return result ? true : false;
     }
     catch (error) {
         winston_util_1.loggers.error(error);

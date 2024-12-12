@@ -131,7 +131,8 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return;
         }
         const isBlacklisted = yield (0, config_1.blackListToken)(AccessToken);
-        if (isBlacklisted) {
+        winston_util_1.loggers.info(isBlacklisted);
+        if (!isBlacklisted) {
             res.status(500).json({ message: 'Failed to blacklist token' });
             return;
         }

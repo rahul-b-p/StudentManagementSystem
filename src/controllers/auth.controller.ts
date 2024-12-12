@@ -133,7 +133,8 @@ export const logout = async (req: Request, res: Response)=>{
         }
 
         const isBlacklisted = await blackListToken(AccessToken);
-        if (isBlacklisted) {
+        loggers.info(isBlacklisted);
+        if (!isBlacklisted) {
             res.status(500).json({ message: 'Failed to blacklist token' });
             return;  
         }
