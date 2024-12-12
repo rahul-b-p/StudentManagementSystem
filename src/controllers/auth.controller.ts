@@ -51,7 +51,7 @@ export const login = async (req: customRequestWithPayload<{}, any, Omit<authBody
         const role = req.payload?.role
         if (!role) throw new Error('role not added by middleware');
 
-        const isValidReqBody=validateLoginBody(req.body);
+        const isValidReqBody = validateLoginBody(req.body);
         if (!isValidReqBody) {
             res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
             return;

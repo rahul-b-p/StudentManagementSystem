@@ -60,7 +60,7 @@ export const readAllStudents = () => {
 
 }
 
-export const readAllStudentsByUser = async(req: customRequestWithPayload, res: Response) => {
+export const readAllStudentsByUser = async (req: customRequestWithPayload, res: Response) => {
     try {
         const userId = req.payload?.id;
         if (!userId) throw new Error("Can't get the payload");
@@ -71,7 +71,7 @@ export const readAllStudentsByUser = async(req: customRequestWithPayload, res: R
         }
 
         const stuents = await findStudentsByUserId(userId);
-        res.status(200).json({message:`Found all students added by ${existinUser?.username}`,ResponseData:stuents});
+        res.status(200).json({ message: `Found all students added by ${existinUser?.username}`, ResponseData: stuents });
     } catch (error: any) {
         loggers.error(error);
         res.status(500).json({ message: 'Something went wrong', error: error.message });

@@ -3,7 +3,7 @@ import { loggers } from "../utils/winston.util";
 
 
 
-export const validateStudentBody = async(reqBody: studentBody<string[]>):Promise<boolean> => {
+export const validateStudentBody = async (reqBody: studentBody<string[]>): Promise<boolean> => {
     try {
         if (typeof reqBody !== 'object' || reqBody === null) return false;
 

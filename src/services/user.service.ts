@@ -47,10 +47,10 @@ export const findUserByRefreshToken = async (refreshToken: string): Promise<User
     }
 }
 
-export const findUsersByrole = async (role:'admin'|'user'):Promise<User[]|[]>=>{
+export const findUsersByrole = async (role: 'admin' | 'user'): Promise<User[] | []> => {
     try {
         const users = await findUsers();
-        return users.filter(item=>item.role==role);
+        return users.filter(item => item.role == role);
     } catch (error) {
         loggers.error(error);
         throw new Error("Can't find Users with given role due to an error");
@@ -97,14 +97,14 @@ export const updateUserById = async (id: string, updatedUser: User): Promise<boo
     }
 }
 
-export const deleteRefreshTokenOfUser = async (id: string):Promise<boolean> => {
+export const deleteRefreshTokenOfUser = async (id: string): Promise<boolean> => {
     try {
         const user = await findUserById(id);
         if (!user) {
             return false;
         }
         user.refreshToken = undefined;
-        updateUserById(id,user);
+        updateUserById(id, user);
         return true
     } catch (error) {
         loggers.error(error);

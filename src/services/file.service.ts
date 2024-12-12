@@ -34,7 +34,7 @@ export const initializeDB = async (): Promise<JSONDataBase> => {
     }
 }
 
-export const writeData = async (data: JSONDataBase):Promise<boolean> => {
+export const writeData = async (data: JSONDataBase): Promise<boolean> => {
     try {
         await writeFile(DB_FILE_PATH, JSON.stringify(data, null, 2), 'utf-8');
         loggers.info('Data Written Successfully');

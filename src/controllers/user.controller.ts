@@ -7,7 +7,7 @@ import { validateUpdateUserBody } from "../validations";
 
 
 
-export const readAllUsers = async(req:customRequestWithPayload,res:Response) => {
+export const readAllUsers = async (req: customRequestWithPayload, res: Response) => {
     try {
         const id = req.payload?.id;
         if (!id) throw new Error("Couldn't find payload");
@@ -19,10 +19,10 @@ export const readAllUsers = async(req:customRequestWithPayload,res:Response) => 
         }
 
         const users = await findUsersByrole('user');
-        type Response = Omit<User,'hashPassword' |'refreshToken' | 'role'>;
-        const ResponseData:Response[] = users.map(({id,username,email})=>({id,email,username}));
-        res.status(200).json({message:"Found all users",ResponseData});
-    } catch (error:any) {
+        type Response = Omit<User, 'hashPassword' | 'refreshToken' | 'role'>;
+        const ResponseData: Response[] = users.map(({ id, username, email }) => ({ id, email, username }));
+        res.status(200).json({ message: "Found all users", ResponseData });
+    } catch (error: any) {
         loggers.error(error);
         res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
@@ -43,7 +43,7 @@ export const readAllAdmins = async (req: customRequestWithPayload, res: Response
         type Response = Omit<User, 'hashPassword' | 'refreshToken' | 'role'>;
         const ResponseData: Response[] = admins.map(({ id, username, email }) => ({ id, email, username }));
         res.status(200).json({ message: "Found all users", ResponseData });
-    } catch (error:any) {
+    } catch (error: any) {
         loggers.error(error);
         res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
@@ -73,7 +73,7 @@ export const updateUser = async (req: customRequestWithPayload<{}, any, updateUs
             res.status(400).json({ messege: 'Entered Password is InCorrect, please check' });
             return;
         }
-        existingUser.hashPassword= updatedPassword ? await getEncryptedPassword(updatedPassword) : existingUser.hashPassword;
+        existingUser.hashPassword = updatedPassword ? await getEncryptedPassword(updatedPassword) : existingUser.hashPassword;
         existingUser.email = updatedEmail ? updatedEmail : existingUser.email;
         existingUser.username = updatedUsername ? updatedUsername : existingUser.username;
 

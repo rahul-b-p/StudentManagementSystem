@@ -3,8 +3,8 @@ import { loggers } from '../utils/winston.util';
 
 export const getEncryptedPassword = async (password: string): Promise<string> => {
     try {
-        const salt = await  bcrypt.genSalt(Number(process.env.SALT));
-        const encryptedPassword: string = await bcrypt.hash(password,salt)
+        const salt = await bcrypt.genSalt(Number(process.env.SALT));
+        const encryptedPassword: string = await bcrypt.hash(password, salt)
         loggers.info(encryptedPassword)
         return encryptedPassword;
     } catch (error) {

@@ -27,7 +27,7 @@ export const verifyRefreshToken = async (token: string): Promise<TokenPayload | 
         }
 
         const result = jwt.verify(token, secretKey) as TokenPayload | null;
-        return result || null; 
+        return result || null;
     } catch (error) {
         return null;
     }

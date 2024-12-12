@@ -6,7 +6,7 @@ export const router = Router();
 router.put('/update', updateUser);
 
 // create student
-router.post('/create-student',  createStudent);
+router.post('/create-student', createStudent);
 
 // read all students added by user
 router.get('/read-students', readAllStudentsByUser);

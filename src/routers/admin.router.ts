@@ -10,4 +10,4 @@ router.put('/update', updateUser);
 router.get('/read-users', readAllUsers);
 
 // read all admins
-router.get('/read-admins',readAllAdmins);
+router.get('/read-admins', readAllAdmins);
