@@ -85,8 +85,23 @@ const insertStudents = (newStudent) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.insertStudents = insertStudents;
-const updateStudentsById = () => {
-};
+const updateStudentsById = (id, updatedStudent) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const students = yield (0, exports.findStudents)();
+        const updateIndex = students.findIndex(item => item.id == id);
+        if (updateIndex == -1)
+            return false;
+        else {
+            students[updateIndex] = updatedStudent;
+            yield (0, exports.saveStudents)(students);
+            return true;
+        }
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        throw new Error("Can't update student with given id due to an error");
+    }
+});
 exports.updateStudentsById = updateStudentsById;
 const deleteStudentsById = () => {
 };

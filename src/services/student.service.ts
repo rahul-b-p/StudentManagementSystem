@@ -71,8 +71,20 @@ export const insertStudents = async (newStudent: Student<string[]>): Promise<boo
     }
 }
 
-export const updateStudentsById = () => {
-
+export const updateStudentsById = async (id: string, updatedStudent: Student<string[]>) => {
+    try {
+        const students = await findStudents();
+        const updateIndex = students.findIndex(item => item.id == id);
+        if (updateIndex == -1) return false;
+        else {
+            students[updateIndex] = updatedStudent;
+            await saveStudents(students);
+            return true;
+        }
+    } catch (error) {
+        loggers.error(error);
+        throw new Error("Can't update student with given id due to an error");
+    }
 }
 
 export const deleteStudentsById = () => {

@@ -10,3 +10,6 @@ router.post('/create-student', createStudent);
 
 // read all students added by user
 router.get('/read-students', readAllStudentsByUser);
+
+// update a student
+router.put('/update-student/:id',)

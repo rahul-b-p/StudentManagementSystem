@@ -1,7 +1,7 @@
 import { Response } from "express"
 import { customRequestWithPayload, Student, studentBody } from "../types"
 import { loggers } from "../utils/winston.util";
-import { findStudentByMail, findStudentsByUserId, findUserById, insertStudents } from "../services";
+import { findStudentByMail, findStudentsByUserId, findUserById, insertStudents, updateStudentsById } from "../services";
 import { generateId } from "../config";
 import { validateStudentBody } from "../validations";
 
@@ -10,7 +10,7 @@ import { validateStudentBody } from "../validations";
 export const createStudent = async (req: customRequestWithPayload<{}, any, studentBody<string[]>>, res: Response) => {
     try {
 
-        const isValidReqBody = await validateStudentBody(req.body)
+        const isValidReqBody = await validateStudentBody(req.body);
 
         if (!isValidReqBody) {
             res.status(400).json({ error: 'Invalid Request Body' });
@@ -78,8 +78,43 @@ export const readAllStudentsByUser = async (req: customRequestWithPayload, res: 
     }
 }
 
-export const updateStudent = () => {
+export const updateStudent = async (req: customRequestWithPayload<{ id: string }, any, studentBody<string[]>>, res: Response) => {
+    try {
+        const isValidReqBody = await validateStudentBody(req.body);
+        if (!isValidReqBody) {
+            res.status(400).json({ error: 'Invalid Request Body' });
+            return;
+        }
 
+        const { name, age, email, subjects, grades } = req.body;
+
+        const userId = req.payload?.id;
+        if (!userId) throw new Error("Couldn't found the payload");
+
+        const existinUser = await findUserById(userId);
+        if (!existinUser) {
+            res.status(404).json({ error: 'Requested with an Invalid UserId' });
+            return;
+        }
+
+        const { id } = req.params;
+        const existingStudent = await findUserById(id);
+        if (!existingStudent) {
+            res.status(404).json({ error: 'No student found with given Id' });
+            return;
+        }
+
+        const updatedStudent: Student<typeof subjects> = {
+            id, userId, name, email, age, subjects, grades
+        };
+        
+        await updateStudentsById(id, updatedStudent);
+        res.statusMessage="Updated Successfully";
+        res.status(200).json({message:"User Updated Successfully",ResponseData:updatedStudent});
+    } catch (error: any) {
+        loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
 }
 
 export const deleteStudent = () => {

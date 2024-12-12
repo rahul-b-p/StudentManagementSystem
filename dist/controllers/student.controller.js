@@ -76,8 +76,41 @@ const readAllStudentsByUser = (req, res) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.readAllStudentsByUser = readAllStudentsByUser;
-const updateStudent = () => {
-};
+const updateStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const isValidReqBody = yield (0, validations_1.validateStudentBody)(req.body);
+        if (!isValidReqBody) {
+            res.status(400).json({ error: 'Invalid Request Body' });
+            return;
+        }
+        const { name, age, email, subjects, grades } = req.body;
+        const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
+        if (!userId)
+            throw new Error("Couldn't found the payload");
+        const existinUser = yield (0, services_1.findUserById)(userId);
+        if (!existinUser) {
+            res.status(404).json({ error: 'Requested with an Invalid UserId' });
+            return;
+        }
+        const { id } = req.params;
+        const existingStudent = yield (0, services_1.findUserById)(id);
+        if (!existingStudent) {
+            res.status(404).json({ error: 'No student found with given Id' });
+            return;
+        }
+        const updatedStudent = {
+            id, userId, name, email, age, subjects, grades
+        };
+        yield (0, services_1.updateStudentsById)(id, updatedStudent);
+        res.statusMessage = "Updated Successfully";
+        res.status(200).json({ message: "User Updated Successfully", ResponseData: updatedStudent });
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
+});
 exports.updateStudent = updateStudent;
 const deleteStudent = () => {
 };
