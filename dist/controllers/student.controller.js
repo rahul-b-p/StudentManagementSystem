@@ -94,7 +94,7 @@ const updateStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             return;
         }
         const { id } = req.params;
-        const existingStudent = yield (0, services_1.findUserById)(id);
+        const existingStudent = yield (0, services_1.findStudentById)(id);
         if (!existingStudent) {
             res.status(404).json({ error: 'No student found with given Id' });
             return;

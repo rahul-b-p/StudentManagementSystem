@@ -1,7 +1,7 @@
 import { Response } from "express"
 import { customRequestWithPayload, Student, studentBody } from "../types"
 import { loggers } from "../utils/winston.util";
-import { findStudentByMail, findStudentsByUserId, findUserById, insertStudents, updateStudentsById } from "../services";
+import { findStudentById, findStudentByMail, findStudentsByUserId, findUserById, insertStudents, updateStudentsById } from "../services";
 import { generateId } from "../config";
 import { validateStudentBody } from "../validations";
 
@@ -98,7 +98,7 @@ export const updateStudent = async (req: customRequestWithPayload<{ id: string }
         }
 
         const { id } = req.params;
-        const existingStudent = await findUserById(id);
+        const existingStudent = await findStudentById(id);
         if (!existingStudent) {
             res.status(404).json({ error: 'No student found with given Id' });
             return;

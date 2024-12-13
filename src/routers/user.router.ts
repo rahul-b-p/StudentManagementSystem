@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createStudent, readAllStudentsByUser, updateUser } from '../controllers';
+import { createStudent, readAllStudentsByUser, updateStudent, updateUser } from '../controllers';
 export const router = Router();
 
 // update user
@@ -12,4 +12,4 @@ router.post('/create-student', createStudent);
 router.get('/read-students', readAllStudentsByUser);
 
 // update a student
-router.put('/update-student/:id',)
+router.put('/update-student/:id', updateStudent);
