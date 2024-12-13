@@ -1,0 +1,1 @@
+export type StanderdGrades = ['A+', 'A', 'B+', 'B', 'C+', 'C', 'D+', 'D', 'F']

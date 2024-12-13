@@ -1,3 +1,5 @@
+import { StanderdGrades } from "./grade.type";
+
 export interface Student<TSubjects extends readonly string[] = []> {
     id: string;
     userId: string;
@@ -5,7 +7,7 @@ export interface Student<TSubjects extends readonly string[] = []> {
     age: number;
     email: string;
     subjects: TSubjects;
-    grades?: TSubjects extends [] ? never : { [key in TSubjects[number]]?: number };
+    grades?: TSubjects extends [] ? never : { [key in TSubjects[number]]: number };
 };
 
 export interface User {
@@ -17,10 +19,17 @@ export interface User {
     refreshToken?: string;
 };
 
+export interface GradeSystem<Tgrades extends readonly string[] = []> {
+    ranges?: Tgrades extends [] ? never : { [key in Tgrades[number]]: [number, number] };
+};
+
 export interface JSONDataBase {
     users: User[] | [];
-    students: Student<string[] | []>[] | [];
+    students: Student<string[]>[] | [];
+    gradeSystem?: GradeSystem<StanderdGrades>;
 };
+
+
 
 
 

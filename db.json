@@ -57,6 +57,40 @@
         "chemistry": 70,
         "maths": 65
       }
+    },
+    {
+      "id": "5a17fb224b5f193bf25e19e",
+      "userId": "4c2556bb0db3193b9c72225",
+      "name": "bony",
+      "email": "bony@gmail.com",
+      "age": 21,
+      "subjects": [
+        "physics",
+        "chemistry",
+        "maths"
+      ],
+      "grades": {
+        "physics": 60,
+        "chemistry": 50,
+        "maths": 65
+      }
+    },
+    {
+      "id": "93b3e13aff31193bf27b411",
+      "userId": "4c2556bb0db3193b9c72225",
+      "name": "aju",
+      "email": "aju@gmail.com",
+      "age": 21,
+      "subjects": [
+        "physics",
+        "chemistry",
+        "maths"
+      ],
+      "grades": {
+        "physics": 65,
+        "chemistry": 55,
+        "maths": 68
+      }
     }
   ],
   "users": [
@@ -79,7 +113,8 @@
       "username": "user2",
       "email": "user2@gmail.com",
       "hashPassword": "$2b$10$Qevug0r46V9Uc5kvy..p.OqQW29PNU6eoLMFFbtiGlIwA1vTuc0kG",
-      "role": "user"
+      "role": "user",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRjMjU1NmJiMGRiMzE5M2I5YzcyMjI1Iiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MzQwNzg2OTksImV4cCI6MTc0MTg1NDY5OX0.7nqEnQy-u3NNgw4YsGiQnSZApLex0PQIik1PaeQTVMw"
     },
     {
       "id": "5c574172c1c2193b9fe07dc",
@@ -93,8 +128,7 @@
       "username": "Admin2",
       "email": "Admin2@gmail.com",
       "hashPassword": "$2b$10$HDNjoIj4KkoUeux7BPCf0u92oriS.480Fr4/e2JNs.0HCgQac6rX6",
-      "role": "admin",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjA5MmU4Yzg0MmNmZjE5M2JhMDBhNmJiIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzM0MDY0NDQyLCJleHAiOjE3NDE4NDA0NDJ9.jf0qMJrETlOfJZG53Lm59FMlXFfFJiWNKXG7_MFEQSw"
+      "role": "admin"
     },
     {
       "id": "4bb1fb7a3316193ba94b1da",
@@ -103,5 +137,45 @@
       "hashPassword": "$2b$10$9jpSpLc9fJrz9ww84DOge.aCt5SinREFl5I4IxvcFVBRlAuj8kmIu",
       "role": "user"
     }
-  ]
+  ],
+  "gradeSystem": {
+    "ranges": {
+      "A+": [
+        100,
+        90
+      ],
+      "A": [
+        90,
+        80
+      ],
+      "B+": [
+        80,
+        70
+      ],
+      "B": [
+        70,
+        60
+      ],
+      "C+": [
+        60,
+        50
+      ],
+      "C": [
+        50,
+        40
+      ],
+      "D+": [
+        40,
+        30
+      ],
+      "D": [
+        30,
+        20
+      ],
+      "F": [
+        20,
+        0
+      ]
+    }
+  }
 }

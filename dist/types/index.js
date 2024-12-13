@@ -18,3 +18,4 @@ __exportStar(require("./db.type"), exports);
 __exportStar(require("./request/body.type"), exports);
 __exportStar(require("./request/payload.type"), exports);
 __exportStar(require("./jwt.type"), exports);
+__exportStar(require("./grade.type"), exports);
