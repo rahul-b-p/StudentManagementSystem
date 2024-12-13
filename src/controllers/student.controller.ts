@@ -1,3 +1,4 @@
+
 import { Response } from "express"
 import { customRequestWithPayload, Student, studentBody } from "../types"
 import { loggers } from "../utils/winston.util";
@@ -56,7 +57,7 @@ export const createStudent = async (req: customRequestWithPayload<{}, any, stude
     }
 }
 
-export const readAllStudents = async(req:customRequestWithPayload,res:Response) => {
+export const readAllStudents = async (req: customRequestWithPayload, res: Response) => {
     try {
         const userId = req.payload?.id;
         if (!userId) throw new Error("Couldn't found the payload");
@@ -68,9 +69,10 @@ export const readAllStudents = async(req:customRequestWithPayload,res:Response) 
         }
 
         const students = await findStudents();
-        res.status(200).json({message:'Fetching all students from the aplication',responseData:students});
-    } catch (error) {
-        
+        res.status(200).json({ message: 'Fetching all students from the aplication', responseData: students });
+    } catch (error: any) {
+        loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 }
 
@@ -121,10 +123,10 @@ export const updateStudent = async (req: customRequestWithPayload<{ id: string }
         const updatedStudent: Student<typeof subjects> = {
             id, userId, name, email, age, subjects, grades
         };
-        
+
         await updateStudentsById(id, updatedStudent);
-        res.statusMessage="Updated Successfully";
-        res.status(200).json({message:"User Updated Successfully",ResponseData:updatedStudent});
+        res.statusMessage = "Updated Successfully";
+        res.status(200).json({ message: "User Updated Successfully", ResponseData: updatedStudent });
     } catch (error: any) {
         loggers.error(error);
         res.status(500).json({ message: 'Something went wrong', error: error.message });
@@ -138,4 +140,3 @@ export const deleteStudent = () => {
 export const deleteAllStudentsByUser = () => {
 
 }
-

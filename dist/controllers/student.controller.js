@@ -69,6 +69,8 @@ const readAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function
         res.status(200).json({ message: 'Fetching all students from the aplication', responseData: students });
     }
     catch (error) {
+        winston_util_1.loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 });
 exports.readAllStudents = readAllStudents;
