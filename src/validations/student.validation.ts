@@ -7,7 +7,7 @@ export const validateStudentBody = async (reqBody: studentBody<string[]>): Promi
     try {
         if (typeof reqBody !== 'object' || reqBody === null) return false;
 
-        const { name, age, email, subjects, grades } = reqBody;
+        const { name, age, email, subjects, marks } = reqBody;
 
         if (typeof name !== 'string') return false;
 
@@ -19,11 +19,11 @@ export const validateStudentBody = async (reqBody: studentBody<string[]>): Promi
             return false;
         }
 
-        if (subjects.length > 0 && grades) {
+        if (subjects.length > 0 && marks) {
             let keysCount = 0;
-            const gradeKeys = Object.keys(grades);
+            const gradeKeys = Object.keys(marks);
             for (const key of gradeKeys) {
-                if (!subjects.includes(key) || typeof grades[key] !== 'number') {
+                if (!subjects.includes(key) || typeof marks[key] !== 'number') {
                     return false;
                 }
                 else keysCount++;

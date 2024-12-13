@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findGradesForMarks = exports.resetGradeRange = exports.updateGradeRange = exports.findGradeRange = void 0;
+exports.fetchGrades = exports.findGradesForMarks = exports.resetGradeRange = exports.updateGradeRange = exports.findGradeRange = void 0;
 const winston_util_1 = require("../utils/winston.util");
 const file_service_1 = require("./file.service");
 const findGradeRange = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -102,3 +102,18 @@ const findGradesForMarks = (mark) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.findGradesForMarks = findGradesForMarks;
+const fetchGrades = (marks) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const grades = {};
+        for (const [subject, mark] of Object.entries(marks)) {
+            const grade = yield (0, exports.findGradesForMarks)(mark);
+            grades[subject] = grade;
+        }
+        return grades;
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        throw new Error("Can't find Standerd Grade System due to an error");
+    }
+});
+exports.fetchGrades = fetchGrades;

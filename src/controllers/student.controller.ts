@@ -2,7 +2,7 @@
 import { Response } from "express"
 import { customRequestWithPayload, Student, studentBody } from "../types"
 import { loggers } from "../utils/winston.util";
-import { findStudentById, findStudentByMail, findStudents, findStudentsByUserId, findUserById, insertStudents, updateStudentsById } from "../services";
+import { fetchStudentsWithGrade, fetchStudentsWithGradeByUserId, findStudentById, findStudentByMail, findUserById, insertStudents, updateStudentsById } from "../services";
 import { generateId } from "../config";
 import { validateStudentBody } from "../validations";
 
@@ -18,7 +18,7 @@ export const createStudent = async (req: customRequestWithPayload<{}, any, stude
             return;
         }
 
-        const { name, age, email, subjects, grades } = req.body;
+        const { name, age, email, subjects, marks } = req.body;
 
         const userId = req.payload?.id;
         if (!userId) throw new Error("Couldn't found the payload");
@@ -42,7 +42,7 @@ export const createStudent = async (req: customRequestWithPayload<{}, any, stude
 
         const id = await generateId();
         const newStudent: Student<typeof subjects> = {
-            id, userId, name, email, age, subjects, grades
+            id, userId, name, email, age, subjects, marks
         }
 
         await insertStudents(newStudent);
@@ -68,8 +68,8 @@ export const readAllStudents = async (req: customRequestWithPayload, res: Respon
             return;
         }
 
-        const students = await findStudents();
-        res.status(200).json({ message: 'Fetching all students from the aplication', responseData: students });
+        const ResponseData = await fetchStudentsWithGrade();
+        res.status(200).json({ message: 'Fetching all students from the aplication', ResponseData });
     } catch (error: any) {
         loggers.error(error);
         res.status(500).json({ message: 'Something went wrong', error: error.message });
@@ -86,7 +86,7 @@ export const readAllStudentsByUser = async (req: customRequestWithPayload, res: 
             res.status(404).json({ error: "Invalid User" });
         }
 
-        const stuents = await findStudentsByUserId(userId);
+        const stuents = await fetchStudentsWithGradeByUserId(userId);
         res.status(200).json({ message: `Found all students added by ${existinUser?.username}`, ResponseData: stuents });
     } catch (error: any) {
         loggers.error(error);
@@ -102,7 +102,7 @@ export const updateStudent = async (req: customRequestWithPayload<{ id: string }
             return;
         }
 
-        const { name, age, email, subjects, grades } = req.body;
+        const { name, age, email, subjects, marks } = req.body;
 
         const userId = req.payload?.id;
         if (!userId) throw new Error("Couldn't found the payload");
@@ -121,7 +121,7 @@ export const updateStudent = async (req: customRequestWithPayload<{ id: string }
         }
 
         const updatedStudent: Student<typeof subjects> = {
-            id, userId, name, email, age, subjects, grades
+            id, userId, name, email, age, subjects, marks
         };
 
         await updateStudentsById(id, updatedStudent);

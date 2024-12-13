@@ -22,7 +22,7 @@ const createStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             res.status(400).json({ error: 'Invalid Request Body' });
             return;
         }
-        const { name, age, email, subjects, grades } = req.body;
+        const { name, age, email, subjects, marks } = req.body;
         const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
         if (!userId)
             throw new Error("Couldn't found the payload");
@@ -42,7 +42,7 @@ const createStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         const id = yield (0, config_1.generateId)();
         const newStudent = {
-            id, userId, name, email, age, subjects, grades
+            id, userId, name, email, age, subjects, marks
         };
         yield (0, services_1.insertStudents)(newStudent);
         res.statusMessage = "Student Added";
@@ -65,8 +65,8 @@ const readAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function
             res.status(404).json({ error: 'Requested with an Invalid UserId' });
             return;
         }
-        const students = yield (0, services_1.findStudents)();
-        res.status(200).json({ message: 'Fetching all students from the aplication', responseData: students });
+        const ResponseData = yield (0, services_1.fetchStudentsWithGrade)();
+        res.status(200).json({ message: 'Fetching all students from the aplication', ResponseData });
     }
     catch (error) {
         winston_util_1.loggers.error(error);
@@ -84,7 +84,7 @@ const readAllStudentsByUser = (req, res) => __awaiter(void 0, void 0, void 0, fu
         if (!existinUser) {
             res.status(404).json({ error: "Invalid User" });
         }
-        const stuents = yield (0, services_1.findStudentsByUserId)(userId);
+        const stuents = yield (0, services_1.fetchStudentsWithGradeByUserId)(userId);
         res.status(200).json({ message: `Found all students added by ${existinUser === null || existinUser === void 0 ? void 0 : existinUser.username}`, ResponseData: stuents });
     }
     catch (error) {
@@ -101,7 +101,7 @@ const updateStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             res.status(400).json({ error: 'Invalid Request Body' });
             return;
         }
-        const { name, age, email, subjects, grades } = req.body;
+        const { name, age, email, subjects, marks } = req.body;
         const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
         if (!userId)
             throw new Error("Couldn't found the payload");
@@ -117,7 +117,7 @@ const updateStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             return;
         }
         const updatedStudent = {
-            id, userId, name, email, age, subjects, grades
+            id, userId, name, email, age, subjects, marks
         };
         yield (0, services_1.updateStudentsById)(id, updatedStudent);
         res.statusMessage = "Updated Successfully";

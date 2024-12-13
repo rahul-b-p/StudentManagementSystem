@@ -10,20 +10,20 @@ export const findGradeRange = async (): Promise<GradeSystem<StanderdGrades>> => 
         const data = await readData();
         if (data.gradeSystem) return data.gradeSystem;
         else {
-            const StanderdGradeSystem:GradeSystem<StanderdGrades> = {
-                ranges:{
-                    "A+":[100,90],
-                    "A":[90,80],
-                    "B+":[80,70],
-                    "B":[70,60],
-                    "C+":[60,50],
-                    "C":[50,40],
-                    "D+":[40,30],
-                    "D":[30,20],
-                    'F':[20,0]
+            const StanderdGradeSystem: GradeSystem<StanderdGrades> = {
+                ranges: {
+                    "A+": [100, 90],
+                    "A": [90, 80],
+                    "B+": [80, 70],
+                    "B": [70, 60],
+                    "C+": [60, 50],
+                    "C": [50, 40],
+                    "D+": [40, 30],
+                    "D": [30, 20],
+                    'F': [20, 0]
                 }
             }
-            data.gradeSystem=StanderdGradeSystem;
+            data.gradeSystem = StanderdGradeSystem;
             await writeData(data);
             return data.gradeSystem
         }
@@ -33,10 +33,10 @@ export const findGradeRange = async (): Promise<GradeSystem<StanderdGrades>> => 
     }
 }
 
-export const updateGradeRange = async(gradeSystem:GradeSystem<StanderdGrades>):Promise<boolean>=>{
+export const updateGradeRange = async (gradeSystem: GradeSystem<StanderdGrades>): Promise<boolean> => {
     try {
         const data = await readData();
-        data.gradeSystem=gradeSystem;
+        data.gradeSystem = gradeSystem;
         await writeData(data);
         return true;
     } catch (error) {
@@ -45,10 +45,10 @@ export const updateGradeRange = async(gradeSystem:GradeSystem<StanderdGrades>):P
     }
 }
 
-export const resetGradeRange = async (): Promise<GradeSystem<StanderdGrades>>=>{
+export const resetGradeRange = async (): Promise<GradeSystem<StanderdGrades>> => {
     try {
         const data = await readData();
-        
+
         const StanderdGradeSystem: GradeSystem<StanderdGrades> = {
             ranges: {
                 "A+": [100, 90],
@@ -71,12 +71,12 @@ export const resetGradeRange = async (): Promise<GradeSystem<StanderdGrades>>=>{
     }
 }
 
-export const findGradesForMarks = async(mark:number):Promise<string>=>{
+export const findGradesForMarks = async (mark: number): Promise<string> => {
     try {
-        const {ranges} = await findGradeRange();
-        if(!ranges) throw new Error("Can't found the grade range");
+        const { ranges } = await findGradeRange();
+        if (!ranges) throw new Error("Can't found the grade range");
 
-        if(mark==ranges["A+"][0]) return 'A+';
+        if (mark == ranges["A+"][0]) return 'A+';
 
         for (const [grade, range] of Object.entries(ranges)) {
             const [max, min] = range;
@@ -87,6 +87,20 @@ export const findGradesForMarks = async(mark:number):Promise<string>=>{
 
         throw new Error("System Failed to store valid grades");
 
+    } catch (error) {
+        loggers.error(error);
+        throw new Error("Can't find Standerd Grade System due to an error");
+    }
+}
+
+export const fetchGrades = async (marks: Record<string, number>): Promise<Record<string, string>> => {
+    try {
+        const grades: Record<string, string> = {}
+        for (const [subject, mark] of Object.entries(marks)) {
+            const grade = await findGradesForMarks(mark);
+            grades[subject] = grade;
+        }
+        return grades;
     } catch (error) {
         loggers.error(error);
         throw new Error("Can't find Standerd Grade System due to an error");

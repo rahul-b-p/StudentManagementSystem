@@ -9,7 +9,7 @@
       "subjects": [
         "physics"
       ],
-      "grades": {
+      "marks": {
         "physics": 100
       }
     },
@@ -22,7 +22,7 @@
       "subjects": [
         "physics"
       ],
-      "grades": {
+      "marks": {
         "physics": 90
       }
     },
@@ -36,14 +36,14 @@
         "physics",
         "chemistry"
       ],
-      "grades": {
+      "marks": {
         "physics": 60,
         "chemistry": 50
       }
     },
     {
       "id": "126606b8adc0193babea933",
-      "userId": "4c2556bb0db3193b9c72225",
+      "userId": "83e218ded230193bff23d73",
       "name": "ben",
       "email": "ben@gmail.com",
       "age": 21,
@@ -51,12 +51,7 @@
         "physics",
         "chemistry",
         "maths"
-      ],
-      "grades": {
-        "physics": 60,
-        "chemistry": 70,
-        "maths": 65
-      }
+      ]
     },
     {
       "id": "5a17fb224b5f193bf25e19e",
@@ -69,7 +64,7 @@
         "chemistry",
         "maths"
       ],
-      "grades": {
+      "marks": {
         "physics": 60,
         "chemistry": 50,
         "maths": 65
@@ -86,7 +81,24 @@
         "chemistry",
         "maths"
       ],
-      "grades": {
+      "marks": {
+        "physics": 65,
+        "chemistry": 55,
+        "maths": 68
+      }
+    },
+    {
+      "id": "1d2f0f34b244193c0051320",
+      "userId": "83e218ded230193bff23d73",
+      "name": "abc",
+      "email": "abc@gmail.com",
+      "age": 21,
+      "subjects": [
+        "abc",
+        "chemistry",
+        "maths"
+      ],
+      "marks": {
         "physics": 65,
         "chemistry": 55,
         "maths": 68
@@ -113,8 +125,7 @@
       "username": "user2",
       "email": "user2@gmail.com",
       "hashPassword": "$2b$10$Qevug0r46V9Uc5kvy..p.OqQW29PNU6eoLMFFbtiGlIwA1vTuc0kG",
-      "role": "user",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRjMjU1NmJiMGRiMzE5M2I5YzcyMjI1Iiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MzQwNzg2OTksImV4cCI6MTc0MTg1NDY5OX0.7nqEnQy-u3NNgw4YsGiQnSZApLex0PQIik1PaeQTVMw"
+      "role": "user"
     },
     {
       "id": "5c574172c1c2193b9fe07dc",
@@ -125,7 +136,7 @@
     },
     {
       "id": "092e8c842cff193ba00a6bb",
-      "username": "Admin2",
+      "username": "Admin12",
       "email": "Admin2@gmail.com",
       "hashPassword": "$2b$10$HDNjoIj4KkoUeux7BPCf0u92oriS.480Fr4/e2JNs.0HCgQac6rX6",
       "role": "admin"
@@ -136,6 +147,14 @@
       "email": "user3@gmail.com",
       "hashPassword": "$2b$10$9jpSpLc9fJrz9ww84DOge.aCt5SinREFl5I4IxvcFVBRlAuj8kmIu",
       "role": "user"
+    },
+    {
+      "id": "83e218ded230193bff23d73",
+      "username": "user4",
+      "email": "user4@gmail.com",
+      "hashPassword": "$2b$10$Bya8hBqU1fLh/VLcbOXYDuekQpQBJiN.N0Mf4vuXoD25PQTPxQVqu",
+      "role": "user",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzZTIxOGRlZDIzMDE5M2JmZjIzZDczIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MzQwOTMzNjQsImV4cCI6MTc0MTg2OTM2NH0.VaIpodu7rgo81o4zyFaMrmNtFbzuvPB5gy6Myc76Xx8"
     }
   ],
   "gradeSystem": {
