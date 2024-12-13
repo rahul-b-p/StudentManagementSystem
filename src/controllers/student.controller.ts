@@ -1,7 +1,7 @@
 import { Response } from "express"
 import { customRequestWithPayload, Student, studentBody } from "../types"
 import { loggers } from "../utils/winston.util";
-import { findStudentById, findStudentByMail, findStudentsByUserId, findUserById, insertStudents, updateStudentsById } from "../services";
+import { findStudentById, findStudentByMail, findStudents, findStudentsByUserId, findUserById, insertStudents, updateStudentsById } from "../services";
 import { generateId } from "../config";
 import { validateStudentBody } from "../validations";
 
@@ -56,8 +56,22 @@ export const createStudent = async (req: customRequestWithPayload<{}, any, stude
     }
 }
 
-export const readAllStudents = () => {
+export const readAllStudents = async(req:customRequestWithPayload,res:Response) => {
+    try {
+        const userId = req.payload?.id;
+        if (!userId) throw new Error("Couldn't found the payload");
 
+        const existinUser = await findUserById(userId);
+        if (!existinUser) {
+            res.status(404).json({ error: 'Requested with an Invalid UserId' });
+            return;
+        }
+
+        const students = await findStudents();
+        res.status(200).json({message:'Fetching all students from the aplication',responseData:students});
+    } catch (error) {
+        
+    }
 }
 
 export const readAllStudentsByUser = async (req: customRequestWithPayload, res: Response) => {

@@ -10,3 +10,5 @@ exports.router.put('/update', controllers_1.updateUser);
 exports.router.get('/read-users', controllers_1.readAllUsers);
 // read all admins
 exports.router.get('/read-admins', controllers_1.readAllAdmins);
+//read all students
+exports.router.get('/read-students', controllers_1.readAllStudents);

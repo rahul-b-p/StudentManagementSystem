@@ -54,8 +54,23 @@ const createStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.createStudent = createStudent;
-const readAllStudents = () => {
-};
+const readAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
+        if (!userId)
+            throw new Error("Couldn't found the payload");
+        const existinUser = yield (0, services_1.findUserById)(userId);
+        if (!existinUser) {
+            res.status(404).json({ error: 'Requested with an Invalid UserId' });
+            return;
+        }
+        const students = yield (0, services_1.findStudents)();
+        res.status(200).json({ message: 'Fetching all students from the aplication', responseData: students });
+    }
+    catch (error) {
+    }
+});
 exports.readAllStudents = readAllStudents;
 const readAllStudentsByUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
