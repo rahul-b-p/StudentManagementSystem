@@ -16,7 +16,7 @@ const winston_1 = require("../utils/winston");
 const config_1 = require("../config");
 const validations_1 = require("../validations");
 const errors_1 = require("../errors");
-const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const isValidReqBody = (0, validations_1.validateSignupBody)(req.body);
         if (!isValidReqBody) {
@@ -48,7 +48,7 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: "Something went wrong", error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.createUser = createUser;
@@ -67,7 +67,7 @@ const readAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.readAllUsers = readAllUsers;
@@ -86,7 +86,7 @@ const readAllAdmins = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.readAllAdmins = readAllAdmins;
@@ -119,7 +119,7 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.updateUser = updateUser;
@@ -158,7 +158,7 @@ const updateUserByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.updateUserByAdmin = updateUserByAdmin;
@@ -187,7 +187,7 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.deleteUser = deleteUser;
@@ -212,7 +212,7 @@ const deleteUserByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.deleteUserByAdmin = deleteUserByAdmin;

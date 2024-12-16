@@ -6,7 +6,7 @@ import { deleteAllStudentsByUserId, deleteStudentsById, fetchStudentsWithGrade, 
 import { generateId } from "../config";
 import { validateStudentBody } from "../validations";
 import { GradeQuery } from "../types/request/query.type";
-import { NotFoundError } from "../errors";
+import { InternalServerError, NotFoundError } from "../errors";
 
 
 
@@ -50,9 +50,9 @@ export const createStudent = async (req: customRequestWithPayload<{}, any, stude
         res.status(200).json({ message: 'New Student Added Succcessfully', data: { newStudent } })
 
 
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new InternalServerError());
     }
 }
 
@@ -67,9 +67,9 @@ export const readAllStudents = async (req: customRequestWithPayload, res: Respon
 
         const ResponseData = await fetchStudentsWithGrade();
         res.status(200).json({ message: 'Fetching all students from the aplication', ResponseData });
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new InternalServerError());
     }
 }
 
@@ -83,9 +83,9 @@ export const readAllStudentsByUser = async (req: customRequestWithPayload, res: 
 
         const stuents = await fetchStudentsWithGradeByUserId(userId);
         res.status(200).json({ message: `Found all students added by ${existinUser?.username}`, ResponseData: stuents });
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new InternalServerError());
     }
 }
 
@@ -106,9 +106,9 @@ export const readAllStudentsByGrade = async (req: customRequestWithPayload<{}, a
 
         const stuents = await findStudentsByAverageGrade(grade);
         res.status(200).json({ message: `Found all students added by ${existinUser?.username}`, data: stuents });
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new InternalServerError());
     }
 }
 
@@ -142,9 +142,9 @@ export const updateStudent = async (req: customRequestWithPayload<{ id: string }
         await updateStudentsById(id, updatedStudent);
         res.statusMessage = "Updated Successfully";
         res.status(200).json({ message: "User Updated Successfully", ResponseData: updatedStudent });
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new InternalServerError());
     }
 }
 
@@ -176,9 +176,9 @@ export const deleteStudent = async (req: customRequestWithPayload<{ id: string }
         }
         res.statusMessage = " Deleted Successfully";
         res.status(200).json({ messege: 'Deleted student with given Id ' });
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ messege: 'Something went wrong', error: error.message });
+        next(new InternalServerError());
     }
 }
 
@@ -194,8 +194,8 @@ export const deleteAllStudentsByUser = async (req: customRequestWithPayload, res
         res.statusMessage = " Deleted Successfully";
         res.status(200).json({ messege: 'Deleted all students created by the user' });
 
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ messege: 'Something went wrong', error: error.message });
+        next(new InternalServerError());
     }
 }

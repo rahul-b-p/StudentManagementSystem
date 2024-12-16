@@ -15,7 +15,8 @@ const config_1 = require("../config");
 const services_1 = require("../services");
 const winston_1 = require("../utils/winston");
 const user_validation_1 = require("../validations/user.validation");
-const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const errors_1 = require("../errors");
+const signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const isValidReqBody = (0, user_validation_1.validateSignupBody)(req.body);
         if (!isValidReqBody) {
@@ -43,11 +44,11 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: "Something went wrong", error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.signup = signup;
-const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const isValidReqBody = (0, user_validation_1.validateLoginBody)(req.body);
         if (!isValidReqBody) {
@@ -80,11 +81,11 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: "Something went wrong", error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.login = login;
-const refreshToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const refreshToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const cookies = req.cookies;
         if (!(cookies === null || cookies === void 0 ? void 0 : cookies.jwt)) {
@@ -116,19 +117,16 @@ const refreshToken = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong while refreshing the token' });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.refreshToken = refreshToken;
-const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const logout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const AccessToken = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
-        if (!AccessToken) {
-            res.status(500).json({ error: 'Logout failed due to misssing of access token' });
-            return;
-        }
-        ;
+        if (!AccessToken)
+            return next(new errors_1.InternalServerError());
         const cookies = req.cookies;
         if (!(cookies === null || cookies === void 0 ? void 0 : cookies.jwt)) {
             res.status(401).json({ error: "refersh token not found on the request" });

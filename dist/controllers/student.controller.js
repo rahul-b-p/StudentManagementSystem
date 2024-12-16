@@ -49,7 +49,7 @@ const createStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.createStudent = createStudent;
@@ -68,7 +68,7 @@ const readAllStudents = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.readAllStudents = readAllStudents;
@@ -86,7 +86,7 @@ const readAllStudentsByUser = (req, res, next) => __awaiter(void 0, void 0, void
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.readAllStudentsByUser = readAllStudentsByUser;
@@ -110,7 +110,7 @@ const readAllStudentsByGrade = (req, res, next) => __awaiter(void 0, void 0, voi
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.readAllStudentsByGrade = readAllStudentsByGrade;
@@ -144,7 +144,7 @@ const updateStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.updateStudent = updateStudent;
@@ -177,7 +177,7 @@ const deleteStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ messege: 'Something went wrong', error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.deleteStudent = deleteStudent;
@@ -196,7 +196,7 @@ const deleteAllStudentsByUser = (req, res, next) => __awaiter(void 0, void 0, vo
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ messege: 'Something went wrong', error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.deleteAllStudentsByUser = deleteAllStudentsByUser;

@@ -2,7 +2,7 @@ import { NextFunction, Response } from "express";
 import { customRequestWithPayload, roles } from "../types";
 import { loggers } from "../utils/winston";
 import { findUserById } from "../services";
-import { NotFoundError } from "../errors";
+import { InternalServerError, NotFoundError } from "../errors";
 
 
 
@@ -21,9 +21,9 @@ export const verifyAdmin = async (req: customRequestWithPayload, res: Response, 
             });
             return;
         }
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new InternalServerError());
     }
 }
 

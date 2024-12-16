@@ -1,13 +1,14 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { User, authBody, customRequestWithPayload, roles } from "../types";
 import { generateId, getEncryptedPassword, verifyPassword, signAccessToken, signRefreshToken, verifyRefreshToken, blackListToken } from "../config";
 import { deleteRefreshTokenOfUser, findUserByMail, findUserByRefreshToken, insertUser, updateUserById } from "../services";
 import { loggers } from "../utils/winston";
 import { validateLoginBody, validateSignupBody } from "../validations/user.validation";
+import { InternalServerError } from "../errors";
 
 
 
-export const signup = async (req: customRequestWithPayload<{}, any, authBody>, res: Response) => {
+export const signup = async (req: customRequestWithPayload<{}, any, authBody>, res: Response, next: NextFunction) => {
     try {
 
         const isValidReqBody = validateSignupBody(req.body);
@@ -38,13 +39,13 @@ export const signup = async (req: customRequestWithPayload<{}, any, authBody>, r
         res.statusMessage = "Signup Successfull";
         res.status(200).json({ message: 'New Account Created Successfully', ResponseData: { id, username, email } });
 
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ message: "Something went wrong", error: error.message })
+        next(new InternalServerError());
     }
 }
 
-export const login = async (req: customRequestWithPayload<{}, any, Omit<authBody, 'username'>>, res: Response) => {
+export const login = async (req: customRequestWithPayload<{}, any, Omit<authBody, 'username'>>, res: Response, next: NextFunction) => {
     try {
 
         const isValidReqBody = validateLoginBody(req.body);
@@ -81,13 +82,13 @@ export const login = async (req: customRequestWithPayload<{}, any, Omit<authBody
             AccessToken,
             RefreshToken
         })
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ message: "Something went wrong", error: error.message })
+        next(new InternalServerError());
     }
 }
 
-export const refreshToken = async (req: Request, res: Response) => {
+export const refreshToken = async (req: Request, res: Response, next:NextFunction) => {
     try {
         const cookies = req.cookies;
         if (!cookies?.jwt) {
@@ -120,19 +121,16 @@ export const refreshToken = async (req: Request, res: Response) => {
         res.cookie('jwt', newRefreshToken, { httpOnly: true, maxAge: 12 * 30 * 24 * 60 * 60 * 1000 });
         res.statusMessage = "Refreshed";
         res.status(200).json({ AccessToken, RefreshToken: newRefreshToken });
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong while refreshing the token' });
+        next(new InternalServerError());
     }
 }
 
-export const logout = async (req: Request, res: Response) => {
+export const logout = async (req: Request, res: Response, next:NextFunction) => {
     try {
         const AccessToken = req.headers.authorization?.split(' ')[1];
-        if (!AccessToken) {
-            res.status(500).json({ error: 'Logout failed due to misssing of access token' });
-            return;
-        };
+        if (!AccessToken) return next(new InternalServerError());
 
 
         const cookies = req.cookies;

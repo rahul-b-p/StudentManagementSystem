@@ -35,7 +35,7 @@ const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.verifyAdmin = verifyAdmin;

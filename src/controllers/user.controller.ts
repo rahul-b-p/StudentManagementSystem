@@ -4,10 +4,10 @@ import { deleteUserAccount, deleteUserById, findUserById, findUserByMail, findUs
 import { loggers } from "../utils/winston";
 import { blackListToken, generateId, getEncryptedPassword, verifyPassword } from "../config";
 import { validateSignupBody, validateUpdateUserBody, validateUpdateUserByAdminBody } from "../validations";
-import { NotFoundError } from "../errors";
+import { InternalServerError, NotFoundError } from "../errors";
 
 
-export const createUser = async (req: customRequestWithPayload<{ role: roles }, any, authBody>, res: Response) => {
+export const createUser = async (req: customRequestWithPayload<{ role: roles }, any, authBody>, res: Response, next:NextFunction) => {
     try {
         const isValidReqBody = validateSignupBody(req.body);
         if (!isValidReqBody) {
@@ -43,9 +43,9 @@ export const createUser = async (req: customRequestWithPayload<{ role: roles }, 
         res.statusMessage = "New admin created";
         res.status(200).json({ message: 'New Admin Created Successfully', ResponseData: { id, username, email } });
 
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ message: "Something went wrong", error: error.message })
+        next(new InternalServerError());
     }
 }
 
@@ -61,9 +61,9 @@ export const readAllUsers = async (req: customRequestWithPayload, res: Response,
         type Response = Omit<User, 'hashPassword' | 'refreshToken' | 'role'>;
         const ResponseData: Response[] = users.map(({ id, username, email }) => ({ id, email, username }));
         res.status(200).json({ message: "Found all users", ResponseData });
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new InternalServerError());
     }
 }
 
@@ -79,9 +79,9 @@ export const readAllAdmins = async (req: customRequestWithPayload, res: Response
         type Response = Omit<User, 'hashPassword' | 'refreshToken' | 'role'>;
         const ResponseData: Response[] = admins.map(({ id, username, email }) => ({ id, email, username }));
         res.status(200).json({ message: "Found all users", ResponseData });
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new InternalServerError());
     }
 }
 
@@ -113,9 +113,9 @@ export const updateUser = async (req: customRequestWithPayload<{}, any, updateUs
         await updateUserById(id, existingUser);
         res.statusMessage = "Updated Successfully";
         res.status(200).json({ messege: 'user updated successfully', body: { username: existingUser.username, email: existingUser.email } })
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new InternalServerError());
     }
 }
 
@@ -157,9 +157,9 @@ export const updateUserByAdmin = async (req: customRequestWithPayload<{ id: stri
             res.status(404).json({ message: 'Not found any user for deletion' });
         }
 
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new InternalServerError());
     }
 }
 
@@ -183,9 +183,9 @@ export const deleteUser = async (req: customRequestWithPayload, res: Response, n
                 res.status(500).json({ message: 'Account Deletion Failed Due to blacklisting your token' });
             }
         }
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new InternalServerError());
     }
 }
 
@@ -208,8 +208,8 @@ export const deleteUserByAdmin = async (req: customRequestWithPayload<{ id: stri
             res.status(404).json({ message: 'Not found any user for deletion' });
         }
 
-    } catch (error: any) {
+    } catch (error) {
         loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
+        next(new InternalServerError());
     }
 }
