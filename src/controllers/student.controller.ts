@@ -8,6 +8,7 @@ import { validateStudentBody } from "../validations";
 import { GradeQuery } from "../types/request/query.type";
 import { InternalServerError, NotFoundError } from "../errors";
 import { ForbiddenError } from "../errors/forbidden.error";
+import { BadRequestError } from "../errors/badRequest.error";
 
 
 
@@ -16,10 +17,7 @@ export const createStudent = async (req: customRequestWithPayload<{}, any, stude
 
         const isValidReqBody = await validateStudentBody(req.body);
 
-        if (!isValidReqBody) {
-            res.status(400).json({ error: 'Invalid Request Body' });
-            return;
-        }
+        if (!isValidReqBody) return next(new BadRequestError());
 
         const { name, age, email, subjects, marks } = req.body;
 
@@ -110,10 +108,7 @@ export const readAllStudentsByGrade = async (req: customRequestWithPayload<{}, a
 export const updateStudent = async (req: customRequestWithPayload<{ id: string }, any, studentBody<string[]>>, res: Response, next: NextFunction) => {
     try {
         const isValidReqBody = await validateStudentBody(req.body);
-        if (!isValidReqBody) {
-            res.status(400).json({ error: 'Invalid Request Body' });
-            return;
-        }
+        if (!isValidReqBody) return next(new BadRequestError());
 
         const { name, age, email, subjects, marks } = req.body;
 
@@ -151,16 +146,16 @@ export const deleteStudent = async (req: customRequestWithPayload<{ id: string }
         const id = req.params.id
 
         const existingUser = await findUserById(userId);
-        if (!existingUser) {
-            res.status(401).json({ messege: 'You are requested from an invalid user id' });
+        if (!existingUser) return next(new NotFoundError());
+
+        const student = await findStudentById(id);
+        if (!student) {
+            res.status(404).json({ messege: 'Not found any student with given id' });
             return;
         }
 
-        const student = await findStudentById(id);
-        if (!student) return next(new NotFoundError());
-
         if (existingUser.role !== 'admin' && userId !== student.userId) return next(new ForbiddenError());
-        
+
         const result = await deleteStudentsById(id);
         loggers.info(result);
         if (!result) {

@@ -16,13 +16,12 @@ const services_1 = require("../services");
 const winston_1 = require("../utils/winston");
 const user_validation_1 = require("../validations/user.validation");
 const errors_1 = require("../errors");
+const badRequest_error_1 = require("../errors/badRequest.error");
 const signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const isValidReqBody = (0, user_validation_1.validateSignupBody)(req.body);
-        if (!isValidReqBody) {
-            res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
-            return;
-        }
+        if (!isValidReqBody)
+            return next(new badRequest_error_1.BadRequestError());
         const { email, password, username } = req.body;
         const existingUser = yield (0, services_1.findUserByMail)(email);
         if (existingUser) {
@@ -51,10 +50,8 @@ exports.signup = signup;
 const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const isValidReqBody = (0, user_validation_1.validateLoginBody)(req.body);
-        if (!isValidReqBody) {
-            res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
-            return;
-        }
+        if (!isValidReqBody)
+            return next(new badRequest_error_1.BadRequestError());
         const { email, password } = req.body;
         const existingUser = yield (0, services_1.findUserByMail)(email);
         if (!existingUser) {
@@ -88,10 +85,8 @@ exports.login = login;
 const refreshToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const cookies = req.cookies;
-        if (!(cookies === null || cookies === void 0 ? void 0 : cookies.jwt)) {
-            res.status(401).json({ error: "refersh token not found on the request" });
-            return;
-        }
+        if (!(cookies === null || cookies === void 0 ? void 0 : cookies.jwt))
+            return next(new errors_1.AuthenticationError());
         const RefreshToken = cookies.jwt;
         const existingUser = yield (0, services_1.findUserByRefreshToken)(RefreshToken);
         if (!existingUser) {
@@ -99,14 +94,10 @@ const refreshToken = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             return;
         }
         const refreshTokenPayload = yield (0, config_1.verifyRefreshToken)(RefreshToken);
-        if (!refreshTokenPayload) {
-            res.status(401).json({ error: 'Unauthorized Request' });
-            return;
-        }
-        if ((refreshTokenPayload === null || refreshTokenPayload === void 0 ? void 0 : refreshTokenPayload.id) !== existingUser.id) {
-            res.status(401).json({ error: 'Unauthorized Request' });
-            return;
-        }
+        if (!refreshTokenPayload)
+            return next(new errors_1.AuthenticationError());
+        if ((refreshTokenPayload === null || refreshTokenPayload === void 0 ? void 0 : refreshTokenPayload.id) !== existingUser.id)
+            return next(new errors_1.AuthenticationError());
         const AccessToken = yield (0, config_1.signAccessToken)(existingUser.id, existingUser.role);
         const newRefreshToken = yield (0, config_1.signRefreshToken)(existingUser.id, existingUser.role);
         existingUser.refreshToken = newRefreshToken;
@@ -128,32 +119,26 @@ const logout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
         if (!AccessToken)
             return next(new errors_1.InternalServerError());
         const cookies = req.cookies;
-        if (!(cookies === null || cookies === void 0 ? void 0 : cookies.jwt)) {
-            res.status(401).json({ error: "refersh token not found on the request" });
-            return;
-        }
+        if (!(cookies === null || cookies === void 0 ? void 0 : cookies.jwt))
+            return next(new errors_1.AuthenticationError());
         const RefreshToken = cookies.jwt;
         const existingUser = yield (0, services_1.findUserByRefreshToken)(RefreshToken);
         if (!existingUser)
             return next(new errors_1.NotFoundError());
         const isBlacklisted = yield (0, config_1.blackListToken)(AccessToken);
         winston_1.loggers.info(isBlacklisted);
-        if (!isBlacklisted) {
-            res.status(500).json({ message: 'Failed to blacklist token' });
-            return;
-        }
+        if (!isBlacklisted)
+            return next(new errors_1.InternalServerError());
         const isRefreshTokenFoundAndDeleted = yield (0, services_1.deleteRefreshTokenOfUser)(existingUser.id);
-        if (!isRefreshTokenFoundAndDeleted) {
-            res.status(404).json({ error: "UserId not match with any user to delete this account" });
-            return;
-        }
+        if (!isRefreshTokenFoundAndDeleted)
+            return next(new errors_1.NotFoundError());
         res.clearCookie('jwt', { httpOnly: true });
         res.statusMessage = "Logout Successfull";
         res.status(200).json({ message: 'Succsessfully completed your logout with invalidation of accesstoken' });
     }
     catch (error) {
         winston_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong while loggging out', error: error.message });
+        next(new errors_1.InternalServerError());
     }
 });
 exports.logout = logout;

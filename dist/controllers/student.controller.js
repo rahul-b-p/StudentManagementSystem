@@ -16,14 +16,13 @@ const config_1 = require("../config");
 const validations_1 = require("../validations");
 const errors_1 = require("../errors");
 const forbidden_error_1 = require("../errors/forbidden.error");
+const badRequest_error_1 = require("../errors/badRequest.error");
 const createStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const isValidReqBody = yield (0, validations_1.validateStudentBody)(req.body);
-        if (!isValidReqBody) {
-            res.status(400).json({ error: 'Invalid Request Body' });
-            return;
-        }
+        if (!isValidReqBody)
+            return next(new badRequest_error_1.BadRequestError());
         const { name, age, email, subjects, marks } = req.body;
         const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
         if (!userId)
@@ -114,10 +113,8 @@ const updateStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     var _a;
     try {
         const isValidReqBody = yield (0, validations_1.validateStudentBody)(req.body);
-        if (!isValidReqBody) {
-            res.status(400).json({ error: 'Invalid Request Body' });
-            return;
-        }
+        if (!isValidReqBody)
+            return next(new badRequest_error_1.BadRequestError());
         const { name, age, email, subjects, marks } = req.body;
         const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
         if (!userId)
@@ -152,13 +149,13 @@ const deleteStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
             throw new Error("Couldn't found the payload");
         const id = req.params.id;
         const existingUser = yield (0, services_1.findUserById)(userId);
-        if (!existingUser) {
-            res.status(401).json({ messege: 'You are requested from an invalid user id' });
+        if (!existingUser)
+            return next(new errors_1.NotFoundError());
+        const student = yield (0, services_1.findStudentById)(id);
+        if (!student) {
+            res.status(404).json({ messege: 'Not found any student with given id' });
             return;
         }
-        const student = yield (0, services_1.findStudentById)(id);
-        if (!student)
-            return next(new errors_1.NotFoundError());
         if (existingUser.role !== 'admin' && userId !== student.userId)
             return next(new forbidden_error_1.ForbiddenError());
         const result = yield (0, services_1.deleteStudentsById)(id);

@@ -16,13 +16,12 @@ const winston_1 = require("../utils/winston");
 const config_1 = require("../config");
 const validations_1 = require("../validations");
 const errors_1 = require("../errors");
+const badRequest_error_1 = require("../errors/badRequest.error");
 const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const isValidReqBody = (0, validations_1.validateSignupBody)(req.body);
-        if (!isValidReqBody) {
-            res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
-            return;
-        }
+        if (!isValidReqBody)
+            return next(new badRequest_error_1.BadRequestError());
         const { role } = req.params;
         if (role !== types_1.roles.admin && role !== types_1.roles.user) {
             res.status(400).json({ Message: "Invalid Request" });
@@ -94,10 +93,8 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     var _a;
     try {
         const isValidReqBody = (0, validations_1.validateUpdateUserBody)(req.body);
-        if (!isValidReqBody) {
-            res.status(400).json({ error: 'Invalid Request Body' });
-            return;
-        }
+        if (!isValidReqBody)
+            return next(new badRequest_error_1.BadRequestError());
         const { currentPassword, updatedPassword, updatedEmail, updatedUsername } = req.body;
         const id = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
         if (!id)
@@ -127,10 +124,8 @@ const updateUserByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     var _a;
     try {
         const isValidReqBody = (0, validations_1.validateUpdateUserByAdminBody)(req.body);
-        if (!isValidReqBody) {
-            res.status(400).json({ error: 'Invalid Request Body' });
-            return;
-        }
+        if (!isValidReqBody)
+            return next(new badRequest_error_1.BadRequestError());
         const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
         if (!userId)
             throw new Error("Couldn't find payload");
@@ -153,7 +148,7 @@ const updateUserByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
             res.status(200).json({ messege: 'user updated successfully', body: { username: updatingUser.username, email: updatingUser.email } });
         }
         else {
-            res.status(404).json({ message: 'Not found any user for deletion' });
+            res.status(404).json({ message: 'Not found any user for updation' });
         }
     }
     catch (error) {

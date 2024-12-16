@@ -5,15 +5,13 @@ import { loggers } from "../utils/winston";
 import { blackListToken, generateId, getEncryptedPassword, verifyPassword } from "../config";
 import { validateSignupBody, validateUpdateUserBody, validateUpdateUserByAdminBody } from "../validations";
 import { InternalServerError, NotFoundError } from "../errors";
+import { BadRequestError } from "../errors/badRequest.error";
 
 
 export const createUser = async (req: customRequestWithPayload<{ role: roles }, any, authBody>, res: Response, next:NextFunction) => {
     try {
         const isValidReqBody = validateSignupBody(req.body);
-        if (!isValidReqBody) {
-            res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
-            return;
-        }
+        if (!isValidReqBody) return next(new BadRequestError());
 
         const { role } = req.params;
         if (role !== roles.admin && role !== roles.user) {
@@ -88,10 +86,7 @@ export const readAllAdmins = async (req: customRequestWithPayload, res: Response
 export const updateUser = async (req: customRequestWithPayload<{}, any, updateUserBody>, res: Response, next:NextFunction) => {
     try {
         const isValidReqBody = validateUpdateUserBody(req.body);
-        if (!isValidReqBody) {
-            res.status(400).json({ error: 'Invalid Request Body' });
-            return;
-        }
+        if (!isValidReqBody) return next(new BadRequestError());
 
         const { currentPassword, updatedPassword, updatedEmail, updatedUsername } = req.body;
 
@@ -122,10 +117,7 @@ export const updateUser = async (req: customRequestWithPayload<{}, any, updateUs
 export const updateUserByAdmin = async (req: customRequestWithPayload<{ id: string }, any, authBody>, res: Response, next: NextFunction) => {
     try {
         const isValidReqBody = validateUpdateUserByAdminBody(req.body);
-        if (!isValidReqBody) {
-            res.status(400).json({ error: 'Invalid Request Body' });
-            return;
-        }
+        if (!isValidReqBody) return next(new BadRequestError());
 
         const userId = req.payload?.id;
         if (!userId) throw new Error("Couldn't find payload");
@@ -154,7 +146,7 @@ export const updateUserByAdmin = async (req: customRequestWithPayload<{ id: stri
             res.status(200).json({ messege: 'user updated successfully', body: { username: updatingUser.username, email: updatingUser.email } });
         }
         else {
-            res.status(404).json({ message: 'Not found any user for deletion' });
+            res.status(404).json({ message: 'Not found any user for updation' });
         }
 
     } catch (error) {

@@ -4,7 +4,8 @@ import { generateId, getEncryptedPassword, verifyPassword, signAccessToken, sign
 import { deleteRefreshTokenOfUser, findUserByMail, findUserByRefreshToken, insertUser, updateUserById } from "../services";
 import { loggers } from "../utils/winston";
 import { validateLoginBody, validateSignupBody } from "../validations/user.validation";
-import { InternalServerError, NotFoundError } from "../errors";
+import { AuthenticationError, InternalServerError, NotFoundError } from "../errors";
+import { BadRequestError } from "../errors/badRequest.error";
 
 
 
@@ -12,10 +13,7 @@ export const signup = async (req: customRequestWithPayload<{}, any, authBody>, r
     try {
 
         const isValidReqBody = validateSignupBody(req.body);
-        if (!isValidReqBody) {
-            res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
-            return;
-        }
+        if (!isValidReqBody) return next(new BadRequestError());
 
         const { email, password, username } = req.body;
 
@@ -49,10 +47,7 @@ export const login = async (req: customRequestWithPayload<{}, any, Omit<authBody
     try {
 
         const isValidReqBody = validateLoginBody(req.body);
-        if (!isValidReqBody) {
-            res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
-            return;
-        }
+        if (!isValidReqBody) return next(new BadRequestError());
 
         const { email, password } = req.body;
 
@@ -91,10 +86,7 @@ export const login = async (req: customRequestWithPayload<{}, any, Omit<authBody
 export const refreshToken = async (req: Request, res: Response, next:NextFunction) => {
     try {
         const cookies = req.cookies;
-        if (!cookies?.jwt) {
-            res.status(401).json({ error: "refersh token not found on the request" });
-            return;
-        }
+        if (!cookies?.jwt) return next(new AuthenticationError());
         const RefreshToken: any = cookies.jwt;
         const existingUser = await findUserByRefreshToken(RefreshToken);
         if (!existingUser) {
@@ -103,15 +95,9 @@ export const refreshToken = async (req: Request, res: Response, next:NextFunctio
         }
 
         const refreshTokenPayload = await verifyRefreshToken(RefreshToken);
-        if (!refreshTokenPayload) {
-            res.status(401).json({ error: 'Unauthorized Request' });
-            return;
-        }
+        if (!refreshTokenPayload) return next(new AuthenticationError());
 
-        if (refreshTokenPayload?.id !== existingUser.id) {
-            res.status(401).json({ error: 'Unauthorized Request' });
-            return;
-        }
+        if (refreshTokenPayload?.id !== existingUser.id) return next(new AuthenticationError());
 
         const AccessToken = await signAccessToken(existingUser.id, existingUser.role);
         const newRefreshToken = await signRefreshToken(existingUser.id, existingUser.role);
@@ -134,33 +120,24 @@ export const logout = async (req: Request, res: Response, next:NextFunction) => 
 
 
         const cookies = req.cookies;
-        if (!cookies?.jwt) {
-            res.status(401).json({ error: "refersh token not found on the request" });
-            return;
-        }
+        if (!cookies?.jwt) return next(new AuthenticationError());
         const RefreshToken: any = cookies.jwt;
         const existingUser = await findUserByRefreshToken(RefreshToken);
         if (!existingUser) return next(new NotFoundError());
 
         const isBlacklisted = await blackListToken(AccessToken);
         loggers.info(isBlacklisted);
-        if (!isBlacklisted) {
-            res.status(500).json({ message: 'Failed to blacklist token' });
-            return;
-        }
+        if (!isBlacklisted) return next(new InternalServerError());
 
         const isRefreshTokenFoundAndDeleted = await deleteRefreshTokenOfUser(existingUser.id);
-        if (!isRefreshTokenFoundAndDeleted) {
-            res.status(404).json({ error: "UserId not match with any user to delete this account" });
-            return;
-        }
+        if (!isRefreshTokenFoundAndDeleted) return next(new NotFoundError());
 
         res.clearCookie('jwt', { httpOnly: true })
         res.statusMessage = "Logout Successfull";
         res.status(200).json({ message: 'Succsessfully completed your logout with invalidation of accesstoken' });
     } catch (error: any) {
         loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong while loggging out', error: error.message });
+        next(new InternalServerError());
     }
 }
 
