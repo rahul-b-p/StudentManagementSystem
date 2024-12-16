@@ -15,11 +15,7 @@ const services_1 = require("../services");
 const winston_util_1 = require("../utils/winston.util");
 const user_validation_1 = require("../validations/user.validation");
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     try {
-        const role = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.role;
-        if (!role)
-            throw new Error('role not added by middleware');
         const isValidReqBody = (0, user_validation_1.validateSignupBody)(req.body);
         if (!isValidReqBody) {
             res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
@@ -38,11 +34,11 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             username,
             email,
             hashPassword,
-            role,
+            role: 'user',
         };
         yield (0, services_1.insertUser)(newUser);
         res.statusMessage = "Signup Successfull";
-        res.status(200).json({ message: `New ${role} Account Created`, ResponseData: { id, username, email } });
+        res.status(200).json({ message: 'New Account Created Successfully', ResponseData: { id, username, email } });
     }
     catch (error) {
         winston_util_1.loggers.error(error);
@@ -51,11 +47,7 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.signup = signup;
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     try {
-        const role = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.role;
-        if (!role)
-            throw new Error('role not added by middleware');
         const isValidReqBody = (0, user_validation_1.validateLoginBody)(req.body);
         if (!isValidReqBody) {
             res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
@@ -65,10 +57,6 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const existingUser = yield (0, services_1.findUserByMail)(email);
         if (!existingUser) {
             res.status(404).json({ error: "user not found", message: 'Please try to login with a valid mail id' });
-            return;
-        }
-        if (existingUser.role !== role) {
-            res.status(400).json({ message: 'Invalid Request' });
             return;
         }
         const isVerifiedPassword = (0, config_1.verifyPassword)(password, existingUser.hashPassword);

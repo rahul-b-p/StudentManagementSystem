@@ -2,7 +2,7 @@ import express from "express";
 import { config } from 'dotenv';
 import { loggers } from "./utils/winston.util";
 import { adminRouter, authRouter, refreshRoter, userRouter } from "./routers";
-import { checkAdmin, JwtAuth, checkUser } from "./middlewares";
+import { checkAdmin, JwtAuth } from "./middlewares";
 import cookieParser from "cookie-parser";
 
 config();
@@ -19,7 +19,7 @@ app.use('/refresh', refreshRoter);
 
 app.use(JwtAuth);
 app.use('/admin', checkAdmin, adminRouter);
-app.use('/user', checkUser, userRouter);
+app.use('/user', userRouter);
 
 
 app.listen(port, () => {

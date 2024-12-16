@@ -1,17 +1,26 @@
 import { NextFunction, Response } from "express";
 import { customRequestWithPayload } from "../types";
 import { loggers } from "../utils/winston.util";
+import { findUserById } from "../services";
 
 
 
 export const checkAdmin = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
     try {
-        const role = req.payload?.role
-        if (!role) throw new Error("Can't get the role from jwt payload");
+        const id = req.payload?.id
+        if (!id) throw new Error("Can't get the role from jwt payload");
 
-        if (role == 'admin') next();
+        const user = await findUserById(id);
+        if(!user){
+            res.status(404).json({ error: 'Requested with an Invalid UserId' });
+            return;
+        }
+        if (user.role == 'admin') next();
         else {
-            res.status(400).json("Invalid Request");
+            res.status(403).json({
+                "error": "Forbidden",
+                "message": "You do not have the necessary permissions to access this resource."
+            });
             return;
         }
     } catch (error: any) {
@@ -20,38 +29,3 @@ export const checkAdmin = async (req: customRequestWithPayload, res: Response, n
     }
 }
 
-export const checkUser = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
-    try {
-        const role = req.payload?.role
-        if (!role) throw new Error("Can't get the role from jwt payload");
-
-        if (role == 'user') next();
-        else {
-            res.status(400).json("Invalid Request");
-            return;
-        }
-    } catch (error: any) {
-        loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
-    }
-}
-
-export const adminAuth = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
-    try {
-        req.payload = { id: '', role: 'admin' };
-        next();
-    } catch (error: any) {
-        loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
-    }
-}
-
-export const userAuth = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
-    try {
-        req.payload = { id: '', role: 'user' };
-        next();
-    } catch (error: any) {
-        loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
-    }
-}

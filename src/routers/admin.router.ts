@@ -3,9 +3,6 @@ import { readAllAdmins, readAllStudents, readAllUsers, updateUser } from '../con
 
 export const router = Router();
 
-// update admin
-router.put('/update', updateUser);
-
 // read all users
 router.get('/read-users', readAllUsers);
 

@@ -11,6 +11,5 @@ export interface customRequestWithPayload<
 > extends Request<P, resBody, reqBody, reqQuery, Local> {
     payload?: {
         id: string;
-        role: 'admin' | 'user';
     };
 }

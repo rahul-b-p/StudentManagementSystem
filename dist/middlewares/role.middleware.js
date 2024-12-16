@@ -9,18 +9,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userAuth = exports.adminAuth = exports.checkUser = exports.checkAdmin = void 0;
+exports.checkAdmin = void 0;
 const winston_util_1 = require("../utils/winston.util");
+const services_1 = require("../services");
 const checkAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        const role = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.role;
-        if (!role)
+        const id = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
+        if (!id)
             throw new Error("Can't get the role from jwt payload");
-        if (role == 'admin')
+        const user = yield (0, services_1.findUserById)(id);
+        if (!user) {
+            res.status(404).json({ error: 'Requested with an Invalid UserId' });
+            return;
+        }
+        if (user.role == 'admin')
             next();
         else {
-            res.status(400).json("Invalid Request");
+            res.status(403).json({
+                "error": "Forbidden",
+                "message": "You do not have the necessary permissions to access this resource."
+            });
             return;
         }
     }
@@ -30,44 +39,3 @@ const checkAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.checkAdmin = checkAdmin;
-const checkUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    try {
-        const role = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.role;
-        if (!role)
-            throw new Error("Can't get the role from jwt payload");
-        if (role == 'user')
-            next();
-        else {
-            res.status(400).json("Invalid Request");
-            return;
-        }
-    }
-    catch (error) {
-        winston_util_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
-    }
-});
-exports.checkUser = checkUser;
-const adminAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        req.payload = { id: '', role: 'admin' };
-        next();
-    }
-    catch (error) {
-        winston_util_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
-    }
-});
-exports.adminAuth = adminAuth;
-const userAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        req.payload = { id: '', role: 'user' };
-        next();
-    }
-    catch (error) {
-        winston_util_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error: error.message });
-    }
-});
-exports.userAuth = userAuth;

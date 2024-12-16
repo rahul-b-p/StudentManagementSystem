@@ -9,8 +9,6 @@ import { validateLoginBody, validateSignupBody } from "../validations/user.valid
 
 export const signup = async (req: customRequestWithPayload<{}, any, authBody>, res: Response) => {
     try {
-        const role = req.payload?.role
-        if (!role) throw new Error('role not added by middleware');
 
         const isValidReqBody = validateSignupBody(req.body);
         if (!isValidReqBody) {
@@ -33,12 +31,12 @@ export const signup = async (req: customRequestWithPayload<{}, any, authBody>, r
             username,
             email,
             hashPassword,
-            role,
+            role:'user',
         }
 
         await insertUser(newUser);
         res.statusMessage = "Signup Successfull";
-        res.status(200).json({ message: `New ${role} Account Created`, ResponseData: { id, username, email } });
+        res.status(200).json({ message: 'New Account Created Successfully', ResponseData: { id, username, email } });
 
     } catch (error: any) {
         loggers.error(error);
@@ -48,8 +46,6 @@ export const signup = async (req: customRequestWithPayload<{}, any, authBody>, r
 
 export const login = async (req: customRequestWithPayload<{}, any, Omit<authBody, 'username'>>, res: Response) => {
     try {
-        const role = req.payload?.role
-        if (!role) throw new Error('role not added by middleware');
 
         const isValidReqBody = validateLoginBody(req.body);
         if (!isValidReqBody) {
@@ -57,17 +53,11 @@ export const login = async (req: customRequestWithPayload<{}, any, Omit<authBody
             return;
         }
 
-
         const { email, password } = req.body;
 
         const existingUser = await findUserByMail(email);
         if (!existingUser) {
             res.status(404).json({ error: "user not found", message: 'Please try to login with a valid mail id' });
-            return;
-        }
-
-        if (existingUser.role !== role) {
-            res.status(400).json({ message: 'Invalid Request' });
             return;
         }
 

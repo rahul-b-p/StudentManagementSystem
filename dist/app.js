@@ -18,7 +18,7 @@ app.use('/auth', routers_1.authRouter);
 app.use('/refresh', routers_1.refreshRoter);
 app.use(middlewares_1.JwtAuth);
 app.use('/admin', middlewares_1.checkAdmin, routers_1.adminRouter);
-app.use('/user', middlewares_1.checkUser, routers_1.userRouter);
+app.use('/user', routers_1.userRouter);
 app.listen(port, () => {
     winston_util_1.loggers.info(`Server Running at http://localhost:${port}`);
 });
