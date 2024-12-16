@@ -12,3 +12,5 @@ exports.router.post('/create-student', controllers_1.createStudent);
 exports.router.get('/read-students', controllers_1.readAllStudentsByUser);
 // update a student
 exports.router.put('/update-student/:id', controllers_1.updateStudent);
+// delete user
+exports.router.delete('/delete', controllers_1.deleteUser);

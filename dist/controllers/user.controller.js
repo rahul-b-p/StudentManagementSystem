@@ -123,6 +123,34 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.updateUser = updateUser;
-const deleteUser = () => {
-};
+const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
+    try {
+        const id = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
+        if (!id)
+            throw new Error("Couldn't find payload");
+        const existingUser = yield (0, services_1.findUserById)(id);
+        if (!existingUser) {
+            res.status(401).json({ messege: 'You are requested from an invalid user id' });
+            return;
+        }
+        const accessToken = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(' ')[1];
+        if (accessToken) {
+            const isBlacklistedAccess = yield (0, config_1.blackListToken)(accessToken);
+            const isBlacklilstedRefresh = existingUser.refreshToken ? yield (0, config_1.blackListToken)(existingUser.refreshToken) : true;
+            if (isBlacklistedAccess && isBlacklilstedRefresh) {
+                yield (0, services_1.deleteUserAccount)(id);
+                res.statusMessage = "Successfully Deleted";
+                res.status(200).json({ message: 'Your Account has been removed successfully' });
+            }
+            else {
+                res.status(500).json({ message: 'Account Deletion Failed Due to blacklisting your token' });
+            }
+        }
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error });
+    }
+});
 exports.deleteUser = deleteUser;

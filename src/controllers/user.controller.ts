@@ -1,8 +1,8 @@
 import { Response } from "express"
 import { authBody, customRequestWithPayload, updateUserBody, User } from "../types"
-import { findUserById, findUserByMail, findUsersByrole, insertUser, updateUserById } from "../services";
+import { deleteUserAccount, findUserById, findUserByMail, findUsersByrole, insertUser, updateUserById } from "../services";
 import { loggers } from "../utils/winston.util";
-import { generateId, getEncryptedPassword, verifyPassword } from "../config";
+import { blackListToken, generateId, getEncryptedPassword, verifyPassword } from "../config";
 import { validateSignupBody, validateUpdateUserBody } from "../validations";
 
 
@@ -122,6 +122,31 @@ export const updateUser = async (req: customRequestWithPayload<{}, any, updateUs
     }
 }
 
-export const deleteUser = () => {
+export const deleteUser = async (req: customRequestWithPayload, res: Response) => {
+    try {
+        const id = req.payload?.id;
+        if (!id) throw new Error("Couldn't find payload");
 
+        const existingUser = await findUserById(id);
+        if (!existingUser) {
+            res.status(401).json({ messege: 'You are requested from an invalid user id' });
+            return;
+        }
+
+        const accessToken = req.headers.authorization?.split(' ')[1];
+        if (accessToken) {
+            const isBlacklistedAccess = await blackListToken(accessToken);
+            const isBlacklilstedRefresh = existingUser.refreshToken ? await blackListToken(existingUser.refreshToken) : true
+            if (isBlacklistedAccess && isBlacklilstedRefresh) {
+                await deleteUserAccount(id);
+                res.statusMessage = "Successfully Deleted";
+                res.status(200).json({ message: 'Your Account has been removed successfully' });
+            } else {
+                res.status(500).json({ message: 'Account Deletion Failed Due to blacklisting your token' });
+            }
+        }
+    } catch (error) {
+        loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error });
+    }
 }

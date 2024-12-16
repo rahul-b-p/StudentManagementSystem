@@ -9,9 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findAverageGrade = exports.fetchGrades = exports.findGradesForMarks = exports.resetGradeRange = exports.updateGradeRange = exports.findGradeRange = void 0;
+exports.findStudentsByAverageGrade = exports.fetchStudentsWithGradeByUserId = exports.fetchStudentsWithGrade = exports.findAverageGrade = exports.fetchGrades = exports.findGradesForMarks = exports.resetGradeRange = exports.updateGradeRange = exports.findGradeRange = void 0;
 const winston_util_1 = require("../utils/winston.util");
 const file_service_1 = require("./file.service");
+const student_service_1 = require("./student.service");
 const findGradeRange = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield (0, file_service_1.readData)();
@@ -130,3 +131,69 @@ const findAverageGrade = (marks) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.findAverageGrade = findAverageGrade;
+const fetchStudentsWithGrade = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const students = yield (0, student_service_1.findStudents)();
+        const studentsWithGrades = yield Promise.all(students.map((item) => __awaiter(void 0, void 0, void 0, function* () {
+            let grades = {};
+            let averageGrade = "";
+            if (item.marks) {
+                grades = yield (0, exports.fetchGrades)(item.marks);
+                averageGrade = yield (0, exports.findAverageGrade)(item.marks);
+            }
+            return {
+                id: item.id,
+                userId: item.userId,
+                name: item.name,
+                age: item.age,
+                email: item.email,
+                grades,
+                averageGrade
+            };
+        })));
+        const Response = studentsWithGrades;
+        return Response;
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        throw new Error('Fetching Grades of students failed due to an error');
+    }
+});
+exports.fetchStudentsWithGrade = fetchStudentsWithGrade;
+const fetchStudentsWithGradeByUserId = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const students = yield (0, student_service_1.findStudentsByUserId)(id);
+        const studentsWithGrades = yield Promise.all(students.map((item) => __awaiter(void 0, void 0, void 0, function* () {
+            let grades = {};
+            if (item.marks) {
+                grades = yield (0, exports.fetchGrades)(item.marks);
+            }
+            return {
+                id: item.id,
+                userId: item.userId,
+                name: item.name,
+                age: item.age,
+                email: item.email,
+                grades,
+            };
+        })));
+        const Response = studentsWithGrades;
+        return Response;
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        throw new Error('Fetching Grades of students failed due to an error');
+    }
+});
+exports.fetchStudentsWithGradeByUserId = fetchStudentsWithGradeByUserId;
+const findStudentsByAverageGrade = (grade) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const students = yield (0, exports.fetchStudentsWithGrade)();
+        return students.filter(item => item.averageGrade == grade);
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        throw new Error('Something went wrong by fetching students with given id');
+    }
+});
+exports.findStudentsByAverageGrade = findStudentsByAverageGrade;

@@ -117,7 +117,7 @@ export const refreshToken = async (req: Request, res: Response) => {
         existingUser.refreshToken = newRefreshToken;
         updateUserById(existingUser.id, existingUser);
 
-        res.cookie('jwt', RefreshToken, { httpOnly: true, maxAge: 12 * 30 * 24 * 60 * 60 * 1000 });
+        res.cookie('jwt', newRefreshToken, { httpOnly: true, maxAge: 12 * 30 * 24 * 60 * 60 * 1000 });
         res.statusMessage = "Refreshed";
         res.status(200).json({ AccessToken, RefreshToken: newRefreshToken });
     } catch (error: any) {
@@ -133,6 +133,7 @@ export const logout = async (req: Request, res: Response) => {
             res.status(500).json({ error: 'Logout failed due to misssing of access token' });
             return;
         };
+
 
         const cookies = req.cookies;
         if (!cookies?.jwt) {

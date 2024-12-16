@@ -109,7 +109,7 @@ const refreshToken = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const newRefreshToken = yield (0, config_1.signRefreshToken)(existingUser.id, existingUser.role);
         existingUser.refreshToken = newRefreshToken;
         (0, services_1.updateUserById)(existingUser.id, existingUser);
-        res.cookie('jwt', RefreshToken, { httpOnly: true, maxAge: 12 * 30 * 24 * 60 * 60 * 1000 });
+        res.cookie('jwt', newRefreshToken, { httpOnly: true, maxAge: 12 * 30 * 24 * 60 * 60 * 1000 });
         res.statusMessage = "Refreshed";
         res.status(200).json({ AccessToken, RefreshToken: newRefreshToken });
     }
