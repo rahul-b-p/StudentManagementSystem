@@ -17,7 +17,6 @@ app.use(cookieParser());
 app.use('/auth', authRouter);
 app.use('/refresh', refreshRoter);
 
-app.use();
 app.use('/admin', JwtAuth, verifyAdmin, adminRouter);
 app.use('/user', JwtAuth, userRouter);
 

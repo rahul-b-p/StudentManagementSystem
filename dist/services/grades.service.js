@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchGrades = exports.findGradesForMarks = exports.resetGradeRange = exports.updateGradeRange = exports.findGradeRange = void 0;
+exports.findAverageGrade = exports.fetchGrades = exports.findGradesForMarks = exports.resetGradeRange = exports.updateGradeRange = exports.findGradeRange = void 0;
 const winston_util_1 = require("../utils/winston.util");
 const file_service_1 = require("./file.service");
 const findGradeRange = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -87,7 +87,7 @@ const findGradesForMarks = (mark) => __awaiter(void 0, void 0, void 0, function*
         if (!ranges)
             throw new Error("Can't found the grade range");
         if (mark == ranges["A+"][0])
-            return 'A+';
+            return "A+" /* grades.Aplus */;
         for (const [grade, range] of Object.entries(ranges)) {
             const [max, min] = range;
             if (mark < max && mark >= min) {
@@ -113,7 +113,20 @@ const fetchGrades = (marks) => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (error) {
         winston_util_1.loggers.error(error);
-        throw new Error("Can't find Standerd Grade System due to an error");
+        throw new Error("Can't fetch grades on given object due to an error");
     }
 });
 exports.fetchGrades = fetchGrades;
+const findAverageGrade = (marks) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const mark = Object.values(marks);
+        const average = (mark.reduce((a, b) => a + b)) / mark.length;
+        const averageGrade = (0, exports.findGradesForMarks)(average);
+        return averageGrade;
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        throw new Error("Can't find Average Grade by given marks due to an error");
+    }
+});
+exports.findAverageGrade = findAverageGrade;

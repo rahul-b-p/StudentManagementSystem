@@ -1,6 +1,6 @@
-import { StudentWithGrades } from "../types";
+import { grades, StudentWithGrades } from "../types";
 import { loggers } from "../utils/winston.util";
-import { fetchGrades } from "./grades.service";
+import { fetchGrades, findAverageGrade } from "./grades.service";
 import { findStudents, findStudentsByUserId } from "./student.service"
 
 
@@ -11,8 +11,10 @@ export const fetchStudentsWithGrade = async (): Promise<StudentWithGrades[]> => 
         const studentsWithGrades: StudentWithGrades[] = await Promise.all(
             students.map(async (item) => {
                 let grades ={}
+                let averageGrade:string="";
                 if (item.marks) {
                     grades = await fetchGrades(item.marks);
+                    averageGrade= await findAverageGrade(item.marks)
                 }
                 return {
                     id: item.id,
@@ -20,7 +22,8 @@ export const fetchStudentsWithGrade = async (): Promise<StudentWithGrades[]> => 
                     name: item.name,
                     age: item.age,
                     email: item.email,
-                    grades
+                    grades,
+                    averageGrade
                 } as StudentWithGrades;
             })
         );
@@ -63,6 +66,9 @@ export const fetchStudentsWithGradeByUserId = async (id: string): Promise<Studen
         throw new Error('Fetching Grades of students failed due to an error');
     }
 }
+
+
+
 export const deleteUserAccount = () => {
 
 }

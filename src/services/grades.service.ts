@@ -1,4 +1,4 @@
-import { GradeSystem, StanderdGrades } from "../types";
+import { grades, GradeSystem, StanderdGrades } from "../types";
 import { loggers } from "../utils/winston.util"
 import { readData, writeData } from "./file.service";
 
@@ -76,7 +76,7 @@ export const findGradesForMarks = async (mark: number): Promise<string> => {
         const { ranges } = await findGradeRange();
         if (!ranges) throw new Error("Can't found the grade range");
 
-        if (mark == ranges["A+"][0]) return 'A+';
+        if (mark == ranges["A+"][0]) return grades.Aplus;
 
         for (const [grade, range] of Object.entries(ranges)) {
             const [max, min] = range;
@@ -103,6 +103,19 @@ export const fetchGrades = async (marks: Record<string, number>): Promise<Record
         return grades;
     } catch (error) {
         loggers.error(error);
-        throw new Error("Can't find Standerd Grade System due to an error");
+        throw new Error("Can't fetch grades on given object due to an error");
     }
 }
+
+export const findAverageGrade = async (marks:Record<string,number>):Promise<string>=>{
+    try {
+        const mark = Object.values(marks);
+        const average = (mark.reduce((a,b)=>a+b))/mark.length;
+        const averageGrade = findGradesForMarks(average);
+        return averageGrade;
+    } catch (error) {
+        loggers.error(error);
+        throw new Error("Can't find Average Grade by given marks due to an error");
+    }
+}
+

@@ -18,8 +18,10 @@ const fetchStudentsWithGrade = () => __awaiter(void 0, void 0, void 0, function*
         const students = yield (0, student_service_1.findStudents)();
         const studentsWithGrades = yield Promise.all(students.map((item) => __awaiter(void 0, void 0, void 0, function* () {
             let grades = {};
+            let averageGrade = "";
             if (item.marks) {
                 grades = yield (0, grades_service_1.fetchGrades)(item.marks);
+                averageGrade = yield (0, grades_service_1.findAverageGrade)(item.marks);
             }
             return {
                 id: item.id,
@@ -27,7 +29,8 @@ const fetchStudentsWithGrade = () => __awaiter(void 0, void 0, void 0, function*
                 name: item.name,
                 age: item.age,
                 email: item.email,
-                grades
+                grades,
+                averageGrade
             };
         })));
         const Response = studentsWithGrades;
