@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteRefreshTokenOfUser = exports.updateUserById = exports.insertUser = exports.saveUsers = exports.findUsersByrole = exports.findUserByRefreshToken = exports.findUserByMail = exports.findUserById = exports.findUsers = void 0;
+exports.deleteUserById = exports.deleteRefreshTokenOfUser = exports.updateUserById = exports.insertUser = exports.saveUsers = exports.findUsersByrole = exports.findUserByRefreshToken = exports.findUserByMail = exports.findUserById = exports.findUsers = void 0;
 const winston_util_1 = require("../utils/winston.util");
 const file_service_1 = require("./file.service");
 const findUsers = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -131,3 +131,21 @@ const deleteRefreshTokenOfUser = (id) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.deleteRefreshTokenOfUser = deleteRefreshTokenOfUser;
+const deleteUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const users = yield (0, exports.findUsers)();
+        const deleteIndex = users.findIndex(item => item.id == id);
+        if (deleteIndex == -1)
+            return false;
+        else {
+            users.splice(deleteIndex, 1);
+            yield (0, exports.saveUsers)(users);
+            return true;
+        }
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        throw new Error("Can't  delete user Due to Error");
+    }
+});
+exports.deleteUserById = deleteUserById;

@@ -12,6 +12,8 @@ exports.router.get('/read-users', controllers_1.readAllUsers);
 exports.router.get('/read-admins', controllers_1.readAllAdmins);
 // update users by id
 exports.router.put('/update-user/:id', controllers_1.updateUserByAdmin);
+// delete user by id
+exports.router.delete('/delete-user/:id', controllers_1.deleteUserByAdmin);
 //read all students
 exports.router.get('/read-students', controllers_1.readAllStudents);
 // read students by grade

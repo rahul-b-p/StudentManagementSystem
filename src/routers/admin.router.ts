@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createAdmin, readAllAdmins, readAllStudents, readAllStudentsByGrade, readAllUsers, updateUser, updateUserByAdmin } from '../controllers';
+import { createAdmin, deleteUserByAdmin, readAllAdmins, readAllStudents, readAllStudentsByGrade, readAllUsers, updateUserByAdmin } from '../controllers';
 
 export const router = Router();
 
@@ -13,11 +13,14 @@ router.get('/read-users', readAllUsers);
 router.get('/read-admins', readAllAdmins);
 
 // update users by id
-router.put('/update-user/:id',updateUserByAdmin)
+router.put('/update-user/:id', updateUserByAdmin)
+
+// delete user by id
+router.delete('/delete-user/:id', deleteUserByAdmin)
 
 //read all students
 router.get('/read-students', readAllStudents);
 
 // read students by grade
-router.get('/read-students/grade',readAllStudentsByGrade);
+router.get('/read-students/grade', readAllStudentsByGrade);
 

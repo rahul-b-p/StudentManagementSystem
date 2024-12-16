@@ -111,3 +111,19 @@ export const deleteRefreshTokenOfUser = async (id: string): Promise<boolean> => 
         throw new Error("Can't  delete Refresh Token Due to Error");
     }
 }
+
+export const deleteUserById = async (id: string): Promise<boolean> => {
+    try {
+        const users = await findUsers();
+        const deleteIndex = users.findIndex(item=>item.id==id);
+        if(deleteIndex==-1) return false;
+        else{
+            users.splice(deleteIndex,1);
+            await saveUsers(users);
+            return true;
+        }
+    } catch (error) {
+        loggers.error(error);
+        throw new Error("Can't  delete user Due to Error");
+    }
+}

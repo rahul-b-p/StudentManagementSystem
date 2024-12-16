@@ -1,6 +1,6 @@
 import { Response } from "express"
 import { authBody, customRequestWithPayload, updateUserBody, User } from "../types"
-import { deleteUserAccount, findUserById, findUserByMail, findUsersByrole, insertUser, updateUserById } from "../services";
+import { deleteUserAccount, deleteUserById, findUserById, findUserByMail, findUsersByrole, insertUser, updateUserById } from "../services";
 import { loggers } from "../utils/winston.util";
 import { blackListToken, generateId, getEncryptedPassword, verifyPassword } from "../config";
 import { validateSignupBody, validateUpdateUserBody, validateUpdateUserByAdminBody } from "../validations";
@@ -144,7 +144,7 @@ export const updateUserByAdmin = async (req: customRequestWithPayload<{ id: stri
         const { email, password, username } = req.body
 
         const updatingUser = await findUserById(id);
-        if(!updatingUser){
+        if (!updatingUser) {
             res.status(404).json({ message: 'Not found any user for deletion' });
             return;
         }
@@ -155,12 +155,12 @@ export const updateUserByAdmin = async (req: customRequestWithPayload<{ id: stri
 
 
         const result = await updateUserById(id, updatingUser);
-        if(result){
+        if (result) {
             res.statusMessage = "Updated Successfully";
             res.status(200).json({ messege: 'user updated successfully', body: { username: updatingUser.username, email: updatingUser.email } });
         }
-        else{
-            res.status(404).json({message:'Not found any user for deletion'});
+        else {
+            res.status(404).json({ message: 'Not found any user for deletion' });
         }
 
     } catch (error: any) {
@@ -192,8 +192,36 @@ export const deleteUser = async (req: customRequestWithPayload, res: Response) =
                 res.status(500).json({ message: 'Account Deletion Failed Due to blacklisting your token' });
             }
         }
-    } catch (error) {
+    } catch (error: any) {
         loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error });
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
+}
+
+export const deleteUserByAdmin = async (req: customRequestWithPayload<{ id: string }>, res: Response) => {
+    try {
+        const userId = req.payload?.id;
+        if (!userId) throw new Error("Couldn't find payload");
+
+        const existingUser = await findUserById(userId);
+        if (!existingUser) {
+            res.status(404).json({ error: 'Requested with an Invalid UserId' });
+            return;
+        }
+
+        const { id } = req.params;
+        const isDeleted = await deleteUserById(id);
+
+        if (isDeleted) {
+            res.statusMessage = "Deleted Successful";
+            res.status(200).json({message:"Deleted user with given Id"});
+        }
+        else{
+            res.status(404).json({ message: 'Not found any user for deletion' });
+        }
+
+    } catch (error: any) {
+        loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 }

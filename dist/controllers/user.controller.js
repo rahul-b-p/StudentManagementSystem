@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.updateUserByAdmin = exports.updateUser = exports.readAllAdmins = exports.readAllUsers = exports.createAdmin = void 0;
+exports.deleteUserByAdmin = exports.deleteUser = exports.updateUserByAdmin = exports.updateUser = exports.readAllAdmins = exports.readAllUsers = exports.createAdmin = void 0;
 const services_1 = require("../services");
 const winston_util_1 = require("../utils/winston.util");
 const config_1 = require("../config");
@@ -191,7 +191,34 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     catch (error) {
         winston_util_1.loggers.error(error);
-        res.status(500).json({ message: 'Something went wrong', error });
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 });
 exports.deleteUser = deleteUser;
+const deleteUserByAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
+        if (!userId)
+            throw new Error("Couldn't find payload");
+        const existingUser = yield (0, services_1.findUserById)(userId);
+        if (!existingUser) {
+            res.status(404).json({ error: 'Requested with an Invalid UserId' });
+            return;
+        }
+        const { id } = req.params;
+        const isDeleted = yield (0, services_1.deleteUserById)(id);
+        if (isDeleted) {
+            res.statusMessage = "Deleted Successful";
+            res.status(200).json({ message: "Deleted user with given Id" });
+        }
+        else {
+            res.status(404).json({ message: 'Not found any user for deletion' });
+        }
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
+});
+exports.deleteUserByAdmin = deleteUserByAdmin;

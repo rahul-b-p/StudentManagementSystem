@@ -159,7 +159,7 @@ export const updateStudent = async (req: customRequestWithPayload<{ id: string }
     }
 }
 
-export const deleteStudent = async(req: customRequestWithPayload<{ id: string }, any, studentBody<string[]>>, res: Response) => {
+export const deleteStudent = async(req: customRequestWithPayload<{ id: string }>, res: Response) => {
     try {
         const userId = req.payload?.id;
         if (!userId) throw new Error("Couldn't found the payload");
