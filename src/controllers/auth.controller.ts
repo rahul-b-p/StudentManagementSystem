@@ -4,8 +4,7 @@ import { generateId, getEncryptedPassword, verifyPassword, signAccessToken, sign
 import { deleteRefreshTokenOfUser, findUserByMail, findUserByRefreshToken, insertUser, updateUserById } from "../services";
 import { loggers } from "../utils/winston";
 import { validateLoginBody, validateSignupBody } from "../validations/user.validation";
-import { AuthenticationError, InternalServerError, NotFoundError } from "../errors";
-import { BadRequestError } from "../errors/badRequest.error";
+import { AuthenticationError, InternalServerError, NotFoundError, BadRequestError } from "../errors";
 
 
 
@@ -83,7 +82,7 @@ export const login = async (req: customRequestWithPayload<{}, any, Omit<authBody
     }
 }
 
-export const refreshToken = async (req: Request, res: Response, next:NextFunction) => {
+export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const cookies = req.cookies;
         if (!cookies?.jwt) return next(new AuthenticationError());
@@ -113,7 +112,7 @@ export const refreshToken = async (req: Request, res: Response, next:NextFunctio
     }
 }
 
-export const logout = async (req: Request, res: Response, next:NextFunction) => {
+export const logout = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const AccessToken = req.headers.authorization?.split(' ')[1];
         if (!AccessToken) return next(new InternalServerError());

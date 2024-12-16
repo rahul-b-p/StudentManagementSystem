@@ -2,8 +2,7 @@ import { NextFunction, Response } from "express";
 import { customRequestWithPayload, roles } from "../types";
 import { loggers } from "../utils/winston";
 import { findUserById } from "../services";
-import { InternalServerError, NotFoundError } from "../errors";
-import { ForbiddenError } from "../errors/forbidden.error";
+import { InternalServerError, NotFoundError, ForbiddenError } from "../errors";
 
 
 

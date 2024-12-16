@@ -15,14 +15,12 @@ const services_1 = require("../services");
 const config_1 = require("../config");
 const validations_1 = require("../validations");
 const errors_1 = require("../errors");
-const forbidden_error_1 = require("../errors/forbidden.error");
-const badRequest_error_1 = require("../errors/badRequest.error");
 const createStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const isValidReqBody = yield (0, validations_1.validateStudentBody)(req.body);
         if (!isValidReqBody)
-            return next(new badRequest_error_1.BadRequestError());
+            return next(new errors_1.BadRequestError());
         const { name, age, email, subjects, marks } = req.body;
         const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
         if (!userId)
@@ -114,7 +112,7 @@ const updateStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     try {
         const isValidReqBody = yield (0, validations_1.validateStudentBody)(req.body);
         if (!isValidReqBody)
-            return next(new badRequest_error_1.BadRequestError());
+            return next(new errors_1.BadRequestError());
         const { name, age, email, subjects, marks } = req.body;
         const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
         if (!userId)
@@ -157,7 +155,7 @@ const deleteStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
             return;
         }
         if (existingUser.role !== 'admin' && userId !== student.userId)
-            return next(new forbidden_error_1.ForbiddenError());
+            return next(new errors_1.ForbiddenError());
         const result = yield (0, services_1.deleteStudentsById)(id);
         winston_1.loggers.info(result);
         if (!result) {

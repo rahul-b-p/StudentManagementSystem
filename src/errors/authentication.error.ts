@@ -9,6 +9,6 @@ export class AuthenticationError extends customError {
     }
     StatusCode = 401;
     serialize(): { success: false, message: string; } {
-        return { success:false,message: 'User UnAuthenticated' };
+        return { success: false, message: 'User UnAuthenticated' };
     }
 }

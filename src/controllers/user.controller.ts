@@ -4,11 +4,12 @@ import { deleteUserAccount, deleteUserById, findUserById, findUserByMail, findUs
 import { loggers } from "../utils/winston";
 import { blackListToken, generateId, getEncryptedPassword, verifyPassword } from "../config";
 import { validateSignupBody, validateUpdateUserBody, validateUpdateUserByAdminBody } from "../validations";
-import { InternalServerError, NotFoundError } from "../errors";
-import { BadRequestError } from "../errors/badRequest.error";
+import { InternalServerError, NotFoundError, BadRequestError } from "../errors";
 
 
-export const createUser = async (req: customRequestWithPayload<{ role: roles }, any, authBody>, res: Response, next:NextFunction) => {
+
+
+export const createUser = async (req: customRequestWithPayload<{ role: roles }, any, authBody>, res: Response, next: NextFunction) => {
     try {
         const isValidReqBody = validateSignupBody(req.body);
         if (!isValidReqBody) return next(new BadRequestError());
@@ -47,7 +48,7 @@ export const createUser = async (req: customRequestWithPayload<{ role: roles }, 
     }
 }
 
-export const readAllUsers = async (req: customRequestWithPayload, res: Response, next:NextFunction) => {
+export const readAllUsers = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
     try {
         const id = req.payload?.id;
         if (!id) throw new Error("Couldn't find payload");
@@ -65,7 +66,7 @@ export const readAllUsers = async (req: customRequestWithPayload, res: Response,
     }
 }
 
-export const readAllAdmins = async (req: customRequestWithPayload, res: Response, next:NextFunction) => {
+export const readAllAdmins = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
     try {
         const id = req.payload?.id;
         if (!id) throw new Error("Couldn't find payload");
@@ -83,7 +84,7 @@ export const readAllAdmins = async (req: customRequestWithPayload, res: Response
     }
 }
 
-export const updateUser = async (req: customRequestWithPayload<{}, any, updateUserBody>, res: Response, next:NextFunction) => {
+export const updateUser = async (req: customRequestWithPayload<{}, any, updateUserBody>, res: Response, next: NextFunction) => {
     try {
         const isValidReqBody = validateUpdateUserBody(req.body);
         if (!isValidReqBody) return next(new BadRequestError());

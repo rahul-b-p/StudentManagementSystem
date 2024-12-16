@@ -11,7 +11,7 @@ export const JwtAuth = async (req: customRequestWithPayload, res: Response, next
     try {
         const AccessToken = req.headers.authorization?.split(' ')[1];
         if (!AccessToken) return next(new AuthenticationError());
-        
+
         const isJwtBlacklisted = await checkTokenBlacklist(AccessToken);
         if (isJwtBlacklisted) return next(new AuthenticationError());
 

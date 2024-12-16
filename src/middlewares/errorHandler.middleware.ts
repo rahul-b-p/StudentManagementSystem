@@ -5,12 +5,12 @@ import { customError } from "../utils/customError";
 
 
 export const ErrorHandler: ErrorRequestHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
-    if(err instanceof customError){
+    if (err instanceof customError) {
         res.status(err.StatusCode).json(err.serialize());
     }
-    else{
+    else {
         res.status(400).json({
-            message:'Something bad has happend'
+            message: 'Something bad has happend'
         })
     }
 }

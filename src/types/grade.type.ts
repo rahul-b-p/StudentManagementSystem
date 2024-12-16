@@ -1,6 +1,6 @@
 
-export const enum grades { 
-    Aplus='A+',
+export const enum grades {
+    Aplus = 'A+',
     A = 'A',
     BPlus = 'B+',
     B = 'B',
@@ -9,7 +9,7 @@ export const enum grades {
     DPlus = 'D+',
     D = 'D',
     F = 'F'
- }
+}
 
 export type StanderdGrades = grades[];
 
@@ -19,7 +19,7 @@ export interface StudentWithGrades {
     name: string;
     age: number;
     email: string;
-    grades: Record<string,string>;
+    grades: Record<string, string>;
     averageGrade: string;
 };
 

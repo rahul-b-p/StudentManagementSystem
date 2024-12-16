@@ -1,3 +1,3 @@
-export interface GradeQuery{
-    grade:string;
+export interface GradeQuery {
+    grade: string;
 }

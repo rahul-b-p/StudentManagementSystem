@@ -14,7 +14,6 @@ const types_1 = require("../types");
 const winston_1 = require("../utils/winston");
 const services_1 = require("../services");
 const errors_1 = require("../errors");
-const forbidden_error_1 = require("../errors/forbidden.error");
 const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
@@ -27,7 +26,7 @@ const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         if (user.role == types_1.roles.admin)
             next();
         else
-            next(new forbidden_error_1.ForbiddenError());
+            next(new errors_1.ForbiddenError());
     }
     catch (error) {
         winston_1.loggers.error(error);

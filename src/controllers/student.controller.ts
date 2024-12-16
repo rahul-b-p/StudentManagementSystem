@@ -6,9 +6,10 @@ import { deleteAllStudentsByUserId, deleteStudentsById, fetchStudentsWithGrade, 
 import { generateId } from "../config";
 import { validateStudentBody } from "../validations";
 import { GradeQuery } from "../types/request/query.type";
-import { InternalServerError, NotFoundError } from "../errors";
-import { ForbiddenError } from "../errors/forbidden.error";
-import { BadRequestError } from "../errors/badRequest.error";
+import { InternalServerError, NotFoundError, BadRequestError, ForbiddenError } from "../errors";
+
+
+
 
 
 
@@ -50,7 +51,7 @@ export const createStudent = async (req: customRequestWithPayload<{}, any, stude
     }
 }
 
-export const readAllStudents = async (req: customRequestWithPayload, res: Response, next:NextFunction) => {
+export const readAllStudents = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
     try {
         const userId = req.payload?.id;
         if (!userId) throw new Error("Couldn't found the payload");

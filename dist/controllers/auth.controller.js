@@ -16,12 +16,11 @@ const services_1 = require("../services");
 const winston_1 = require("../utils/winston");
 const user_validation_1 = require("../validations/user.validation");
 const errors_1 = require("../errors");
-const badRequest_error_1 = require("../errors/badRequest.error");
 const signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const isValidReqBody = (0, user_validation_1.validateSignupBody)(req.body);
         if (!isValidReqBody)
-            return next(new badRequest_error_1.BadRequestError());
+            return next(new errors_1.BadRequestError());
         const { email, password, username } = req.body;
         const existingUser = yield (0, services_1.findUserByMail)(email);
         if (existingUser) {
@@ -51,7 +50,7 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const isValidReqBody = (0, user_validation_1.validateLoginBody)(req.body);
         if (!isValidReqBody)
-            return next(new badRequest_error_1.BadRequestError());
+            return next(new errors_1.BadRequestError());
         const { email, password } = req.body;
         const existingUser = yield (0, services_1.findUserByMail)(email);
         if (!existingUser) {
