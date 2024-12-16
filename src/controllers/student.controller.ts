@@ -6,7 +6,7 @@ import { deleteAllStudentsByUserId, deleteStudentsById, fetchStudentsWithGrade, 
 import { generateId } from "../config";
 import { validateStudentBody } from "../validations";
 import { GradeQuery } from "../types/request/query.type";
-import { InternalServerError, NotFoundError, BadRequestError, ForbiddenError } from "../errors";
+import { InternalServerError, NotFoundError, BadRequestError, ForbiddenError, RersourceNotFoundError } from "../errors";
 
 
 
@@ -90,10 +90,7 @@ export const readAllStudentsByGrade = async (req: customRequestWithPayload<{}, a
 
         const { grade } = req.query
         loggers.info(grade)
-        if (!grade) {
-            res.status(400).json({ error: 'Missing query parameters:grade is required.' });
-            return;
-        }
+        if (!grade) return next(new BadRequestError());
 
         const existinUser = await findUserById(userId);
         if (!existinUser) return next(new NotFoundError());
@@ -121,10 +118,7 @@ export const updateStudent = async (req: customRequestWithPayload<{ id: string }
 
         const { id } = req.params;
         const existingStudent = await findStudentById(id);
-        if (!existingStudent) {
-            res.status(404).json({ error: 'No student found with given Id' });
-            return;
-        }
+        if (!existingStudent) return next(new RersourceNotFoundError());
 
         const updatedStudent: Student<typeof subjects> = {
             id, userId, name, email, age, subjects, marks
@@ -150,19 +144,13 @@ export const deleteStudent = async (req: customRequestWithPayload<{ id: string }
         if (!existingUser) return next(new NotFoundError());
 
         const student = await findStudentById(id);
-        if (!student) {
-            res.status(404).json({ messege: 'Not found any student with given id' });
-            return;
-        }
+        if (!student) return next(new RersourceNotFoundError());
 
         if (existingUser.role !== 'admin' && userId !== student.userId) return next(new ForbiddenError());
 
         const result = await deleteStudentsById(id);
         loggers.info(result);
-        if (!result) {
-            res.status(404).json({ messege: 'Not found any student with given id' });
-            return;
-        }
+        if (!result) return next(new RersourceNotFoundError());
         res.statusMessage = " Deleted Successfully";
         res.status(200).json({ messege: 'Deleted student with given Id ' });
     } catch (error) {

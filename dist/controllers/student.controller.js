@@ -91,10 +91,8 @@ const readAllStudentsByGrade = (req, res, next) => __awaiter(void 0, void 0, voi
             throw new Error("Can't get the payload");
         const { grade } = req.query;
         winston_1.loggers.info(grade);
-        if (!grade) {
-            res.status(400).json({ error: 'Missing query parameters:grade is required.' });
-            return;
-        }
+        if (!grade)
+            return next(new errors_1.BadRequestError());
         const existinUser = yield (0, services_1.findUserById)(userId);
         if (!existinUser)
             return next(new errors_1.NotFoundError());
@@ -122,10 +120,8 @@ const updateStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
             return next(new errors_1.NotFoundError());
         const { id } = req.params;
         const existingStudent = yield (0, services_1.findStudentById)(id);
-        if (!existingStudent) {
-            res.status(404).json({ error: 'No student found with given Id' });
-            return;
-        }
+        if (!existingStudent)
+            return next(new errors_1.RersourceNotFoundError());
         const updatedStudent = {
             id, userId, name, email, age, subjects, marks
         };
@@ -150,18 +146,14 @@ const deleteStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         if (!existingUser)
             return next(new errors_1.NotFoundError());
         const student = yield (0, services_1.findStudentById)(id);
-        if (!student) {
-            res.status(404).json({ messege: 'Not found any student with given id' });
-            return;
-        }
+        if (!student)
+            return next(new errors_1.RersourceNotFoundError());
         if (existingUser.role !== 'admin' && userId !== student.userId)
             return next(new errors_1.ForbiddenError());
         const result = yield (0, services_1.deleteStudentsById)(id);
         winston_1.loggers.info(result);
-        if (!result) {
-            res.status(404).json({ messege: 'Not found any student with given id' });
-            return;
-        }
+        if (!result)
+            return next(new errors_1.RersourceNotFoundError());
         res.statusMessage = " Deleted Successfully";
         res.status(200).json({ messege: 'Deleted student with given Id ' });
     }

@@ -134,10 +134,8 @@ const updateUserByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         const { id } = req.params;
         const { email, password, username } = req.body;
         const updatingUser = yield (0, services_1.findUserById)(id);
-        if (!updatingUser) {
-            res.status(404).json({ message: 'Not found any user for deletion' });
-            return;
-        }
+        if (!updatingUser)
+            return next(new errors_1.RersourceNotFoundError());
         updatingUser.hashPassword = password ? yield (0, config_1.getEncryptedPassword)(password) : updatingUser.hashPassword;
         updatingUser.email = email ? email : updatingUser.email;
         updatingUser.username = username ? username : updatingUser.username;
@@ -200,9 +198,8 @@ const deleteUserByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
             res.statusMessage = "Deleted Successful";
             res.status(200).json({ message: "Deleted user with given Id" });
         }
-        else {
-            res.status(404).json({ message: 'Not found any user for deletion' });
-        }
+        else
+            return next(new errors_1.RersourceNotFoundError());
     }
     catch (error) {
         winston_1.loggers.error(error);

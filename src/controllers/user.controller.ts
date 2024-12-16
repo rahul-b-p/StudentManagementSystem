@@ -4,7 +4,7 @@ import { deleteUserAccount, deleteUserById, findUserById, findUserByMail, findUs
 import { loggers } from "../utils/winston";
 import { blackListToken, generateId, getEncryptedPassword, verifyPassword } from "../config";
 import { validateSignupBody, validateUpdateUserBody, validateUpdateUserByAdminBody } from "../validations";
-import { InternalServerError, NotFoundError, BadRequestError } from "../errors";
+import { InternalServerError, NotFoundError, BadRequestError, RersourceNotFoundError } from "../errors";
 
 
 
@@ -131,10 +131,7 @@ export const updateUserByAdmin = async (req: customRequestWithPayload<{ id: stri
         const { email, password, username } = req.body
 
         const updatingUser = await findUserById(id);
-        if (!updatingUser) {
-            res.status(404).json({ message: 'Not found any user for deletion' });
-            return;
-        }
+        if (!updatingUser) return next(new RersourceNotFoundError());
 
         updatingUser.hashPassword = password ? await getEncryptedPassword(password) : updatingUser.hashPassword
         updatingUser.email = email ? email : updatingUser.email;
@@ -197,10 +194,7 @@ export const deleteUserByAdmin = async (req: customRequestWithPayload<{ id: stri
             res.statusMessage = "Deleted Successful";
             res.status(200).json({ message: "Deleted user with given Id" });
         }
-        else {
-            res.status(404).json({ message: 'Not found any user for deletion' });
-        }
-
+        else return next(new RersourceNotFoundError());
     } catch (error) {
         loggers.error(error);
         next(new InternalServerError());
