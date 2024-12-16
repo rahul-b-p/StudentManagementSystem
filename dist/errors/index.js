@@ -19,3 +19,4 @@ __exportStar(require("./notFound.error"), exports);
 __exportStar(require("./server.error"), exports);
 __exportStar(require("./badRequest.error"), exports);
 __exportStar(require("./forbidden.error"), exports);
+__exportStar(require("./conflict.error"), exports);

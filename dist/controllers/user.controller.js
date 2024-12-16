@@ -22,15 +22,12 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (!isValidReqBody)
             return next(new errors_1.BadRequestError());
         const { role } = req.params;
-        if (role !== types_1.roles.admin && role !== types_1.roles.user) {
-            res.status(400).json({ Message: "Invalid Request" });
-        }
+        if (role !== types_1.roles.admin && role !== types_1.roles.user)
+            return next(new errors_1.BadRequestError());
         const { email, password, username } = req.body;
         const existingUser = yield (0, services_1.findUserByMail)(email);
-        if (existingUser) {
-            res.status(409).json({ message: "user already exists" });
-            return;
-        }
+        if (existingUser)
+            return next(new errors_1.ConflictError());
         const hashPassword = yield (0, config_1.getEncryptedPassword)(password);
         const id = yield (0, config_1.generateId)();
         const newUser = {

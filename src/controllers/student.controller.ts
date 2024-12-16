@@ -6,7 +6,7 @@ import { deleteAllStudentsByUserId, deleteStudentsById, fetchStudentsWithGrade, 
 import { generateId } from "../config";
 import { validateStudentBody } from "../validations";
 import { GradeQuery } from "../types/request/query.type";
-import { InternalServerError, NotFoundError, BadRequestError, ForbiddenError, RersourceNotFoundError } from "../errors";
+import { InternalServerError, NotFoundError, BadRequestError, ForbiddenError, RersourceNotFoundError, ConflictError } from "../errors";
 
 
 
@@ -29,10 +29,7 @@ export const createStudent = async (req: customRequestWithPayload<{}, any, stude
         if (!existinUser) return next(new NotFoundError());
 
         const existingStudent = await findStudentByMail(email);
-        if (existingStudent) {
-            res.status(409).json({ error: 'One student already added with given mail id' });
-            return;
-        }
+        if (existingStudent) return next(new ConflictError());
 
         const id = await generateId();
         const newStudent: Student<typeof subjects> = {

@@ -23,10 +23,8 @@ const signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
             return next(new errors_1.BadRequestError());
         const { email, password, username } = req.body;
         const existingUser = yield (0, services_1.findUserByMail)(email);
-        if (existingUser) {
-            res.status(409).json({ message: "user already exists" });
-            return;
-        }
+        if (existingUser)
+            return next(new errors_1.ConflictError());
         const hashPassword = yield (0, config_1.getEncryptedPassword)(password);
         const id = yield (0, config_1.generateId)();
         const newUser = {
@@ -88,10 +86,8 @@ const refreshToken = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             return next(new errors_1.AuthenticationError());
         const RefreshToken = cookies.jwt;
         const existingUser = yield (0, services_1.findUserByRefreshToken)(RefreshToken);
-        if (!existingUser) {
-            res.status(404).json({ error: "Not found a user with requested refresh token" });
-            return;
-        }
+        if (!existingUser)
+            return next(new errors_1.NotFoundError());
         const refreshTokenPayload = yield (0, config_1.verifyRefreshToken)(RefreshToken);
         if (!refreshTokenPayload)
             return next(new errors_1.AuthenticationError());

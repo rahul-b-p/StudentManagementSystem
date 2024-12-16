@@ -4,7 +4,7 @@ import { generateId, getEncryptedPassword, verifyPassword, signAccessToken, sign
 import { deleteRefreshTokenOfUser, findUserByMail, findUserByRefreshToken, insertUser, updateUserById } from "../services";
 import { loggers } from "../utils/winston";
 import { validateLoginBody, validateSignupBody } from "../validations/user.validation";
-import { AuthenticationError, InternalServerError, NotFoundError, BadRequestError } from "../errors";
+import { AuthenticationError, InternalServerError, NotFoundError, BadRequestError, ConflictError } from "../errors";
 
 
 
@@ -17,10 +17,7 @@ export const signup = async (req: customRequestWithPayload<{}, any, authBody>, r
         const { email, password, username } = req.body;
 
         const existingUser = await findUserByMail(email);
-        if (existingUser) {
-            res.status(409).json({ message: "user already exists" });
-            return;
-        }
+        if (existingUser) return next(new ConflictError());
 
         const hashPassword = await getEncryptedPassword(password);
         const id = await generateId();
@@ -88,10 +85,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
         if (!cookies?.jwt) return next(new AuthenticationError());
         const RefreshToken: any = cookies.jwt;
         const existingUser = await findUserByRefreshToken(RefreshToken);
-        if (!existingUser) {
-            res.status(404).json({ error: "Not found a user with requested refresh token" });
-            return;
-        }
+        if (!existingUser) return next(new NotFoundError())
 
         const refreshTokenPayload = await verifyRefreshToken(RefreshToken);
         if (!refreshTokenPayload) return next(new AuthenticationError());

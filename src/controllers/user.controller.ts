@@ -4,7 +4,7 @@ import { deleteUserAccount, deleteUserById, findUserById, findUserByMail, findUs
 import { loggers } from "../utils/winston";
 import { blackListToken, generateId, getEncryptedPassword, verifyPassword } from "../config";
 import { validateSignupBody, validateUpdateUserBody, validateUpdateUserByAdminBody } from "../validations";
-import { InternalServerError, NotFoundError, BadRequestError, RersourceNotFoundError } from "../errors";
+import { InternalServerError, NotFoundError, BadRequestError, RersourceNotFoundError, ConflictError } from "../errors";
 
 
 
@@ -15,17 +15,11 @@ export const createUser = async (req: customRequestWithPayload<{ role: roles }, 
         if (!isValidReqBody) return next(new BadRequestError());
 
         const { role } = req.params;
-        if (role !== roles.admin && role !== roles.user) {
-            res.status(400).json({ Message: "Invalid Request" });
-        }
-
+        if (role !== roles.admin && role !== roles.user) return next(new BadRequestError());
         const { email, password, username } = req.body;
 
         const existingUser = await findUserByMail(email);
-        if (existingUser) {
-            res.status(409).json({ message: "user already exists" });
-            return;
-        }
+        if (existingUser) return next(new ConflictError());
 
 
         const hashPassword = await getEncryptedPassword(password);
@@ -200,3 +194,4 @@ export const deleteUserByAdmin = async (req: customRequestWithPayload<{ id: stri
         next(new InternalServerError());
     }
 }
+

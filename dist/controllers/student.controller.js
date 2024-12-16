@@ -29,10 +29,8 @@ const createStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         if (!existinUser)
             return next(new errors_1.NotFoundError());
         const existingStudent = yield (0, services_1.findStudentByMail)(email);
-        if (existingStudent) {
-            res.status(409).json({ error: 'One student already added with given mail id' });
-            return;
-        }
+        if (existingStudent)
+            return next(new errors_1.ConflictError());
         const id = yield (0, config_1.generateId)();
         const newStudent = {
             id, userId, name, email, age, subjects, marks
