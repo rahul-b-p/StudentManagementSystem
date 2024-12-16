@@ -62,12 +62,20 @@ export const fetchStudentsWithGradeByUserId = async (id: string): Promise<Studen
 
         return Response;
     } catch (error) {
-        loggers.error(error)
+        loggers.error(error);
         throw new Error('Fetching Grades of students failed due to an error');
     }
 }
 
-
+export const findStudentsByAverageGrade=async(grade: string): Promise<StudentWithGrades[]> =>{
+    try {
+        const students = await fetchStudentsWithGrade();
+        return students.filter(item=>item.averageGrade==grade);
+    } catch (error) {
+        loggers.error(error);
+        throw new Error('Something went wrong by fetching students with given id')
+    }
+}
 
 export const deleteUserAccount = () => {
 

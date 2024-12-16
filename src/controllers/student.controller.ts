@@ -2,9 +2,10 @@
 import { Response } from "express"
 import { customRequestWithPayload, Student, studentBody } from "../types"
 import { loggers } from "../utils/winston.util";
-import { fetchStudentsWithGrade, fetchStudentsWithGradeByUserId, findStudentById, findStudentByMail, findUserById, insertStudents, updateStudentsById } from "../services";
+import { fetchStudentsWithGrade, fetchStudentsWithGradeByUserId, findStudentById, findStudentByMail, findStudentsByAverageGrade, findUserById, insertStudents, updateStudentsById } from "../services";
 import { generateId } from "../config";
 import { validateStudentBody } from "../validations";
+import { GradeQuery } from "../types/request/query.type";
 
 
 
@@ -88,6 +89,31 @@ export const readAllStudentsByUser = async (req: customRequestWithPayload, res: 
 
         const stuents = await fetchStudentsWithGradeByUserId(userId);
         res.status(200).json({ message: `Found all students added by ${existinUser?.username}`, ResponseData: stuents });
+    } catch (error: any) {
+        loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
+}
+
+export const readAllStudentsByGrade = async (req:customRequestWithPayload<{},any,any,GradeQuery>,res:Response)=>{
+    try {
+        const userId = req.payload?.id;
+        if (!userId) throw new Error("Can't get the payload");
+
+        const {grade} = req.query
+        loggers.info(grade)
+        if(!grade){
+            res.status(400).json({ error: 'Missing query parameters:grade is required.' });
+            return;
+        }
+
+        const existinUser = await findUserById(userId);
+        if (!existinUser) {
+            res.status(404).json({ error: "Invalid User" });
+        }
+
+        const stuents = await findStudentsByAverageGrade(grade);
+        res.status(200).json({ message: `Found all students added by ${existinUser?.username}`, data: stuents });
     } catch (error: any) {
         loggers.error(error);
         res.status(500).json({ message: 'Something went wrong', error: error.message });

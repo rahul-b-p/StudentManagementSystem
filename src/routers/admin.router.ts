@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createAdmin, readAllAdmins, readAllStudents, readAllUsers, updateUser } from '../controllers';
+import { createAdmin, readAllAdmins, readAllStudents, readAllStudentsByGrade, readAllUsers, updateUser } from '../controllers';
 
 export const router = Router();
 
@@ -14,3 +14,6 @@ router.get('/read-admins', readAllAdmins);
 
 //read all students
 router.get('/read-students', readAllStudents);
+
+// read students by grade
+router.get('/read-students/grade',readAllStudentsByGrade)

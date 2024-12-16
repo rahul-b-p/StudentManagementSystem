@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUserAccount = exports.fetchStudentsWithGradeByUserId = exports.fetchStudentsWithGrade = void 0;
+exports.deleteUserAccount = exports.findStudentsByAverageGrade = exports.fetchStudentsWithGradeByUserId = exports.fetchStudentsWithGrade = void 0;
 const winston_util_1 = require("../utils/winston.util");
 const grades_service_1 = require("./grades.service");
 const student_service_1 = require("./student.service");
@@ -68,6 +68,17 @@ const fetchStudentsWithGradeByUserId = (id) => __awaiter(void 0, void 0, void 0,
     }
 });
 exports.fetchStudentsWithGradeByUserId = fetchStudentsWithGradeByUserId;
+const findStudentsByAverageGrade = (grade) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const students = yield (0, exports.fetchStudentsWithGrade)();
+        return students.filter(item => item.averageGrade == grade);
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        throw new Error('Something went wrong by fetching students with given id');
+    }
+});
+exports.findStudentsByAverageGrade = findStudentsByAverageGrade;
 const deleteUserAccount = () => {
 };
 exports.deleteUserAccount = deleteUserAccount;

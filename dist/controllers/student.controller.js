@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAllStudentsByUser = exports.deleteStudent = exports.updateStudent = exports.readAllStudentsByUser = exports.readAllStudents = exports.createStudent = void 0;
+exports.deleteAllStudentsByUser = exports.deleteStudent = exports.updateStudent = exports.readAllStudentsByGrade = exports.readAllStudentsByUser = exports.readAllStudents = exports.createStudent = void 0;
 const winston_util_1 = require("../utils/winston.util");
 const services_1 = require("../services");
 const config_1 = require("../config");
@@ -93,6 +93,31 @@ const readAllStudentsByUser = (req, res) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.readAllStudentsByUser = readAllStudentsByUser;
+const readAllStudentsByGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
+        if (!userId)
+            throw new Error("Can't get the payload");
+        const { grade } = req.query;
+        winston_util_1.loggers.info(grade);
+        if (!grade) {
+            res.status(400).json({ error: 'Missing query parameters:grade is required.' });
+            return;
+        }
+        const existinUser = yield (0, services_1.findUserById)(userId);
+        if (!existinUser) {
+            res.status(404).json({ error: "Invalid User" });
+        }
+        const stuents = yield (0, services_1.findStudentsByAverageGrade)(grade);
+        res.status(200).json({ message: `Found all students added by ${existinUser === null || existinUser === void 0 ? void 0 : existinUser.username}`, data: stuents });
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
+});
+exports.readAllStudentsByGrade = readAllStudentsByGrade;
 const updateStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {

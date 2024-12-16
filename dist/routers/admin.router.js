@@ -12,3 +12,5 @@ exports.router.get('/read-users', controllers_1.readAllUsers);
 exports.router.get('/read-admins', controllers_1.readAllAdmins);
 //read all students
 exports.router.get('/read-students', controllers_1.readAllStudents);
+// read students by grade
+exports.router.get('/read-students/grade', controllers_1.readAllStudentsByGrade);

@@ -20,6 +20,6 @@ export interface StudentWithGrades {
     age: number;
     email: string;
     grades: Record<string,string>;
-    averageGrade: grades
+    averageGrade: string;
 };
 
