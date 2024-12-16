@@ -4,7 +4,7 @@ import { generateId, getEncryptedPassword, verifyPassword, signAccessToken, sign
 import { deleteRefreshTokenOfUser, findUserByMail, findUserByRefreshToken, insertUser, updateUserById } from "../services";
 import { loggers } from "../utils/winston";
 import { validateLoginBody, validateSignupBody } from "../validations/user.validation";
-import { AuthenticationError, InternalServerError, NotFoundError, BadRequestError, ConflictError } from "../errors";
+import { AuthenticationError, InternalServerError, NotFoundError, BadRequestError, ConflictError, RersourceNotFoundError, PasswordAuthenticationError } from "../errors";
 
 
 
@@ -48,16 +48,10 @@ export const login = async (req: customRequestWithPayload<{}, any, Omit<authBody
         const { email, password } = req.body;
 
         const existingUser = await findUserByMail(email);
-        if (!existingUser) {
-            res.status(404).json({ error: "user not found", message: 'Please try to login with a valid mail id' });
-            return;
-        }
+        if (!existingUser) return next(new RersourceNotFoundError());
 
         const isVerifiedPassword = verifyPassword(password, existingUser.hashPassword);
-        if (!isVerifiedPassword) {
-            res.status(401).json({ error: "Invalid Password", message: "Please try to request with a valid password" });
-            return;
-        }
+        if (!isVerifiedPassword) return next(new PasswordAuthenticationError());
 
         const AccessToken = await signAccessToken(existingUser.id, existingUser.role);
         const RefreshToken = await signRefreshToken(existingUser.id, existingUser.role);

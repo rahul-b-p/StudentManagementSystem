@@ -4,7 +4,7 @@ import { deleteUserAccount, deleteUserById, findUserById, findUserByMail, findUs
 import { loggers } from "../utils/winston";
 import { blackListToken, generateId, getEncryptedPassword, verifyPassword } from "../config";
 import { validateSignupBody, validateUpdateUserBody, validateUpdateUserByAdminBody } from "../validations";
-import { InternalServerError, NotFoundError, BadRequestError, RersourceNotFoundError, ConflictError } from "../errors";
+import { InternalServerError, NotFoundError, BadRequestError, RersourceNotFoundError, ConflictError, PasswordAuthenticationError } from "../errors";
 
 
 
@@ -91,10 +91,7 @@ export const updateUser = async (req: customRequestWithPayload<{}, any, updateUs
         const existingUser = await findUserById(id);
         if (!existingUser) return next(new NotFoundError());
         const isVerifiedPassword = await verifyPassword(currentPassword, existingUser.hashPassword);
-        if (!isVerifiedPassword) {
-            res.status(400).json({ messege: 'Entered Password is InCorrect, please check' });
-            return;
-        }
+        if (!isVerifiedPassword) return next(new PasswordAuthenticationError());
         existingUser.hashPassword = updatedPassword ? await getEncryptedPassword(updatedPassword) : existingUser.hashPassword;
         existingUser.email = updatedEmail ? updatedEmail : existingUser.email;
         existingUser.username = updatedUsername ? updatedUsername : existingUser.username;

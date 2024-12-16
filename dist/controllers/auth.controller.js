@@ -51,15 +51,11 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
             return next(new errors_1.BadRequestError());
         const { email, password } = req.body;
         const existingUser = yield (0, services_1.findUserByMail)(email);
-        if (!existingUser) {
-            res.status(404).json({ error: "user not found", message: 'Please try to login with a valid mail id' });
-            return;
-        }
+        if (!existingUser)
+            return next(new errors_1.RersourceNotFoundError());
         const isVerifiedPassword = (0, config_1.verifyPassword)(password, existingUser.hashPassword);
-        if (!isVerifiedPassword) {
-            res.status(401).json({ error: "Invalid Password", message: "Please try to request with a valid password" });
-            return;
-        }
+        if (!isVerifiedPassword)
+            return next(new errors_1.PasswordAuthenticationError());
         const AccessToken = yield (0, config_1.signAccessToken)(existingUser.id, existingUser.role);
         const RefreshToken = yield (0, config_1.signRefreshToken)(existingUser.id, existingUser.role);
         existingUser.refreshToken = RefreshToken;

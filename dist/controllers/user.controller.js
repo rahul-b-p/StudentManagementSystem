@@ -99,10 +99,8 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (!existingUser)
             return next(new errors_1.NotFoundError());
         const isVerifiedPassword = yield (0, config_1.verifyPassword)(currentPassword, existingUser.hashPassword);
-        if (!isVerifiedPassword) {
-            res.status(400).json({ messege: 'Entered Password is InCorrect, please check' });
-            return;
-        }
+        if (!isVerifiedPassword)
+            return next(new errors_1.PasswordAuthenticationError());
         existingUser.hashPassword = updatedPassword ? yield (0, config_1.getEncryptedPassword)(updatedPassword) : existingUser.hashPassword;
         existingUser.email = updatedEmail ? updatedEmail : existingUser.email;
         existingUser.username = updatedUsername ? updatedUsername : existingUser.username;
