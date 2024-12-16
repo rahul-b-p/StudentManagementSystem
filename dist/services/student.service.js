@@ -121,6 +121,16 @@ const deleteStudentsById = (id) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.deleteStudentsById = deleteStudentsById;
-const deleteAllStudentsByUserId = () => {
-};
+const deleteAllStudentsByUserId = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const students = yield (0, exports.findStudents)();
+        const updatedStudents = students.filter(item => item.userId !== userId);
+        yield (0, exports.saveStudents)(updatedStudents);
+        return true;
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        throw new Error("Can't delete students with given Userid due to an error");
+    }
+});
 exports.deleteAllStudentsByUserId = deleteAllStudentsByUserId;

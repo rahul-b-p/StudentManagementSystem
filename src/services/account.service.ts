@@ -13,9 +13,9 @@ export const deleteUserAccount = async(id:string) => {
         if (userDeleteIndex !== -1) {
             users.splice(userDeleteIndex, 1);
             const students = await findStudents();
-            const updatedTodos = students.filter(item => item.userId !== id);
+            const updatedStudents = students.filter(item => item.userId !== id);
             const data = await readData();
-            data.students = updatedTodos;
+            data.students = updatedStudents;
             data.users = users;
             await writeData(data);
 

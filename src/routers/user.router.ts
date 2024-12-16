@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createStudent, deleteStudent, deleteUser, readAllStudentsByUser, updateStudent, updateUser } from '../controllers';
+import { createStudent, deleteAllStudentsByUser, deleteStudent, deleteUser, readAllStudentsByUser, updateStudent, updateUser } from '../controllers';
 export const router = Router();
 
 // update user
@@ -19,3 +19,6 @@ router.put('/update-student/:id', updateStudent);
 
 // delete student 
 router.delete('/delete-student/:id', deleteStudent);
+
+// delete students by user
+router.delete('/delete-students', deleteAllStudentsByUser);

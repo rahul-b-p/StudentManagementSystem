@@ -185,10 +185,28 @@ const deleteStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
     catch (error) {
         winston_util_1.loggers.error(error);
-        res.status(500).json({ messege: 'Something went wrong', error });
+        res.status(500).json({ messege: 'Something went wrong', error: error.message });
     }
 });
 exports.deleteStudent = deleteStudent;
-const deleteAllStudentsByUser = () => {
-};
+const deleteAllStudentsByUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
+        if (!userId)
+            throw new Error("Couldn't found the payload");
+        const existingUser = yield (0, services_1.findUserById)(userId);
+        if (!existingUser) {
+            res.status(401).json({ messege: 'You are requested from an invalid user id' });
+            return;
+        }
+        yield (0, services_1.deleteAllStudentsByUserId)(userId);
+        res.statusMessage = " Deleted Successfully";
+        res.status(200).json({ messege: 'Deleted all students created by the user' });
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        res.status(500).json({ messege: 'Something went wrong', error: error.message });
+    }
+});
 exports.deleteAllStudentsByUser = deleteAllStudentsByUser;

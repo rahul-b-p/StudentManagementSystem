@@ -16,3 +16,5 @@ exports.router.get('/read-students', controllers_1.readAllStudentsByUser);
 exports.router.put('/update-student/:id', controllers_1.updateStudent);
 // delete student 
 exports.router.delete('/delete-student/:id', controllers_1.deleteStudent);
+// delete students by user
+exports.router.delete('/delete-students', controllers_1.deleteAllStudentsByUser);

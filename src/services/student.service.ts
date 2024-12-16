@@ -103,8 +103,16 @@ export const deleteStudentsById = async(id:string):Promise<boolean> => {
     }
 }
 
-export const deleteAllStudentsByUserId = () => {
-
+export const deleteAllStudentsByUserId = async (userId: String): Promise<boolean> => {
+    try {
+        const students = await findStudents();
+        const updatedStudents = students.filter(item => item.userId !== userId);
+        await saveStudents(updatedStudents);
+        return true;
+    } catch (error) {
+        loggers.error(error);
+        throw new Error("Can't delete students with given Userid due to an error");
+    }
 }
 
 

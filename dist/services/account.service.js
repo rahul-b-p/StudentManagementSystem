@@ -21,9 +21,9 @@ const deleteUserAccount = (id) => __awaiter(void 0, void 0, void 0, function* ()
         if (userDeleteIndex !== -1) {
             users.splice(userDeleteIndex, 1);
             const students = yield (0, student_service_1.findStudents)();
-            const updatedTodos = students.filter(item => item.userId !== id);
+            const updatedStudents = students.filter(item => item.userId !== id);
             const data = yield (0, file_service_1.readData)();
-            data.students = updatedTodos;
+            data.students = updatedStudents;
             data.users = users;
             yield (0, file_service_1.writeData)(data);
             return true;
