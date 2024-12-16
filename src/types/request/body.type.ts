@@ -1,4 +1,3 @@
-import { Student } from "../db.type";
 
 export interface authBody {
     username: string;

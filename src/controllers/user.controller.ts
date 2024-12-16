@@ -1,11 +1,46 @@
 import { Response } from "express"
-import { customRequestWithPayload, updateUserBody, User } from "../types"
-import { findUserById, findUsersByrole, updateUserById } from "../services";
+import { authBody, customRequestWithPayload, updateUserBody, User } from "../types"
+import { findUserById, findUserByMail, findUsersByrole, insertUser, updateUserById } from "../services";
 import { loggers } from "../utils/winston.util";
-import { getEncryptedPassword, verifyPassword } from "../config";
-import { validateUpdateUserBody } from "../validations";
+import { generateId, getEncryptedPassword, verifyPassword } from "../config";
+import { validateSignupBody, validateUpdateUserBody } from "../validations";
 
 
+export const createAdmin = async (req: customRequestWithPayload<{}, any, authBody>, res: Response) => {
+    try {
+        const isValidReqBody = validateSignupBody(req.body);
+        if (!isValidReqBody) {
+            res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
+            return;
+        }
+
+        const { email, password, username } = req.body;
+
+        const existingUser = await findUserByMail(email);
+        if (existingUser) {
+            res.status(409).json({ message: "user already exists" });
+            return;
+        }
+
+        const hashPassword = await getEncryptedPassword(password);
+        const id = await generateId();
+        const newUser: User = {
+            id,
+            username,
+            email,
+            hashPassword,
+            role: 'admin',
+        }
+
+        await insertUser(newUser);
+        res.statusMessage = "New admin created";
+        res.status(200).json({ message: 'New Admin Created Successfully', ResponseData: { id, username, email } });
+
+    } catch (error: any) {
+        loggers.error(error);
+        res.status(500).json({ message: "Something went wrong", error: error.message })
+    }
+}
 
 export const readAllUsers = async (req: customRequestWithPayload, res: Response) => {
     try {

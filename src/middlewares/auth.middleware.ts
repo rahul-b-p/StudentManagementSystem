@@ -22,8 +22,7 @@ export const JwtAuth = async (req: customRequestWithPayload, res: Response, next
         const tokenPayload: TokenPayload = await verifyAccessToken(AccessToken);
         const { id, role } = tokenPayload;
         req.payload = {
-            id,
-            role
+            id
         }
         next();
 

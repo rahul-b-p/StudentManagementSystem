@@ -28,8 +28,7 @@ const JwtAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         const tokenPayload = yield (0, config_1.verifyAccessToken)(AccessToken);
         const { id, role } = tokenPayload;
         req.payload = {
-            id,
-            role
+            id
         };
         next();
     }

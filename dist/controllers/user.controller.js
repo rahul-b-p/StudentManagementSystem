@@ -9,11 +9,43 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.updateUser = exports.readAllAdmins = exports.readAllUsers = void 0;
+exports.deleteUser = exports.updateUser = exports.readAllAdmins = exports.readAllUsers = exports.createAdmin = void 0;
 const services_1 = require("../services");
 const winston_util_1 = require("../utils/winston.util");
 const config_1 = require("../config");
 const validations_1 = require("../validations");
+const createAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const isValidReqBody = (0, validations_1.validateSignupBody)(req.body);
+        if (!isValidReqBody) {
+            res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
+            return;
+        }
+        const { email, password, username } = req.body;
+        const existingUser = yield (0, services_1.findUserByMail)(email);
+        if (existingUser) {
+            res.status(409).json({ message: "user already exists" });
+            return;
+        }
+        const hashPassword = yield (0, config_1.getEncryptedPassword)(password);
+        const id = yield (0, config_1.generateId)();
+        const newUser = {
+            id,
+            username,
+            email,
+            hashPassword,
+            role: 'admin',
+        };
+        yield (0, services_1.insertUser)(newUser);
+        res.statusMessage = "New admin created";
+        res.status(200).json({ message: 'New Admin Created Successfully', ResponseData: { id, username, email } });
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        res.status(500).json({ message: "Something went wrong", error: error.message });
+    }
+});
+exports.createAdmin = createAdmin;
 const readAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {

@@ -116,7 +116,8 @@
       "username": "Admin",
       "email": "admin1@gmail.com",
       "hashPassword": "$2b$10$SjsxHJK9YgOwx8goMUORuOmN.FMfP.8nbmoZl4iMowXF4HwkTUZsy",
-      "role": "admin"
+      "role": "admin",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIxZWI5NDgxNjFiZDE5M2IzZjYwNGNiIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzM0MzI0ODEzLCJleHAiOjE3NDIxMDA4MTN9.CLtWNrUknmxGFI1vtiNYvyu60VeMCKldGl9DR4UnCp0"
     },
     {
       "id": "69921096bc46193b3fdf90f",
@@ -158,8 +159,14 @@
       "username": "user4",
       "email": "user4@gmail.com",
       "hashPassword": "$2b$10$Bya8hBqU1fLh/VLcbOXYDuekQpQBJiN.N0Mf4vuXoD25PQTPxQVqu",
-      "role": "user",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzZTIxOGRlZDIzMDE5M2JmZjIzZDczIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MzQzMjI2ODMsImV4cCI6MTc0MjA5ODY4M30.Bf24oESRczyRQkGqy1neDx8G_uIp9nYbuHHYXK0LGxA"
+      "role": "user"
+    },
+    {
+      "id": "e48549bbe7be193cdd0d329",
+      "username": "Admin4",
+      "email": "admin4@gmail.com",
+      "hashPassword": "$2b$10$JPKuJDTty1Gms0x3O66CH.qb81hXfyQAYlRn9LagdTSTJR5x8alwa",
+      "role": "admin"
     }
   ],
   "gradeSystem": {
