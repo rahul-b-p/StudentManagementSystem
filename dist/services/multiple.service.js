@@ -17,14 +17,17 @@ const fetchStudentsWithGrade = () => __awaiter(void 0, void 0, void 0, function*
     try {
         const students = yield (0, student_service_1.findStudents)();
         const studentsWithGrades = yield Promise.all(students.map((item) => __awaiter(void 0, void 0, void 0, function* () {
-            const grades = yield (0, grades_service_1.fetchGrades)(item.marks);
+            let grades = {};
+            if (item.marks) {
+                grades = yield (0, grades_service_1.fetchGrades)(item.marks);
+            }
             return {
                 id: item.id,
                 userId: item.userId,
                 name: item.name,
                 age: item.age,
                 email: item.email,
-                grades,
+                grades
             };
         })));
         const Response = studentsWithGrades;
@@ -40,7 +43,10 @@ const fetchStudentsWithGradeByUserId = (id) => __awaiter(void 0, void 0, void 0,
     try {
         const students = yield (0, student_service_1.findStudentsByUserId)(id);
         const studentsWithGrades = yield Promise.all(students.map((item) => __awaiter(void 0, void 0, void 0, function* () {
-            const grades = yield (0, grades_service_1.fetchGrades)(item.marks);
+            let grades = {};
+            if (item.marks) {
+                grades = yield (0, grades_service_1.fetchGrades)(item.marks);
+            }
             return {
                 id: item.id,
                 userId: item.userId,
