@@ -4,7 +4,7 @@ import { generateId, getEncryptedPassword, verifyPassword, signAccessToken, sign
 import { deleteRefreshTokenOfUser, findUserByMail, findUserByRefreshToken, insertUser, updateUserById } from "../services";
 import { loggers } from "../utils/winston";
 import { validateLoginBody, validateSignupBody } from "../validations/user.validation";
-import { InternalServerError } from "../errors";
+import { InternalServerError, NotFoundError } from "../errors";
 
 
 
@@ -140,10 +140,7 @@ export const logout = async (req: Request, res: Response, next:NextFunction) => 
         }
         const RefreshToken: any = cookies.jwt;
         const existingUser = await findUserByRefreshToken(RefreshToken);
-        if (!existingUser) {
-            res.status(404).json({ error: "Not found a user with requested refresh token" });
-            return;
-        }
+        if (!existingUser) return next(new NotFoundError());
 
         const isBlacklisted = await blackListToken(AccessToken);
         loggers.info(isBlacklisted);

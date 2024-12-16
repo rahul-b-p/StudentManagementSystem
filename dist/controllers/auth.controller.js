@@ -134,10 +134,8 @@ const logout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
         }
         const RefreshToken = cookies.jwt;
         const existingUser = yield (0, services_1.findUserByRefreshToken)(RefreshToken);
-        if (!existingUser) {
-            res.status(404).json({ error: "Not found a user with requested refresh token" });
-            return;
-        }
+        if (!existingUser)
+            return next(new errors_1.NotFoundError());
         const isBlacklisted = yield (0, config_1.blackListToken)(AccessToken);
         winston_1.loggers.info(isBlacklisted);
         if (!isBlacklisted) {

@@ -15,6 +15,7 @@ const services_1 = require("../services");
 const config_1 = require("../config");
 const validations_1 = require("../validations");
 const errors_1 = require("../errors");
+const forbidden_error_1 = require("../errors/forbidden.error");
 const createStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
@@ -30,10 +31,6 @@ const createStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         const existinUser = yield (0, services_1.findUserById)(userId);
         if (!existinUser)
             return next(new errors_1.NotFoundError());
-        if (existinUser.id !== userId) {
-            res.status(403).json({ error: 'Forbidden' });
-            return;
-        }
         const existingStudent = yield (0, services_1.findStudentByMail)(email);
         if (existingStudent) {
             res.status(409).json({ error: 'One student already added with given mail id' });
@@ -60,7 +57,6 @@ const readAllStudents = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         if (!userId)
             throw new Error("Couldn't found the payload");
         const existinUser = yield (0, services_1.findUserById)(userId);
-        winston_1.loggers.info('Hi');
         if (!existinUser)
             return next(new errors_1.NotFoundError());
         const ResponseData = yield (0, services_1.fetchStudentsWithGrade)();
@@ -163,9 +159,8 @@ const deleteStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         const student = yield (0, services_1.findStudentById)(id);
         if (!student)
             return next(new errors_1.NotFoundError());
-        if (existingUser.role !== 'admin' && userId !== student.userId) {
-            res.status(403).json({ error: 'forbidden', message: "You don't have permision to delete this item" });
-        }
+        if (existingUser.role !== 'admin' && userId !== student.userId)
+            return next(new forbidden_error_1.ForbiddenError());
         const result = yield (0, services_1.deleteStudentsById)(id);
         winston_1.loggers.info(result);
         if (!result) {

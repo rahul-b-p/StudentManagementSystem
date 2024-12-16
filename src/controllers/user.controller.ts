@@ -180,7 +180,7 @@ export const deleteUser = async (req: customRequestWithPayload, res: Response, n
                 res.statusMessage = "Successfully Deleted";
                 res.status(200).json({ message: 'Your Account has been removed successfully' });
             } else {
-                res.status(500).json({ message: 'Account Deletion Failed Due to blacklisting your token' });
+                next(new InternalServerError());
             }
         }
     } catch (error) {

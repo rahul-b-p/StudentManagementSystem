@@ -7,6 +7,7 @@ import { generateId } from "../config";
 import { validateStudentBody } from "../validations";
 import { GradeQuery } from "../types/request/query.type";
 import { InternalServerError, NotFoundError } from "../errors";
+import { ForbiddenError } from "../errors/forbidden.error";
 
 
 
@@ -27,11 +28,6 @@ export const createStudent = async (req: customRequestWithPayload<{}, any, stude
 
         const existinUser = await findUserById(userId);
         if (!existinUser) return next(new NotFoundError());
-
-        if (existinUser.id !== userId) {
-            res.status(403).json({ error: 'Forbidden' });
-            return;
-        }
 
         const existingStudent = await findStudentByMail(email);
         if (existingStudent) {
@@ -62,7 +58,6 @@ export const readAllStudents = async (req: customRequestWithPayload, res: Respon
         if (!userId) throw new Error("Couldn't found the payload");
 
         const existinUser = await findUserById(userId);
-        loggers.info('Hi')
         if (!existinUser) return next(new NotFoundError());
 
         const ResponseData = await fetchStudentsWithGrade();
@@ -164,10 +159,8 @@ export const deleteStudent = async (req: customRequestWithPayload<{ id: string }
         const student = await findStudentById(id);
         if (!student) return next(new NotFoundError());
 
-        if (existingUser.role !== 'admin' && userId !== student.userId) {
-            res.status(403).json({ error: 'forbidden', message: "You don't have permision to delete this item" });
-        }
-
+        if (existingUser.role !== 'admin' && userId !== student.userId) return next(new ForbiddenError());
+        
         const result = await deleteStudentsById(id);
         loggers.info(result);
         if (!result) {

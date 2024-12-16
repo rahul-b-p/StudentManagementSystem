@@ -14,6 +14,7 @@ const types_1 = require("../types");
 const winston_1 = require("../utils/winston");
 const services_1 = require("../services");
 const errors_1 = require("../errors");
+const forbidden_error_1 = require("../errors/forbidden.error");
 const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
@@ -25,13 +26,8 @@ const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             return next(new errors_1.NotFoundError());
         if (user.role == types_1.roles.admin)
             next();
-        else {
-            res.status(403).json({
-                "error": "Forbidden",
-                "message": "You do not have the necessary permissions to access this resource."
-            });
-            return;
-        }
+        else
+            next(new forbidden_error_1.ForbiddenError());
     }
     catch (error) {
         winston_1.loggers.error(error);

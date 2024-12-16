@@ -3,6 +3,7 @@ import { customRequestWithPayload, roles } from "../types";
 import { loggers } from "../utils/winston";
 import { findUserById } from "../services";
 import { InternalServerError, NotFoundError } from "../errors";
+import { ForbiddenError } from "../errors/forbidden.error";
 
 
 
@@ -13,14 +14,9 @@ export const verifyAdmin = async (req: customRequestWithPayload, res: Response, 
 
         const user = await findUserById(id);
         if (!user) return next(new NotFoundError());
+        
         if (user.role == roles.admin) next();
-        else {
-            res.status(403).json({
-                "error": "Forbidden",
-                "message": "You do not have the necessary permissions to access this resource."
-            });
-            return;
-        }
+        else next(new ForbiddenError());
     } catch (error) {
         loggers.error(error);
         next(new InternalServerError());
