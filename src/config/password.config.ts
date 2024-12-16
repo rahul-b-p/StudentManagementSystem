@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { loggers } from '../utils/winston.util';
+import { loggers } from '../utils/winston';
 
 export const getEncryptedPassword = async (password: string): Promise<string> => {
     try {

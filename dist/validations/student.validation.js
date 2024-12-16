@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateStudentBody = void 0;
-const winston_util_1 = require("../utils/winston.util");
+const winston_1 = require("../utils/winston");
 const validateStudentBody = (reqBody) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (typeof reqBody !== 'object' || reqBody === null)
@@ -35,14 +35,14 @@ const validateStudentBody = (reqBody) => __awaiter(void 0, void 0, void 0, funct
                 else
                     keysCount++;
             }
-            winston_util_1.loggers.info(keysCount);
+            winston_1.loggers.info(keysCount);
             if (keysCount !== subjects.length)
                 return false;
         }
         return true;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error('Req Body Validation failed due to an error');
     }
 });

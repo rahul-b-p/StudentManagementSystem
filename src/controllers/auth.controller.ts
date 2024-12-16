@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { User, authBody, customRequestWithPayload, roles } from "../types";
 import { generateId, getEncryptedPassword, verifyPassword, signAccessToken, signRefreshToken, verifyRefreshToken, blackListToken } from "../config";
 import { deleteRefreshTokenOfUser, findUserByMail, findUserByRefreshToken, insertUser, updateUserById } from "../services";
-import { loggers } from "../utils/winston.util";
+import { loggers } from "../utils/winston";
 import { validateLoginBody, validateSignupBody } from "../validations/user.validation";
 
 

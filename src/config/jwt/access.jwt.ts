@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { loggers } from '../../utils/winston.util';
+import { loggers } from '../../utils/winston';
 import { roles, TokenPayload } from '../../types';
 
 

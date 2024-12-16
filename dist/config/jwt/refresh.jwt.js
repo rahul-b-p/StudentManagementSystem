@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyRefreshToken = exports.signRefreshToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const winston_util_1 = require("../../utils/winston.util");
+const winston_1 = require("../../utils/winston");
 const signRefreshToken = (id, role) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const secretKey = process.env.REFRESH_TOKEN_SECRET;
@@ -25,7 +25,7 @@ const signRefreshToken = (id, role) => __awaiter(void 0, void 0, void 0, functio
         return RefreshToken;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't Get Access Token");
     }
 });

@@ -11,8 +11,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyAdmin = void 0;
 const types_1 = require("../types");
-const winston_util_1 = require("../utils/winston.util");
+const winston_1 = require("../utils/winston");
 const services_1 = require("../services");
+const errors_1 = require("../errors");
 const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
@@ -20,10 +21,8 @@ const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         if (!id)
             throw new Error("Can't get the role from jwt payload");
         const user = yield (0, services_1.findUserById)(id);
-        if (!user) {
-            res.status(404).json({ error: 'Requested with an Invalid UserId' });
-            return;
-        }
+        if (!user)
+            return next(new errors_1.NotFoundError());
         if (user.role == types_1.roles.admin)
             next();
         else {
@@ -35,7 +34,7 @@ const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         }
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 });

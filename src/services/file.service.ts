@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
-import { loggers } from '../utils/winston.util';
+import { loggers } from '../utils/winston';
 import { JSONDataBase } from '../types';
 import { DefaultDeserializer } from 'v8';
 

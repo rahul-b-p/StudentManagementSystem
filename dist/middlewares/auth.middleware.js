@@ -10,21 +10,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JwtAuth = void 0;
-const winston_util_1 = require("../utils/winston.util");
+const winston_1 = require("../utils/winston");
 const config_1 = require("../config");
+const errors_1 = require("../errors");
 const JwtAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const AccessToken = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
-        if (!AccessToken) {
-            res.status(400).json({ error: 'Authorization failed due to inavailability of access token', message: 'add your token for authorization' });
-            return;
-        }
+        if (!AccessToken)
+            return next(new errors_1.AuthenticationError());
         const isJwtBlacklisted = yield (0, config_1.checkTokenBlacklist)(AccessToken);
-        if (isJwtBlacklisted) {
-            res.status(401).json({ error: 'Unauthorized', message: 'You are requested from unauthorized access' });
-            return;
-        }
+        if (isJwtBlacklisted)
+            return next(new errors_1.AuthenticationError());
         const tokenPayload = yield (0, config_1.verifyAccessToken)(AccessToken);
         const { id, role } = tokenPayload;
         req.payload = {
@@ -33,8 +30,8 @@ const JwtAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         next();
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
-        res.status(401).json({ error: 'Unauthorized', message: 'You are requested from unauthorized access' });
+        winston_1.loggers.error(error);
+        next(new errors_1.AuthenticationError());
     }
 });
 exports.JwtAuth = JwtAuth;

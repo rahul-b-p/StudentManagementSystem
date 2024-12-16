@@ -1,15 +1,16 @@
 
-import { Response } from "express"
+import { NextFunction, Response } from "express"
 import { customRequestWithPayload, Student, studentBody } from "../types"
-import { loggers } from "../utils/winston.util";
+import { loggers } from "../utils/winston";
 import { deleteAllStudentsByUserId, deleteStudentsById, fetchStudentsWithGrade, fetchStudentsWithGradeByUserId, findStudentById, findStudentByMail, findStudentsByAverageGrade, findUserById, insertStudents, updateStudentsById } from "../services";
 import { generateId } from "../config";
 import { validateStudentBody } from "../validations";
 import { GradeQuery } from "../types/request/query.type";
+import { NotFoundError } from "../errors";
 
 
 
-export const createStudent = async (req: customRequestWithPayload<{}, any, studentBody<string[]>>, res: Response) => {
+export const createStudent = async (req: customRequestWithPayload<{}, any, studentBody<string[]>>, res: Response, next: NextFunction) => {
     try {
 
         const isValidReqBody = await validateStudentBody(req.body);
@@ -25,13 +26,10 @@ export const createStudent = async (req: customRequestWithPayload<{}, any, stude
         if (!userId) throw new Error("Couldn't found the payload");
 
         const existinUser = await findUserById(userId);
-        if (!existinUser) {
-            res.status(404).json({ error: 'Requested with an Invalid UserId' });
-            return;
-        }
+        if (!existinUser) return next(new NotFoundError());
 
         if (existinUser.id !== userId) {
-            res.status(409).json({ error: 'Requested by an Invalid User' });
+            res.status(403).json({ error: 'Forbidden' });
             return;
         }
 
@@ -58,16 +56,14 @@ export const createStudent = async (req: customRequestWithPayload<{}, any, stude
     }
 }
 
-export const readAllStudents = async (req: customRequestWithPayload, res: Response) => {
+export const readAllStudents = async (req: customRequestWithPayload, res: Response, next:NextFunction) => {
     try {
         const userId = req.payload?.id;
         if (!userId) throw new Error("Couldn't found the payload");
 
         const existinUser = await findUserById(userId);
-        if (!existinUser) {
-            res.status(404).json({ error: 'Requested with an Invalid UserId' });
-            return;
-        }
+        loggers.info('Hi')
+        if (!existinUser) return next(new NotFoundError());
 
         const ResponseData = await fetchStudentsWithGrade();
         res.status(200).json({ message: 'Fetching all students from the aplication', ResponseData });
@@ -77,15 +73,13 @@ export const readAllStudents = async (req: customRequestWithPayload, res: Respon
     }
 }
 
-export const readAllStudentsByUser = async (req: customRequestWithPayload, res: Response) => {
+export const readAllStudentsByUser = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
     try {
         const userId = req.payload?.id;
         if (!userId) throw new Error("Can't get the payload");
 
         const existinUser = await findUserById(userId);
-        if (!existinUser) {
-            res.status(404).json({ error: "Invalid User" });
-        }
+        if (!existinUser) return next(new NotFoundError());
 
         const stuents = await fetchStudentsWithGradeByUserId(userId);
         res.status(200).json({ message: `Found all students added by ${existinUser?.username}`, ResponseData: stuents });
@@ -95,22 +89,20 @@ export const readAllStudentsByUser = async (req: customRequestWithPayload, res: 
     }
 }
 
-export const readAllStudentsByGrade = async (req:customRequestWithPayload<{},any,any,GradeQuery>,res:Response)=>{
+export const readAllStudentsByGrade = async (req: customRequestWithPayload<{}, any, any, GradeQuery>, res: Response, next: NextFunction) => {
     try {
         const userId = req.payload?.id;
         if (!userId) throw new Error("Can't get the payload");
 
-        const {grade} = req.query
+        const { grade } = req.query
         loggers.info(grade)
-        if(!grade){
+        if (!grade) {
             res.status(400).json({ error: 'Missing query parameters:grade is required.' });
             return;
         }
 
         const existinUser = await findUserById(userId);
-        if (!existinUser) {
-            res.status(404).json({ error: "Invalid User" });
-        }
+        if (!existinUser) return next(new NotFoundError());
 
         const stuents = await findStudentsByAverageGrade(grade);
         res.status(200).json({ message: `Found all students added by ${existinUser?.username}`, data: stuents });
@@ -120,7 +112,7 @@ export const readAllStudentsByGrade = async (req:customRequestWithPayload<{},any
     }
 }
 
-export const updateStudent = async (req: customRequestWithPayload<{ id: string }, any, studentBody<string[]>>, res: Response) => {
+export const updateStudent = async (req: customRequestWithPayload<{ id: string }, any, studentBody<string[]>>, res: Response, next: NextFunction) => {
     try {
         const isValidReqBody = await validateStudentBody(req.body);
         if (!isValidReqBody) {
@@ -134,10 +126,7 @@ export const updateStudent = async (req: customRequestWithPayload<{ id: string }
         if (!userId) throw new Error("Couldn't found the payload");
 
         const existinUser = await findUserById(userId);
-        if (!existinUser) {
-            res.status(404).json({ error: 'Requested with an Invalid UserId' });
-            return;
-        }
+        if (!existinUser) return next(new NotFoundError());
 
         const { id } = req.params;
         const existingStudent = await findStudentById(id);
@@ -159,7 +148,7 @@ export const updateStudent = async (req: customRequestWithPayload<{ id: string }
     }
 }
 
-export const deleteStudent = async(req: customRequestWithPayload<{ id: string }>, res: Response) => {
+export const deleteStudent = async (req: customRequestWithPayload<{ id: string }>, res: Response, next: NextFunction) => {
     try {
         const userId = req.payload?.id;
         if (!userId) throw new Error("Couldn't found the payload");
@@ -173,13 +162,10 @@ export const deleteStudent = async(req: customRequestWithPayload<{ id: string }>
         }
 
         const student = await findStudentById(id);
-        if (!student) {
-            res.status(404).json({ messege: 'Not found any student with given id' });
-            return;
-        }
+        if (!student) return next(new NotFoundError());
 
-        if(existingUser.role!=='admin' && userId !== student.userId){
-            res.status(403).json({error:'forbidden',message:"You don't have permision to delete this item"});
+        if (existingUser.role !== 'admin' && userId !== student.userId) {
+            res.status(403).json({ error: 'forbidden', message: "You don't have permision to delete this item" });
         }
 
         const result = await deleteStudentsById(id);
@@ -192,26 +178,23 @@ export const deleteStudent = async(req: customRequestWithPayload<{ id: string }>
         res.status(200).json({ messege: 'Deleted student with given Id ' });
     } catch (error: any) {
         loggers.error(error);
-        res.status(500).json({ messege: 'Something went wrong', error:error.message });
+        res.status(500).json({ messege: 'Something went wrong', error: error.message });
     }
 }
 
-export const deleteAllStudentsByUser = async (req: customRequestWithPayload, res: Response) => {
+export const deleteAllStudentsByUser = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
     try {
         const userId = req.payload?.id;
         if (!userId) throw new Error("Couldn't found the payload");
 
         const existingUser = await findUserById(userId);
-        if (!existingUser) {
-            res.status(401).json({ messege: 'You are requested from an invalid user id' });
-            return;
-        }
+        if (!existingUser) return next(new NotFoundError());
 
         await deleteAllStudentsByUserId(userId);
         res.statusMessage = " Deleted Successfully";
         res.status(200).json({ messege: 'Deleted all students created by the user' });
 
-    } catch (error:any) {
+    } catch (error: any) {
         loggers.error(error);
         res.status(500).json({ messege: 'Something went wrong', error: error.message });
     }

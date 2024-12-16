@@ -1,7 +1,8 @@
 import { NextFunction, Response } from "express";
 import { customRequestWithPayload, roles } from "../types";
-import { loggers } from "../utils/winston.util";
+import { loggers } from "../utils/winston";
 import { findUserById } from "../services";
+import { NotFoundError } from "../errors";
 
 
 
@@ -11,10 +12,7 @@ export const verifyAdmin = async (req: customRequestWithPayload, res: Response, 
         if (!id) throw new Error("Can't get the role from jwt payload");
 
         const user = await findUserById(id);
-        if(!user){
-            res.status(404).json({ error: 'Requested with an Invalid UserId' });
-            return;
-        }
+        if (!user) return next(new NotFoundError());
         if (user.role == roles.admin) next();
         else {
             res.status(403).json({

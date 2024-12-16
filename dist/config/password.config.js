@@ -14,16 +14,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyPassword = exports.getEncryptedPassword = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const winston_util_1 = require("../utils/winston.util");
+const winston_1 = require("../utils/winston");
 const getEncryptedPassword = (password) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const salt = yield bcrypt_1.default.genSalt(Number(process.env.SALT));
         const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
-        winston_util_1.loggers.info(encryptedPassword);
+        winston_1.loggers.info(encryptedPassword);
         return encryptedPassword;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("An Error occur while password encryption");
     }
 });
@@ -34,7 +34,7 @@ const verifyPassword = (password, hashPass) => __awaiter(void 0, void 0, void 0,
         return isVerifiedPassword;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("An Error occur while password verification");
     }
 });

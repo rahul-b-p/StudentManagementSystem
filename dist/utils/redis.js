@@ -9,18 +9,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateId = void 0;
-const winston_1 = require("../utils/winston");
-const generateId = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const timestamp = Date.now().toString(16);
-        const randomString = crypto.randomUUID();
-        const uniqueId = (randomString + timestamp).slice(-23);
-        return uniqueId;
+const client_1 = require("@redis/client");
+const winston_1 = require("./winston");
+const redisClient = (0, client_1.createClient)();
+(() => __awaiter(void 0, void 0, void 0, function* () {
+    if (!redisClient.isOpen) {
+        try {
+            yield redisClient.connect();
+            winston_1.loggers.info('Connected to Redis');
+        }
+        catch (err) {
+            winston_1.loggers.error('Failed to connect to Redis:', err);
+        }
     }
-    catch (error) {
-        winston_1.loggers.error(error);
-        throw new Error("Can't generate Id due to an error");
-    }
-});
-exports.generateId = generateId;
+}))();
+exports.default = redisClient;

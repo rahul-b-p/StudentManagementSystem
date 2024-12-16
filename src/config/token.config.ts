@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { TokenPayload } from '../types';
-import redisClient from '../utils/redis.util';
-import { loggers } from '../utils/winston.util';
+import redisClient from '../utils/redis';
+import { loggers } from '../utils/winston';
 
 
 export const blackListToken = async (token: string): Promise<boolean> => {

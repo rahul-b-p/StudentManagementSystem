@@ -1,12 +1,12 @@
-import { loggers } from "../utils/winston.util";
+import { loggers } from "../utils/winston";
 import { readData, writeData } from "./file.service";
-import { findStudents} from "./student.service"
+import { findStudents } from "./student.service"
 import { findUsers } from "./user.service";
 
 
 
 
-export const deleteUserAccount = async(id:string) => {
+export const deleteUserAccount = async (id: string) => {
     try {
         const users = await findUsers();
         const userDeleteIndex = users.findIndex(item => item.id == id);

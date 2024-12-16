@@ -1,9 +1,10 @@
-import { Response } from "express"
+import { NextFunction, Response } from "express"
 import { authBody, customRequestWithPayload, roles, updateUserBody, User } from "../types"
 import { deleteUserAccount, deleteUserById, findUserById, findUserByMail, findUsersByrole, insertUser, updateUserById } from "../services";
-import { loggers } from "../utils/winston.util";
+import { loggers } from "../utils/winston";
 import { blackListToken, generateId, getEncryptedPassword, verifyPassword } from "../config";
 import { validateSignupBody, validateUpdateUserBody, validateUpdateUserByAdminBody } from "../validations";
+import { NotFoundError } from "../errors";
 
 
 export const createUser = async (req: customRequestWithPayload<{ role: roles }, any, authBody>, res: Response) => {
@@ -16,7 +17,7 @@ export const createUser = async (req: customRequestWithPayload<{ role: roles }, 
 
         const { role } = req.params;
         if (role !== roles.admin && role !== roles.user) {
-            res.status(400).json({Message:"Invalid Request"});
+            res.status(400).json({ Message: "Invalid Request" });
         }
 
         const { email, password, username } = req.body;
@@ -48,16 +49,13 @@ export const createUser = async (req: customRequestWithPayload<{ role: roles }, 
     }
 }
 
-export const readAllUsers = async (req: customRequestWithPayload, res: Response) => {
+export const readAllUsers = async (req: customRequestWithPayload, res: Response, next:NextFunction) => {
     try {
         const id = req.payload?.id;
         if (!id) throw new Error("Couldn't find payload");
 
         const existingUser = await findUserById(id)
-        if (!existingUser) {
-            res.status(404).json({ error: 'Requested with an Invalid UserId' });
-            return;
-        }
+        if (!existingUser) return next(new NotFoundError());
 
         const users = await findUsersByrole('user');
         type Response = Omit<User, 'hashPassword' | 'refreshToken' | 'role'>;
@@ -69,16 +67,13 @@ export const readAllUsers = async (req: customRequestWithPayload, res: Response)
     }
 }
 
-export const readAllAdmins = async (req: customRequestWithPayload, res: Response) => {
+export const readAllAdmins = async (req: customRequestWithPayload, res: Response, next:NextFunction) => {
     try {
         const id = req.payload?.id;
         if (!id) throw new Error("Couldn't find payload");
 
         const existingUser = await findUserById(id)
-        if (!existingUser) {
-            res.status(404).json({ error: 'Requested with an Invalid UserId' });
-            return;
-        }
+        if (!existingUser) return next(new NotFoundError());
 
         const admins = await findUsersByrole('admin');
         type Response = Omit<User, 'hashPassword' | 'refreshToken' | 'role'>;
@@ -90,7 +85,7 @@ export const readAllAdmins = async (req: customRequestWithPayload, res: Response
     }
 }
 
-export const updateUser = async (req: customRequestWithPayload<{}, any, updateUserBody>, res: Response) => {
+export const updateUser = async (req: customRequestWithPayload<{}, any, updateUserBody>, res: Response, next:NextFunction) => {
     try {
         const isValidReqBody = validateUpdateUserBody(req.body);
         if (!isValidReqBody) {
@@ -104,11 +99,7 @@ export const updateUser = async (req: customRequestWithPayload<{}, any, updateUs
         if (!id) throw new Error("Couldn't find payload");
 
         const existingUser = await findUserById(id);
-        if (!existingUser) {
-            res.status(404).json({ error: 'Requested with an Invalid UserId' });
-            return;
-        }
-
+        if (!existingUser) return next(new NotFoundError());
         const isVerifiedPassword = await verifyPassword(currentPassword, existingUser.hashPassword);
         if (!isVerifiedPassword) {
             res.status(400).json({ messege: 'Entered Password is InCorrect, please check' });
@@ -128,7 +119,7 @@ export const updateUser = async (req: customRequestWithPayload<{}, any, updateUs
     }
 }
 
-export const updateUserByAdmin = async (req: customRequestWithPayload<{ id: string }, any, authBody>, res: Response) => {
+export const updateUserByAdmin = async (req: customRequestWithPayload<{ id: string }, any, authBody>, res: Response, next: NextFunction) => {
     try {
         const isValidReqBody = validateUpdateUserByAdminBody(req.body);
         if (!isValidReqBody) {
@@ -140,10 +131,7 @@ export const updateUserByAdmin = async (req: customRequestWithPayload<{ id: stri
         if (!userId) throw new Error("Couldn't find payload");
 
         const existingUser = await findUserById(userId);
-        if (!existingUser) {
-            res.status(404).json({ error: 'Requested with an Invalid UserId' });
-            return;
-        }
+        if (!existingUser) return next(new NotFoundError());
 
         const { id } = req.params;
 
@@ -175,16 +163,13 @@ export const updateUserByAdmin = async (req: customRequestWithPayload<{ id: stri
     }
 }
 
-export const deleteUser = async (req: customRequestWithPayload, res: Response) => {
+export const deleteUser = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
     try {
         const id = req.payload?.id;
         if (!id) throw new Error("Couldn't find payload");
 
         const existingUser = await findUserById(id);
-        if (!existingUser) {
-            res.status(401).json({ messege: 'You are requested from an invalid user id' });
-            return;
-        }
+        if (!existingUser) return next(new NotFoundError());
 
         const accessToken = req.headers.authorization?.split(' ')[1];
         if (accessToken) {
@@ -204,16 +189,13 @@ export const deleteUser = async (req: customRequestWithPayload, res: Response) =
     }
 }
 
-export const deleteUserByAdmin = async (req: customRequestWithPayload<{ id: string }>, res: Response) => {
+export const deleteUserByAdmin = async (req: customRequestWithPayload<{ id: string }>, res: Response, next: NextFunction) => {
     try {
         const userId = req.payload?.id;
         if (!userId) throw new Error("Couldn't find payload");
 
         const existingUser = await findUserById(userId);
-        if (!existingUser) {
-            res.status(404).json({ error: 'Requested with an Invalid UserId' });
-            return;
-        }
+        if (!existingUser) return next(new NotFoundError());
 
         const { id } = req.params;
         const isDeleted = await deleteUserById(id);

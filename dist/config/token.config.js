@@ -14,28 +14,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkTokenBlacklist = exports.blackListToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const redis_util_1 = __importDefault(require("../utils/redis.util"));
-const winston_util_1 = require("../utils/winston.util");
+const redis_1 = __importDefault(require("../utils/redis"));
+const winston_1 = require("../utils/winston");
 const blackListToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { exp } = jsonwebtoken_1.default.decode(token);
         const expiresIn = exp - Math.floor(Date.now() / 1000);
-        const result = yield redis_util_1.default.set(token, 'Blacklisted', { 'EX': expiresIn });
+        const result = yield redis_1.default.set(token, 'Blacklisted', { 'EX': expiresIn });
         return result ? true : false;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't Blacklist Token");
     }
 });
 exports.blackListToken = blackListToken;
 const checkTokenBlacklist = (token) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield redis_util_1.default.get(token);
+        const result = yield redis_1.default.get(token);
         return result ? true : false;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't check the token now");
     }
 });

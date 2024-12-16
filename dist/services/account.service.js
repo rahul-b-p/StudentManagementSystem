@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUserAccount = void 0;
-const winston_util_1 = require("../utils/winston.util");
+const winston_1 = require("../utils/winston");
 const file_service_1 = require("./file.service");
 const student_service_1 = require("./student.service");
 const user_service_1 = require("./user.service");
@@ -31,7 +31,7 @@ const deleteUserAccount = (id) => __awaiter(void 0, void 0, void 0, function* ()
         return false;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't Delete Account due to an error");
     }
 });

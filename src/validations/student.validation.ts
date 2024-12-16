@@ -1,5 +1,5 @@
 import { studentBody } from "../types";
-import { loggers } from "../utils/winston.util";
+import { loggers } from "../utils/winston";
 
 
 

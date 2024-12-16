@@ -15,17 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.writeData = exports.initializeDB = exports.readData = void 0;
 const promises_1 = require("fs/promises");
 const path_1 = __importDefault(require("path"));
-const winston_util_1 = require("../utils/winston.util");
+const winston_1 = require("../utils/winston");
 const DB_FILE_PATH = path_1.default.join(path_1.default.dirname(path_1.default.dirname(__dirname)), 'db.json');
 const readData = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const fileContent = yield (0, promises_1.readFile)(DB_FILE_PATH, 'utf-8');
         const data = JSON.parse(fileContent);
-        winston_util_1.loggers.info('Data Readed Successfully');
+        winston_1.loggers.info('Data Readed Successfully');
         return data;
     }
     catch (error) {
-        winston_util_1.loggers.info('Empty DataBase Found...!');
+        winston_1.loggers.info('Empty DataBase Found...!');
         return (0, exports.initializeDB)();
     }
 });
@@ -37,11 +37,11 @@ const initializeDB = () => __awaiter(void 0, void 0, void 0, function* () {
             students: []
         };
         yield (0, promises_1.writeFile)(DB_FILE_PATH, JSON.stringify(data, null, 2), 'utf-8');
-        winston_util_1.loggers.info('DataBase Initialized Successfully');
+        winston_1.loggers.info('DataBase Initialized Successfully');
         return data;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error('Error happens while Initializing new DB');
     }
 });
@@ -49,11 +49,11 @@ exports.initializeDB = initializeDB;
 const writeData = (data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, promises_1.writeFile)(DB_FILE_PATH, JSON.stringify(data, null, 2), 'utf-8');
-        winston_util_1.loggers.info('Data Written Successfully');
+        winston_1.loggers.info('Data Written Successfully');
         return true;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Error happens while writing data into file");
     }
 });

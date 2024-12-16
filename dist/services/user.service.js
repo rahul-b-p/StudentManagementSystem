@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUserById = exports.deleteRefreshTokenOfUser = exports.updateUserById = exports.insertUser = exports.saveUsers = exports.findUsersByrole = exports.findUserByRefreshToken = exports.findUserByMail = exports.findUserById = exports.findUsers = void 0;
-const winston_util_1 = require("../utils/winston.util");
+const winston_1 = require("../utils/winston");
 const file_service_1 = require("./file.service");
 const findUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -19,7 +19,7 @@ const findUsers = () => __awaiter(void 0, void 0, void 0, function* () {
         return users;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't find users due to an error");
     }
 });
@@ -31,7 +31,7 @@ const findUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
         return user ? user : null;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't find Users with given id due to an error");
     }
 });
@@ -43,7 +43,7 @@ const findUserByMail = (email) => __awaiter(void 0, void 0, void 0, function* ()
         return user ? user : null;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't find Users with given email due to an error");
     }
 });
@@ -55,7 +55,7 @@ const findUserByRefreshToken = (refreshToken) => __awaiter(void 0, void 0, void 
         return user ? user : null;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't find Users with requested RefreshToken due to an error");
     }
 });
@@ -66,7 +66,7 @@ const findUsersByrole = (role) => __awaiter(void 0, void 0, void 0, function* ()
         return users.filter(item => item.role == role);
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't find Users with given role due to an error");
     }
 });
@@ -79,7 +79,7 @@ const saveUsers = (newUsers) => __awaiter(void 0, void 0, void 0, function* () {
         return true;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't save users on Database due to an error");
     }
 });
@@ -92,7 +92,7 @@ const insertUser = (newUser) => __awaiter(void 0, void 0, void 0, function* () {
         return true;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't insert user on Users due to an error");
     }
 });
@@ -110,7 +110,7 @@ const updateUserById = (id, updatedUser) => __awaiter(void 0, void 0, void 0, fu
         }
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't update user with given id due to an error");
     }
 });
@@ -126,7 +126,7 @@ const deleteRefreshTokenOfUser = (id) => __awaiter(void 0, void 0, void 0, funct
         return true;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't  delete Refresh Token Due to Error");
     }
 });
@@ -144,7 +144,7 @@ const deleteUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't  delete user Due to Error");
     }
 });

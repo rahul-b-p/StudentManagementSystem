@@ -1,5 +1,5 @@
 import { grades, GradeSystem, StanderdGrades, StudentWithGrades } from "../types";
-import { loggers } from "../utils/winston.util"
+import { loggers } from "../utils/winston"
 import { readData, writeData } from "./file.service";
 import { findStudents, findStudentsByUserId } from "./student.service";
 
@@ -108,10 +108,10 @@ export const fetchGrades = async (marks: Record<string, number>): Promise<Record
     }
 }
 
-export const findAverageGrade = async (marks:Record<string,number>):Promise<string>=>{
+export const findAverageGrade = async (marks: Record<string, number>): Promise<string> => {
     try {
         const mark = Object.values(marks);
-        const average = (mark.reduce((a,b)=>a+b))/mark.length;
+        const average = (mark.reduce((a, b) => a + b)) / mark.length;
         const averageGrade = findGradesForMarks(average);
         return averageGrade;
     } catch (error) {

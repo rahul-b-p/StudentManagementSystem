@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.findStudentsByAverageGrade = exports.fetchStudentsWithGradeByUserId = exports.fetchStudentsWithGrade = exports.findAverageGrade = exports.fetchGrades = exports.findGradesForMarks = exports.resetGradeRange = exports.updateGradeRange = exports.findGradeRange = void 0;
-const winston_util_1 = require("../utils/winston.util");
+const winston_1 = require("../utils/winston");
 const file_service_1 = require("./file.service");
 const student_service_1 = require("./student.service");
 const findGradeRange = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -38,7 +38,7 @@ const findGradeRange = () => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't find Standerd Grade System due to an error");
     }
 });
@@ -51,7 +51,7 @@ const updateGradeRange = (gradeSystem) => __awaiter(void 0, void 0, void 0, func
         return true;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't find Standerd Grade System due to an error");
     }
 });
@@ -77,7 +77,7 @@ const resetGradeRange = () => __awaiter(void 0, void 0, void 0, function* () {
         return data.gradeSystem;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't find Standerd Grade System due to an error");
     }
 });
@@ -98,7 +98,7 @@ const findGradesForMarks = (mark) => __awaiter(void 0, void 0, void 0, function*
         throw new Error("System Failed to store valid grades");
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't find Standerd Grade System due to an error");
     }
 });
@@ -113,7 +113,7 @@ const fetchGrades = (marks) => __awaiter(void 0, void 0, void 0, function* () {
         return grades;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't fetch grades on given object due to an error");
     }
 });
@@ -126,7 +126,7 @@ const findAverageGrade = (marks) => __awaiter(void 0, void 0, void 0, function* 
         return averageGrade;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't find Average Grade by given marks due to an error");
     }
 });
@@ -155,7 +155,7 @@ const fetchStudentsWithGrade = () => __awaiter(void 0, void 0, void 0, function*
         return Response;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error('Fetching Grades of students failed due to an error');
     }
 });
@@ -181,7 +181,7 @@ const fetchStudentsWithGradeByUserId = (id) => __awaiter(void 0, void 0, void 0,
         return Response;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error('Fetching Grades of students failed due to an error');
     }
 });
@@ -192,7 +192,7 @@ const findStudentsByAverageGrade = (grade) => __awaiter(void 0, void 0, void 0, 
         return students.filter(item => item.averageGrade == grade);
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error('Something went wrong by fetching students with given id');
     }
 });

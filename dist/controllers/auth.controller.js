@@ -13,7 +13,7 @@ exports.logout = exports.refreshToken = exports.login = exports.signup = void 0;
 const types_1 = require("../types");
 const config_1 = require("../config");
 const services_1 = require("../services");
-const winston_util_1 = require("../utils/winston.util");
+const winston_1 = require("../utils/winston");
 const user_validation_1 = require("../validations/user.validation");
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -42,7 +42,7 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(200).json({ message: 'New Account Created Successfully', ResponseData: { id, username, email } });
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 });
@@ -79,7 +79,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 });
@@ -115,7 +115,7 @@ const refreshToken = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(200).json({ AccessToken, RefreshToken: newRefreshToken });
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         res.status(500).json({ message: 'Something went wrong while refreshing the token' });
     }
 });
@@ -141,7 +141,7 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return;
         }
         const isBlacklisted = yield (0, config_1.blackListToken)(AccessToken);
-        winston_util_1.loggers.info(isBlacklisted);
+        winston_1.loggers.info(isBlacklisted);
         if (!isBlacklisted) {
             res.status(500).json({ message: 'Failed to blacklist token' });
             return;
@@ -156,7 +156,7 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(200).json({ message: 'Succsessfully completed your logout with invalidation of accesstoken' });
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         res.status(500).json({ message: 'Something went wrong while loggging out', error: error.message });
     }
 });

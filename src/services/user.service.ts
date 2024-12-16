@@ -1,5 +1,5 @@
 import { User } from "../types";
-import { loggers } from "../utils/winston.util";
+import { loggers } from "../utils/winston";
 import { readData, writeData } from "./file.service";
 
 
@@ -115,10 +115,10 @@ export const deleteRefreshTokenOfUser = async (id: string): Promise<boolean> => 
 export const deleteUserById = async (id: string): Promise<boolean> => {
     try {
         const users = await findUsers();
-        const deleteIndex = users.findIndex(item=>item.id==id);
-        if(deleteIndex==-1) return false;
-        else{
-            users.splice(deleteIndex,1);
+        const deleteIndex = users.findIndex(item => item.id == id);
+        if (deleteIndex == -1) return false;
+        else {
+            users.splice(deleteIndex, 1);
             await saveUsers(users);
             return true;
         }

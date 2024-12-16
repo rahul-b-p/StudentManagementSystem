@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteAllStudentsByUserId = exports.deleteStudentsById = exports.updateStudentsById = exports.insertStudents = exports.saveStudents = exports.findStudentsByUserId = exports.findStudentByMail = exports.findStudentById = exports.findStudents = void 0;
-const winston_util_1 = require("../utils/winston.util");
+const winston_1 = require("../utils/winston");
 const file_service_1 = require("./file.service");
 const findStudents = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -19,7 +19,7 @@ const findStudents = () => __awaiter(void 0, void 0, void 0, function* () {
         return students;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't find students due to an error");
     }
 });
@@ -31,7 +31,7 @@ const findStudentById = (id) => __awaiter(void 0, void 0, void 0, function* () {
         return student ? student : null;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't find Student with given id due to an error");
     }
 });
@@ -43,7 +43,7 @@ const findStudentByMail = (email) => __awaiter(void 0, void 0, void 0, function*
         return student ? student : null;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't find Student with given email due to an error");
     }
 });
@@ -54,7 +54,7 @@ const findStudentsByUserId = (userId) => __awaiter(void 0, void 0, void 0, funct
         return students.filter(item => item.userId == userId);
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't find students added by the users due to an error");
     }
 });
@@ -67,7 +67,7 @@ const saveStudents = (newStudents) => __awaiter(void 0, void 0, void 0, function
         return true;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't save students on Database due to an error");
     }
 });
@@ -80,7 +80,7 @@ const insertStudents = (newStudent) => __awaiter(void 0, void 0, void 0, functio
         return true;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't insert user on Student due to an error");
     }
 });
@@ -98,7 +98,7 @@ const updateStudentsById = (id, updatedStudent) => __awaiter(void 0, void 0, voi
         }
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't update student with given id due to an error");
     }
 });
@@ -116,7 +116,7 @@ const deleteStudentsById = (id) => __awaiter(void 0, void 0, void 0, function* (
         }
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't delete student with given id due to an error");
     }
 });
@@ -129,7 +129,7 @@ const deleteAllStudentsByUserId = (userId) => __awaiter(void 0, void 0, void 0, 
         return true;
     }
     catch (error) {
-        winston_util_1.loggers.error(error);
+        winston_1.loggers.error(error);
         throw new Error("Can't delete students with given Userid due to an error");
     }
 });
