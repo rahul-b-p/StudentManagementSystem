@@ -32,3 +32,17 @@ export const validateUpdateUserBody = (reqBody: updateUserBody) => {
             typeof updatedUsername !== 'string')) return false;
     else return true;
 }
+
+
+export const validateUpdateUserByAdminBody = (reqBody: authBody) => {
+    if (typeof reqBody !== 'object' ||
+        reqBody === null) return false;
+
+    const { email, username, password } = reqBody;
+
+    if (email && typeof email !== 'string' ||
+        password && typeof password !== 'string' ||
+        email && typeof email !== 'string'
+    ) return false;
+    else return true;
+}

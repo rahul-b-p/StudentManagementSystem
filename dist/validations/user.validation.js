@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateUpdateUserBody = exports.validateLoginBody = exports.validateSignupBody = void 0;
+exports.validateUpdateUserByAdminBody = exports.validateUpdateUserBody = exports.validateLoginBody = exports.validateSignupBody = void 0;
 const validateSignupBody = (reqBody) => {
     if (typeof reqBody !== 'object' || reqBody === null)
         return false;
@@ -37,3 +37,16 @@ const validateUpdateUserBody = (reqBody) => {
         return true;
 };
 exports.validateUpdateUserBody = validateUpdateUserBody;
+const validateUpdateUserByAdminBody = (reqBody) => {
+    if (typeof reqBody !== 'object' ||
+        reqBody === null)
+        return false;
+    const { email, username, password } = reqBody;
+    if (email && typeof email !== 'string' ||
+        password && typeof password !== 'string' ||
+        email && typeof email !== 'string')
+        return false;
+    else
+        return true;
+};
+exports.validateUpdateUserByAdminBody = validateUpdateUserByAdminBody;

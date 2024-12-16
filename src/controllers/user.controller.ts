@@ -3,7 +3,7 @@ import { authBody, customRequestWithPayload, updateUserBody, User } from "../typ
 import { deleteUserAccount, findUserById, findUserByMail, findUsersByrole, insertUser, updateUserById } from "../services";
 import { loggers } from "../utils/winston.util";
 import { blackListToken, generateId, getEncryptedPassword, verifyPassword } from "../config";
-import { validateSignupBody, validateUpdateUserBody } from "../validations";
+import { validateSignupBody, validateUpdateUserBody, validateUpdateUserByAdminBody } from "../validations";
 
 
 export const createAdmin = async (req: customRequestWithPayload<{}, any, authBody>, res: Response) => {
@@ -116,6 +116,53 @@ export const updateUser = async (req: customRequestWithPayload<{}, any, updateUs
         await updateUserById(id, existingUser);
         res.statusMessage = "Updated Successfully";
         res.status(200).json({ messege: 'user updated successfully', body: { username: existingUser.username, email: existingUser.email } })
+    } catch (error: any) {
+        loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
+}
+
+export const updateUserByAdmin = async (req: customRequestWithPayload<{ id: string }, any, authBody>, res: Response) => {
+    try {
+        const isValidReqBody = validateUpdateUserByAdminBody(req.body);
+        if (!isValidReqBody) {
+            res.status(400).json({ error: 'Invalid Request Body' });
+            return;
+        }
+
+        const userId = req.payload?.id;
+        if (!userId) throw new Error("Couldn't find payload");
+
+        const existingUser = await findUserById(userId);
+        if (!existingUser) {
+            res.status(404).json({ error: 'Requested with an Invalid UserId' });
+            return;
+        }
+
+        const { id } = req.params;
+
+        const { email, password, username } = req.body
+
+        const updatingUser = await findUserById(id);
+        if(!updatingUser){
+            res.status(404).json({ message: 'Not found any user for deletion' });
+            return;
+        }
+
+        updatingUser.hashPassword = password ? await getEncryptedPassword(password) : updatingUser.hashPassword
+        updatingUser.email = email ? email : updatingUser.email;
+        updatingUser.username = username ? username : updatingUser.username;
+
+
+        const result = await updateUserById(id, updatingUser);
+        if(result){
+            res.statusMessage = "Updated Successfully";
+            res.status(200).json({ messege: 'user updated successfully', body: { username: updatingUser.username, email: updatingUser.email } });
+        }
+        else{
+            res.status(404).json({message:'Not found any user for deletion'});
+        }
+
     } catch (error: any) {
         loggers.error(error);
         res.status(500).json({ message: 'Something went wrong', error: error.message });

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.updateUser = exports.readAllAdmins = exports.readAllUsers = exports.createAdmin = void 0;
+exports.deleteUser = exports.updateUserByAdmin = exports.updateUser = exports.readAllAdmins = exports.readAllUsers = exports.createAdmin = void 0;
 const services_1 = require("../services");
 const winston_util_1 = require("../utils/winston.util");
 const config_1 = require("../config");
@@ -123,6 +123,47 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.updateUser = updateUser;
+const updateUserByAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const isValidReqBody = (0, validations_1.validateUpdateUserByAdminBody)(req.body);
+        if (!isValidReqBody) {
+            res.status(400).json({ error: 'Invalid Request Body' });
+            return;
+        }
+        const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
+        if (!userId)
+            throw new Error("Couldn't find payload");
+        const existingUser = yield (0, services_1.findUserById)(userId);
+        if (!existingUser) {
+            res.status(404).json({ error: 'Requested with an Invalid UserId' });
+            return;
+        }
+        const { id } = req.params;
+        const { email, password, username } = req.body;
+        const updatingUser = yield (0, services_1.findUserById)(id);
+        if (!updatingUser) {
+            res.status(404).json({ message: 'Not found any user for deletion' });
+            return;
+        }
+        updatingUser.hashPassword = password ? yield (0, config_1.getEncryptedPassword)(password) : updatingUser.hashPassword;
+        updatingUser.email = email ? email : updatingUser.email;
+        updatingUser.username = username ? username : updatingUser.username;
+        const result = yield (0, services_1.updateUserById)(id, updatingUser);
+        if (result) {
+            res.statusMessage = "Updated Successfully";
+            res.status(200).json({ messege: 'user updated successfully', body: { username: updatingUser.username, email: updatingUser.email } });
+        }
+        else {
+            res.status(404).json({ message: 'Not found any user for deletion' });
+        }
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
+});
+exports.updateUserByAdmin = updateUserByAdmin;
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     try {

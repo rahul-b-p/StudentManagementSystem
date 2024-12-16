@@ -10,6 +10,8 @@ exports.router.post('/create-new', controllers_1.createAdmin);
 exports.router.get('/read-users', controllers_1.readAllUsers);
 // read all admins
 exports.router.get('/read-admins', controllers_1.readAllAdmins);
+// update users by id
+exports.router.put('/update-user/:id', controllers_1.updateUserByAdmin);
 //read all students
 exports.router.get('/read-students', controllers_1.readAllStudents);
 // read students by grade
