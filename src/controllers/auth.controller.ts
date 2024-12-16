@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { User, authBody, customRequestWithPayload } from "../types";
+import { User, authBody, customRequestWithPayload, roles } from "../types";
 import { generateId, getEncryptedPassword, verifyPassword, signAccessToken, signRefreshToken, verifyRefreshToken, blackListToken } from "../config";
 import { deleteRefreshTokenOfUser, findUserByMail, findUserByRefreshToken, insertUser, updateUserById } from "../services";
 import { loggers } from "../utils/winston.util";
@@ -31,7 +31,7 @@ export const signup = async (req: customRequestWithPayload<{}, any, authBody>, r
             username,
             email,
             hashPassword,
-            role: 'user',
+            role: roles.user,
         }
 
         await insertUser(newUser);

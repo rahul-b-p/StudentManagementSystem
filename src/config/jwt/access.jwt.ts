@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 import { loggers } from '../../utils/winston.util';
-import { TokenPayload } from '../../types';
+import { roles, TokenPayload } from '../../types';
 
 
-export const signAccessToken = async (id: string, role: 'admin' | 'user'): Promise<string> => {
+export const signAccessToken = async (id: string, role: roles): Promise<string> => {
     try {
         const secretKey = process.env.ACCESS_TOKEN_SECRET;
         if (!secretKey) {

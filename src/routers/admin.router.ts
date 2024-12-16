@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { createAdmin, deleteUserByAdmin, readAllAdmins, readAllStudents, readAllStudentsByGrade, readAllUsers, updateUserByAdmin } from '../controllers';
+import { createUser, deleteUserByAdmin, readAllAdmins, readAllStudents, readAllStudentsByGrade, readAllUsers, updateUserByAdmin } from '../controllers';
 
 export const router = Router();
 
 // create admin
-router.post('/create-new', createAdmin);
+router.post('/create-new/:role', createUser);
 
 // read all users
 router.get('/read-users', readAllUsers);

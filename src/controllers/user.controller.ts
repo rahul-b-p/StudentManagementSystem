@@ -1,17 +1,22 @@
 import { Response } from "express"
-import { authBody, customRequestWithPayload, updateUserBody, User } from "../types"
+import { authBody, customRequestWithPayload, roles, updateUserBody, User } from "../types"
 import { deleteUserAccount, deleteUserById, findUserById, findUserByMail, findUsersByrole, insertUser, updateUserById } from "../services";
 import { loggers } from "../utils/winston.util";
 import { blackListToken, generateId, getEncryptedPassword, verifyPassword } from "../config";
 import { validateSignupBody, validateUpdateUserBody, validateUpdateUserByAdminBody } from "../validations";
 
 
-export const createAdmin = async (req: customRequestWithPayload<{}, any, authBody>, res: Response) => {
+export const createUser = async (req: customRequestWithPayload<{ role: roles }, any, authBody>, res: Response) => {
     try {
         const isValidReqBody = validateSignupBody(req.body);
         if (!isValidReqBody) {
             res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
             return;
+        }
+
+        const { role } = req.params;
+        if (role !== roles.admin && role !== roles.user) {
+            res.status(400).json({Message:"Invalid Request"});
         }
 
         const { email, password, username } = req.body;
@@ -22,6 +27,7 @@ export const createAdmin = async (req: customRequestWithPayload<{}, any, authBod
             return;
         }
 
+
         const hashPassword = await getEncryptedPassword(password);
         const id = await generateId();
         const newUser: User = {
@@ -29,7 +35,7 @@ export const createAdmin = async (req: customRequestWithPayload<{}, any, authBod
             username,
             email,
             hashPassword,
-            role: 'admin',
+            role,
         }
 
         await insertUser(newUser);
@@ -214,9 +220,9 @@ export const deleteUserByAdmin = async (req: customRequestWithPayload<{ id: stri
 
         if (isDeleted) {
             res.statusMessage = "Deleted Successful";
-            res.status(200).json({message:"Deleted user with given Id"});
+            res.status(200).json({ message: "Deleted user with given Id" });
         }
-        else{
+        else {
             res.status(404).json({ message: 'Not found any user for deletion' });
         }
 

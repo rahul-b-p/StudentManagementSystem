@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyAdmin = void 0;
+const types_1 = require("../types");
 const winston_util_1 = require("../utils/winston.util");
 const services_1 = require("../services");
 const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -23,7 +24,7 @@ const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             res.status(404).json({ error: 'Requested with an Invalid UserId' });
             return;
         }
-        if (user.role == 'admin')
+        if (user.role == types_1.roles.admin)
             next();
         else {
             res.status(403).json({

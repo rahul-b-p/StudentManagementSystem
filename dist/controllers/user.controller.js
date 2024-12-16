@@ -9,17 +9,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUserByAdmin = exports.deleteUser = exports.updateUserByAdmin = exports.updateUser = exports.readAllAdmins = exports.readAllUsers = exports.createAdmin = void 0;
+exports.deleteUserByAdmin = exports.deleteUser = exports.updateUserByAdmin = exports.updateUser = exports.readAllAdmins = exports.readAllUsers = exports.createUser = void 0;
+const types_1 = require("../types");
 const services_1 = require("../services");
 const winston_util_1 = require("../utils/winston.util");
 const config_1 = require("../config");
 const validations_1 = require("../validations");
-const createAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const isValidReqBody = (0, validations_1.validateSignupBody)(req.body);
         if (!isValidReqBody) {
             res.status(400).json({ error: 'Invalid Request Body', message: 'Please setup request body properly' });
             return;
+        }
+        const { role } = req.params;
+        if (role !== types_1.roles.admin && role !== types_1.roles.user) {
+            res.status(400).json({ Message: "Invalid Request" });
         }
         const { email, password, username } = req.body;
         const existingUser = yield (0, services_1.findUserByMail)(email);
@@ -34,7 +39,7 @@ const createAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             username,
             email,
             hashPassword,
-            role: 'admin',
+            role,
         };
         yield (0, services_1.insertUser)(newUser);
         res.statusMessage = "New admin created";
@@ -45,7 +50,7 @@ const createAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 });
-exports.createAdmin = createAdmin;
+exports.createUser = createUser;
 const readAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {

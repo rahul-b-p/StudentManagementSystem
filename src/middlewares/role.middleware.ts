@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express";
-import { customRequestWithPayload } from "../types";
+import { customRequestWithPayload, roles } from "../types";
 import { loggers } from "../utils/winston.util";
 import { findUserById } from "../services";
 
@@ -15,7 +15,7 @@ export const verifyAdmin = async (req: customRequestWithPayload, res: Response, 
             res.status(404).json({ error: 'Requested with an Invalid UserId' });
             return;
         }
-        if (user.role == 'admin') next();
+        if (user.role == roles.admin) next();
         else {
             res.status(403).json({
                 "error": "Forbidden",

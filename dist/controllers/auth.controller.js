@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logout = exports.refreshToken = exports.login = exports.signup = void 0;
+const types_1 = require("../types");
 const config_1 = require("../config");
 const services_1 = require("../services");
 const winston_util_1 = require("../utils/winston.util");
@@ -34,7 +35,7 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             username,
             email,
             hashPassword,
-            role: 'user',
+            role: types_1.roles.user,
         };
         yield (0, services_1.insertUser)(newUser);
         res.statusMessage = "Signup Successfull";

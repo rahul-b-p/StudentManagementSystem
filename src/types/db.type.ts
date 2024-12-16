@@ -10,12 +10,14 @@ export interface Student<TSubjects extends readonly string[] = []> {
     marks: TSubjects extends [] ? never : { [key in TSubjects[number]]: number };
 };
 
+export enum roles { admin = 'admin', user = 'user' };
+
 export interface User {
     id: string;
     username: string;
     email: string;
     hashPassword: string;
-    role: 'admin' | 'user';
+    role: roles;
     refreshToken?: string;
 };
 

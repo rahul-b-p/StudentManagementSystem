@@ -5,7 +5,7 @@ const express_1 = require("express");
 const controllers_1 = require("../controllers");
 exports.router = (0, express_1.Router)();
 // create admin
-exports.router.post('/create-new', controllers_1.createAdmin);
+exports.router.post('/create-new/:role', controllers_1.createUser);
 // read all users
 exports.router.get('/read-users', controllers_1.readAllUsers);
 // read all admins
