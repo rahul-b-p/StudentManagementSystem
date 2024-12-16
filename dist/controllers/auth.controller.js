@@ -73,7 +73,8 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(200).json({
             message: 'Login Successfull',
             auth: true,
-            AccessToken
+            AccessToken,
+            RefreshToken
         });
     }
     catch (error) {
@@ -105,7 +106,12 @@ const refreshToken = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             return;
         }
         const AccessToken = yield (0, config_1.signAccessToken)(existingUser.id, existingUser.role);
-        res.status(200).json({ AccessToken });
+        const newRefreshToken = yield (0, config_1.signRefreshToken)(existingUser.id, existingUser.role);
+        existingUser.refreshToken = newRefreshToken;
+        (0, services_1.updateUserById)(existingUser.id, existingUser);
+        res.cookie('jwt', RefreshToken, { httpOnly: true, maxAge: 12 * 30 * 24 * 60 * 60 * 1000 });
+        res.statusMessage = "Refreshed";
+        res.status(200).json({ AccessToken, RefreshToken: newRefreshToken });
     }
     catch (error) {
         winston_util_1.loggers.error(error);

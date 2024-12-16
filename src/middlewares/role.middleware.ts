@@ -5,7 +5,7 @@ import { findUserById } from "../services";
 
 
 
-export const checkAdmin = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
+export const verifyAdmin = async (req: customRequestWithPayload, res: Response, next: NextFunction) => {
     try {
         const id = req.payload?.id
         if (!id) throw new Error("Can't get the role from jwt payload");

@@ -31,7 +31,7 @@ export const signup = async (req: customRequestWithPayload<{}, any, authBody>, r
             username,
             email,
             hashPassword,
-            role:'user',
+            role: 'user',
         }
 
         await insertUser(newUser);
@@ -78,7 +78,8 @@ export const login = async (req: customRequestWithPayload<{}, any, Omit<authBody
         res.status(200).json({
             message: 'Login Successfull',
             auth: true,
-            AccessToken
+            AccessToken,
+            RefreshToken
         })
     } catch (error: any) {
         loggers.error(error);
@@ -112,7 +113,13 @@ export const refreshToken = async (req: Request, res: Response) => {
         }
 
         const AccessToken = await signAccessToken(existingUser.id, existingUser.role);
-        res.status(200).json({ AccessToken });
+        const newRefreshToken = await signRefreshToken(existingUser.id, existingUser.role);
+        existingUser.refreshToken = newRefreshToken;
+        updateUserById(existingUser.id, existingUser);
+
+        res.cookie('jwt', RefreshToken, { httpOnly: true, maxAge: 12 * 30 * 24 * 60 * 60 * 1000 });
+        res.statusMessage = "Refreshed";
+        res.status(200).json({ AccessToken, RefreshToken: newRefreshToken });
     } catch (error: any) {
         loggers.error(error);
         res.status(500).json({ message: 'Something went wrong while refreshing the token' });

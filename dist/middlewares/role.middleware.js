@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkAdmin = void 0;
+exports.verifyAdmin = void 0;
 const winston_util_1 = require("../utils/winston.util");
 const services_1 = require("../services");
-const checkAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const id = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
@@ -38,4 +38,4 @@ const checkAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 });
-exports.checkAdmin = checkAdmin;
+exports.verifyAdmin = verifyAdmin;

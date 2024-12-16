@@ -21,7 +21,7 @@ const signRefreshToken = (id, role) => __awaiter(void 0, void 0, void 0, functio
         if (!secretKey) {
             throw new Error("Can't Find secret key to sign Access token");
         }
-        const RefreshToken = jsonwebtoken_1.default.sign({ id, role }, secretKey, { expiresIn: '90d' });
+        const RefreshToken = jsonwebtoken_1.default.sign({ id, role }, secretKey, { expiresIn: '7d' });
         return RefreshToken;
     }
     catch (error) {
