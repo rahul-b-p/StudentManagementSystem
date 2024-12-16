@@ -134,9 +134,7 @@ export const updateUserByAdmin = async (req: customRequestWithPayload<{ id: stri
             res.statusMessage = "Updated Successfully";
             res.status(200).json({ messege: 'user updated successfully', body: { username: updatingUser.username, email: updatingUser.email } });
         }
-        else {
-            res.status(404).json({ message: 'Not found any user for updation' });
-        }
+        else return next(new RersourceNotFoundError());
 
     } catch (error) {
         loggers.error(error);

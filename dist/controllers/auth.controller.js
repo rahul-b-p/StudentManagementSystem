@@ -14,11 +14,11 @@ const types_1 = require("../types");
 const config_1 = require("../config");
 const services_1 = require("../services");
 const winston_1 = require("../utils/winston");
-const user_validation_1 = require("../validations/user.validation");
+const validations_1 = require("../validations");
 const errors_1 = require("../errors");
 const signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const isValidReqBody = (0, user_validation_1.validateSignupBody)(req.body);
+        const isValidReqBody = (0, validations_1.validateSignupBody)(req.body);
         if (!isValidReqBody)
             return next(new errors_1.BadRequestError());
         const { email, password, username } = req.body;
@@ -46,7 +46,7 @@ const signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
 exports.signup = signup;
 const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const isValidReqBody = (0, user_validation_1.validateLoginBody)(req.body);
+        const isValidReqBody = (0, validations_1.validateLoginBody)(req.body);
         if (!isValidReqBody)
             return next(new errors_1.BadRequestError());
         const { email, password } = req.body;

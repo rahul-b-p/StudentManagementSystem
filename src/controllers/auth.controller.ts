@@ -3,7 +3,7 @@ import { User, authBody, customRequestWithPayload, roles } from "../types";
 import { generateId, getEncryptedPassword, verifyPassword, signAccessToken, signRefreshToken, verifyRefreshToken, blackListToken } from "../config";
 import { deleteRefreshTokenOfUser, findUserByMail, findUserByRefreshToken, insertUser, updateUserById } from "../services";
 import { loggers } from "../utils/winston";
-import { validateLoginBody, validateSignupBody } from "../validations/user.validation";
+import { validateLoginBody, validateSignupBody } from "../validations";
 import { AuthenticationError, InternalServerError, NotFoundError, BadRequestError, ConflictError, RersourceNotFoundError, PasswordAuthenticationError } from "../errors";
 
 

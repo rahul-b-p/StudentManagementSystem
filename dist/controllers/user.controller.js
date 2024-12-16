@@ -139,9 +139,8 @@ const updateUserByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
             res.statusMessage = "Updated Successfully";
             res.status(200).json({ messege: 'user updated successfully', body: { username: updatingUser.username, email: updatingUser.email } });
         }
-        else {
-            res.status(404).json({ message: 'Not found any user for updation' });
-        }
+        else
+            return next(new errors_1.RersourceNotFoundError());
     }
     catch (error) {
         winston_1.loggers.error(error);
