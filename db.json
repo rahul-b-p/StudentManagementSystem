@@ -93,10 +93,10 @@
       }
     },
     {
-      "id": "83d1c6b6b1c4193cdaf816a",
-      "userId": "092e8c842cff193ba00a6bb",
-      "name": "don",
-      "email": "don@gmail.com",
+      "id": "b957150861f4193ce490d06",
+      "userId": "83e218ded230193bff23d73",
+      "name": "aby",
+      "email": "aby@gmail.com",
       "age": 21,
       "subjects": [
         "physics",
@@ -104,9 +104,9 @@
         "maths"
       ],
       "marks": {
-        "physics": 45,
-        "chemistry": 75,
-        "maths": 80
+        "physics": 90,
+        "chemistry": 78,
+        "maths": 87
       }
     }
   ],
@@ -117,7 +117,7 @@
       "email": "admin1@gmail.com",
       "hashPassword": "$2b$10$SjsxHJK9YgOwx8goMUORuOmN.FMfP.8nbmoZl4iMowXF4HwkTUZsy",
       "role": "admin",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIxZWI5NDgxNjFiZDE5M2IzZjYwNGNiIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzM0MzMxMjg3LCJleHAiOjE3MzQ5MzYwODd9.XOJgJNKWdKdJKLloGyzsy9jWDm6mBC1hHr4dbK_JEFM"
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIxZWI5NDgxNjFiZDE5M2IzZjYwNGNiIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzM0MzMyNzYxLCJleHAiOjE3MzQ5Mzc1NjF9.6Hb3CQmMh5bn0gCWeEEq1BYE1MbCf2JjCwgOeYmdwDQ"
     },
     {
       "id": "69921096bc46193b3fdf90f",

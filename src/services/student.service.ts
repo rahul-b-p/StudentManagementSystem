@@ -87,8 +87,20 @@ export const updateStudentsById = async (id: string, updatedStudent: Student<str
     }
 }
 
-export const deleteStudentsById = () => {
-
+export const deleteStudentsById = async(id:string):Promise<boolean> => {
+    try {
+        const students = await findStudents();
+        const deleteIndex = students.findIndex(item => item.id == id);
+        if (deleteIndex == -1) return false;
+        else{
+            students.splice(deleteIndex,1);
+            await saveStudents(students);
+            return true;
+        }
+    } catch (error) {
+        loggers.error(error);
+        throw new Error("Can't delete student with given id due to an error");
+    }
 }
 
 export const deleteAllStudentsByUserId = () => {

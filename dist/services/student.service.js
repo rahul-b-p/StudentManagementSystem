@@ -103,8 +103,23 @@ const updateStudentsById = (id, updatedStudent) => __awaiter(void 0, void 0, voi
     }
 });
 exports.updateStudentsById = updateStudentsById;
-const deleteStudentsById = () => {
-};
+const deleteStudentsById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const students = yield (0, exports.findStudents)();
+        const deleteIndex = students.findIndex(item => item.id == id);
+        if (deleteIndex == -1)
+            return false;
+        else {
+            students.splice(deleteIndex, 1);
+            yield (0, exports.saveStudents)(students);
+            return true;
+        }
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        throw new Error("Can't delete student with given id due to an error");
+    }
+});
 exports.deleteStudentsById = deleteStudentsById;
 const deleteAllStudentsByUserId = () => {
 };

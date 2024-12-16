@@ -154,8 +154,40 @@ const updateStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.updateStudent = updateStudent;
-const deleteStudent = () => {
-};
+const deleteStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const userId = (_a = req.payload) === null || _a === void 0 ? void 0 : _a.id;
+        if (!userId)
+            throw new Error("Couldn't found the payload");
+        const id = req.params.id;
+        const existingUser = yield (0, services_1.findUserById)(userId);
+        if (!existingUser) {
+            res.status(401).json({ messege: 'You are requested from an invalid user id' });
+            return;
+        }
+        const student = yield (0, services_1.findStudentById)(id);
+        if (!student) {
+            res.status(404).json({ messege: 'Not found any student with given id' });
+            return;
+        }
+        if (existingUser.role !== 'admin' && userId !== student.userId) {
+            res.status(403).json({ error: 'forbidden', message: "You don't have permision to delete this item" });
+        }
+        const result = yield (0, services_1.deleteStudentsById)(id);
+        winston_util_1.loggers.info(result);
+        if (!result) {
+            res.status(404).json({ messege: 'Not found any student with given id' });
+            return;
+        }
+        res.statusMessage = " Deleted Successfully";
+        res.status(200).json({ messege: 'Deleted student with given Id ' });
+    }
+    catch (error) {
+        winston_util_1.loggers.error(error);
+        res.status(500).json({ messege: 'Something went wrong', error });
+    }
+});
 exports.deleteStudent = deleteStudent;
 const deleteAllStudentsByUser = () => {
 };
