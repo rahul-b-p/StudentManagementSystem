@@ -17,7 +17,7 @@ class RersourceNotFoundError extends customError_1.customError {
     constructor() {
         super('Resource Not Found');
         this.StatusCode = 404;
-        Object.setPrototypeOf(this, NotFoundError.prototype);
+        Object.setPrototypeOf(this, RersourceNotFoundError.prototype);
     }
     serialize() {
         return { success: false, message: 'The requested resource was not found' };

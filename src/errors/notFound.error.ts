@@ -17,7 +17,7 @@ export class NotFoundError extends customError {
 export class RersourceNotFoundError extends customError {
     constructor() {
         super('Resource Not Found');
-        Object.setPrototypeOf(this, NotFoundError.prototype);
+        Object.setPrototypeOf(this, RersourceNotFoundError.prototype);
     }
     StatusCode = 404;
     serialize(): { success: false, message: string; } {

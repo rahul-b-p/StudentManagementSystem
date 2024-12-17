@@ -51,7 +51,8 @@ export const login = async (req: customRequestWithPayload<{}, any, Omit<authBody
         const existingUser = await findUserByMail(email);
         if (!existingUser) return next(new RersourceNotFoundError());
 
-        const isVerifiedPassword = verifyPassword(password, existingUser.hashPassword);
+        const isVerifiedPassword =await verifyPassword(password, existingUser.hashPassword);
+        loggers.info(isVerifiedPassword)
         if (!isVerifiedPassword) return next(new PasswordAuthenticationError());
 
         const AccessToken = await signAccessToken(existingUser.id, existingUser.role);

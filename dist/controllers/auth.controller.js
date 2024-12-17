@@ -54,7 +54,8 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         const existingUser = yield (0, services_1.findUserByMail)(email);
         if (!existingUser)
             return next(new errors_1.RersourceNotFoundError());
-        const isVerifiedPassword = (0, config_1.verifyPassword)(password, existingUser.hashPassword);
+        const isVerifiedPassword = yield (0, config_1.verifyPassword)(password, existingUser.hashPassword);
+        winston_1.loggers.info(isVerifiedPassword);
         if (!isVerifiedPassword)
             return next(new errors_1.PasswordAuthenticationError());
         const AccessToken = yield (0, config_1.signAccessToken)(existingUser.id, existingUser.role);
