@@ -15,6 +15,7 @@ const services_1 = require("../services");
 const config_1 = require("../config");
 const validations_1 = require("../validations");
 const errors_1 = require("../errors");
+const successResponse_1 = require("../utils/successResponse");
 const createStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
@@ -36,8 +37,8 @@ const createStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
             id, userId, name, email, age, subjects, marks
         };
         yield (0, services_1.insertStudents)(newStudent);
-        res.statusMessage = "Student Added";
-        res.status(200).json({ message: 'New Student Added Succcessfully', data: { newStudent } });
+        res.statusMessage = "Created Successful";
+        res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)('Created new student', newStudent));
     }
     catch (error) {
         winston_1.loggers.error(error);
@@ -55,7 +56,7 @@ const readAllStudents = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         if (!existinUser)
             return next(new errors_1.NotFoundError());
         const ResponseData = yield (0, services_1.fetchStudentsWithGrade)();
-        res.status(200).json({ message: 'Fetching all students from the aplication', ResponseData });
+        res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)('Sucessfully Fetched all Students details', ResponseData));
     }
     catch (error) {
         winston_1.loggers.error(error);
@@ -72,8 +73,8 @@ const readAllStudentsByUser = (req, res, next) => __awaiter(void 0, void 0, void
         const existinUser = yield (0, services_1.findUserById)(userId);
         if (!existinUser)
             return next(new errors_1.NotFoundError());
-        const stuents = yield (0, services_1.fetchStudentsWithGradeByUserId)(userId);
-        res.status(200).json({ message: `Found all students added by ${existinUser === null || existinUser === void 0 ? void 0 : existinUser.username}`, ResponseData: stuents });
+        const responseData = yield (0, services_1.fetchStudentsWithGradeByUserId)(userId);
+        res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)(`Fetched all students added by ${existinUser === null || existinUser === void 0 ? void 0 : existinUser.username}`, responseData));
     }
     catch (error) {
         winston_1.loggers.error(error);
@@ -94,8 +95,8 @@ const readAllStudentsByGrade = (req, res, next) => __awaiter(void 0, void 0, voi
         const existinUser = yield (0, services_1.findUserById)(userId);
         if (!existinUser)
             return next(new errors_1.NotFoundError());
-        const stuents = yield (0, services_1.findStudentsByAverageGrade)(grade);
-        res.status(200).json({ message: `Found all students added by ${existinUser === null || existinUser === void 0 ? void 0 : existinUser.username}`, data: stuents });
+        const responseData = yield (0, services_1.findStudentsByAverageGrade)(grade);
+        res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)('Fetched all students with given average grade', responseData));
     }
     catch (error) {
         winston_1.loggers.error(error);
@@ -125,7 +126,7 @@ const updateStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         };
         yield (0, services_1.updateStudentsById)(id, updatedStudent);
         res.statusMessage = "Updated Successfully";
-        res.status(200).json({ message: "User Updated Successfully", ResponseData: updatedStudent });
+        res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)('Student Updated Successfully', updatedStudent));
     }
     catch (error) {
         winston_1.loggers.error(error);
@@ -153,7 +154,7 @@ const deleteStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         if (!result)
             return next(new errors_1.RersourceNotFoundError());
         res.statusMessage = " Deleted Successfully";
-        res.status(200).json({ messege: 'Deleted student with given Id ' });
+        res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)('Deleted Student with given Id'));
     }
     catch (error) {
         winston_1.loggers.error(error);
@@ -172,7 +173,7 @@ const deleteAllStudentsByUser = (req, res, next) => __awaiter(void 0, void 0, vo
             return next(new errors_1.NotFoundError());
         yield (0, services_1.deleteAllStudentsByUserId)(userId);
         res.statusMessage = " Deleted Successfully";
-        res.status(200).json({ messege: 'Deleted all students created by the user' });
+        res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)('Deleted all students created by the user'));
     }
     catch (error) {
         winston_1.loggers.error(error);

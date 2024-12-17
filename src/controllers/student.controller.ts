@@ -7,6 +7,7 @@ import { generateId } from "../config";
 import { validateStudentBody } from "../validations";
 import { GradeQuery } from "../types/request/query.type";
 import { InternalServerError, NotFoundError, BadRequestError, ForbiddenError, RersourceNotFoundError, ConflictError } from "../errors";
+import { sendSuccessResponse } from "../utils/successResponse";
 
 
 
@@ -38,8 +39,8 @@ export const createStudent = async (req: customRequestWithPayload<{}, any, stude
 
         await insertStudents(newStudent);
 
-        res.statusMessage = "Student Added"
-        res.status(200).json({ message: 'New Student Added Succcessfully', data: { newStudent } })
+        res.statusMessage = "Created Successful"
+        res.status(200).json(await sendSuccessResponse('Created new student', newStudent))
 
 
     } catch (error) {
@@ -57,7 +58,7 @@ export const readAllStudents = async (req: customRequestWithPayload, res: Respon
         if (!existinUser) return next(new NotFoundError());
 
         const ResponseData = await fetchStudentsWithGrade();
-        res.status(200).json({ message: 'Fetching all students from the aplication', ResponseData });
+        res.status(200).json(await sendSuccessResponse('Sucessfully Fetched all Students details', ResponseData));
     } catch (error) {
         loggers.error(error);
         next(new InternalServerError());
@@ -72,8 +73,8 @@ export const readAllStudentsByUser = async (req: customRequestWithPayload, res: 
         const existinUser = await findUserById(userId);
         if (!existinUser) return next(new NotFoundError());
 
-        const stuents = await fetchStudentsWithGradeByUserId(userId);
-        res.status(200).json({ message: `Found all students added by ${existinUser?.username}`, ResponseData: stuents });
+        const responseData = await fetchStudentsWithGradeByUserId(userId);
+        res.status(200).json(await sendSuccessResponse(`Fetched all students added by ${existinUser?.username}`, responseData));
     } catch (error) {
         loggers.error(error);
         next(new InternalServerError());
@@ -92,8 +93,8 @@ export const readAllStudentsByGrade = async (req: customRequestWithPayload<{}, a
         const existinUser = await findUserById(userId);
         if (!existinUser) return next(new NotFoundError());
 
-        const stuents = await findStudentsByAverageGrade(grade);
-        res.status(200).json({ message: `Found all students added by ${existinUser?.username}`, data: stuents });
+        const responseData = await findStudentsByAverageGrade(grade);
+        res.status(200).json(await sendSuccessResponse('Fetched all students with given average grade', responseData));
     } catch (error) {
         loggers.error(error);
         next(new InternalServerError());
@@ -123,7 +124,7 @@ export const updateStudent = async (req: customRequestWithPayload<{ id: string }
 
         await updateStudentsById(id, updatedStudent);
         res.statusMessage = "Updated Successfully";
-        res.status(200).json({ message: "User Updated Successfully", ResponseData: updatedStudent });
+        res.status(200).json(await sendSuccessResponse('Student Updated Successfully', updatedStudent));
     } catch (error) {
         loggers.error(error);
         next(new InternalServerError());
@@ -149,7 +150,7 @@ export const deleteStudent = async (req: customRequestWithPayload<{ id: string }
         loggers.info(result);
         if (!result) return next(new RersourceNotFoundError());
         res.statusMessage = " Deleted Successfully";
-        res.status(200).json({ messege: 'Deleted student with given Id ' });
+        res.status(200).json(await sendSuccessResponse('Deleted Student with given Id'));
     } catch (error) {
         loggers.error(error);
         next(new InternalServerError());
@@ -166,7 +167,7 @@ export const deleteAllStudentsByUser = async (req: customRequestWithPayload, res
 
         await deleteAllStudentsByUserId(userId);
         res.statusMessage = " Deleted Successfully";
-        res.status(200).json({ messege: 'Deleted all students created by the user' });
+        res.status(200).json(await sendSuccessResponse('Deleted all students created by the user'));
 
     } catch (error) {
         loggers.error(error);

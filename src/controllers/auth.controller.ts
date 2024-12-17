@@ -5,6 +5,7 @@ import { deleteRefreshTokenOfUser, findUserByMail, findUserByRefreshToken, inser
 import { loggers } from "../utils/winston";
 import { validateLoginBody, validateSignupBody } from "../validations";
 import { AuthenticationError, InternalServerError, NotFoundError, BadRequestError, ConflictError, RersourceNotFoundError, PasswordAuthenticationError } from "../errors";
+import { sendSuccessResponse } from "../utils/successResponse";
 
 
 
@@ -31,7 +32,7 @@ export const signup = async (req: customRequestWithPayload<{}, any, authBody>, r
 
         await insertUser(newUser);
         res.statusMessage = "Signup Successfull";
-        res.status(200).json({ message: 'New Account Created Successfully', ResponseData: { id, username, email } });
+        res.status(200).json(await sendSuccessResponse('Signup Successfull', { id, username, email }));
 
     } catch (error) {
         loggers.error(error);
@@ -61,12 +62,7 @@ export const login = async (req: customRequestWithPayload<{}, any, Omit<authBody
 
         res.cookie('jwt', RefreshToken, { httpOnly: true, maxAge: 12 * 30 * 24 * 60 * 60 * 1000 });
         res.statusMessage = "Login Successfull";
-        res.status(200).json({
-            message: 'Login Successfull',
-            auth: true,
-            AccessToken,
-            RefreshToken
-        })
+        res.status(200).json(await sendSuccessResponse('Login Successful', { AccessToken, RefreshToken }));
     } catch (error) {
         loggers.error(error);
         next(new InternalServerError());
@@ -93,7 +89,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
 
         res.cookie('jwt', newRefreshToken, { httpOnly: true, maxAge: 12 * 30 * 24 * 60 * 60 * 1000 });
         res.statusMessage = "Refreshed";
-        res.status(200).json({ AccessToken, RefreshToken: newRefreshToken });
+        res.status(200).json(await sendSuccessResponse('Refresh Successful', { AccessToken, RefreshToken: newRefreshToken }));
     } catch (error) {
         loggers.error(error);
         next(new InternalServerError());
@@ -121,7 +117,7 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
 
         res.clearCookie('jwt', { httpOnly: true })
         res.statusMessage = "Logout Successfull";
-        res.status(200).json({ message: 'Succsessfully completed your logout with invalidation of accesstoken' });
+        res.status(200).json(await sendSuccessResponse('Logout Successfull with Invalidation of all access'));
     } catch (error: any) {
         loggers.error(error);
         next(new InternalServerError());

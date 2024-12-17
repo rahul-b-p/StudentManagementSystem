@@ -16,6 +16,7 @@ const winston_1 = require("../utils/winston");
 const config_1 = require("../config");
 const validations_1 = require("../validations");
 const errors_1 = require("../errors");
+const successResponse_1 = require("../utils/successResponse");
 const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const isValidReqBody = (0, validations_1.validateSignupBody)(req.body);
@@ -39,7 +40,7 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         };
         yield (0, services_1.insertUser)(newUser);
         res.statusMessage = "New admin created";
-        res.status(200).json({ message: 'New Admin Created Successfully', ResponseData: { id, username, email } });
+        res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)(`New ${role} Created Successfully`, { id, username, email }));
     }
     catch (error) {
         winston_1.loggers.error(error);
@@ -58,7 +59,7 @@ const readAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             return next(new errors_1.NotFoundError());
         const users = yield (0, services_1.findUsersByrole)('user');
         const ResponseData = users.map(({ id, username, email }) => ({ id, email, username }));
-        res.status(200).json({ message: "Found all users", ResponseData });
+        res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)('Fetched all users', ResponseData));
     }
     catch (error) {
         winston_1.loggers.error(error);
@@ -77,7 +78,7 @@ const readAllAdmins = (req, res, next) => __awaiter(void 0, void 0, void 0, func
             return next(new errors_1.NotFoundError());
         const admins = yield (0, services_1.findUsersByrole)('admin');
         const ResponseData = admins.map(({ id, username, email }) => ({ id, email, username }));
-        res.status(200).json({ message: "Found all users", ResponseData });
+        res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)('Fetched all users with adminrole', ResponseData));
     }
     catch (error) {
         winston_1.loggers.error(error);
@@ -106,7 +107,7 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         existingUser.username = updatedUsername ? updatedUsername : existingUser.username;
         yield (0, services_1.updateUserById)(id, existingUser);
         res.statusMessage = "Updated Successfully";
-        res.status(200).json({ messege: 'user updated successfully', body: { username: existingUser.username, email: existingUser.email } });
+        res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)('user updated successfully', { username: existingUser.username, email: existingUser.email }));
     }
     catch (error) {
         winston_1.loggers.error(error);
@@ -137,7 +138,7 @@ const updateUserByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         const result = yield (0, services_1.updateUserById)(id, updatingUser);
         if (result) {
             res.statusMessage = "Updated Successfully";
-            res.status(200).json({ messege: 'user updated successfully', body: { username: updatingUser.username, email: updatingUser.email } });
+            res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)('user updated successfully', { username: updatingUser.username, email: updatingUser.email }));
         }
         else
             return next(new errors_1.RersourceNotFoundError());
@@ -164,7 +165,7 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             if (isBlacklistedAccess && isBlacklilstedRefresh) {
                 yield (0, services_1.deleteUserAccount)(id);
                 res.statusMessage = "Successfully Deleted";
-                res.status(200).json({ message: 'Your Account has been removed successfully' });
+                res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)('Your Account has been deleted successfully'));
             }
             else {
                 next(new errors_1.InternalServerError());
@@ -190,7 +191,7 @@ const deleteUserByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         const isDeleted = yield (0, services_1.deleteUserById)(id);
         if (isDeleted) {
             res.statusMessage = "Deleted Successful";
-            res.status(200).json({ message: "Deleted user with given Id" });
+            res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)('Deleted User with given Id'));
         }
         else
             return next(new errors_1.RersourceNotFoundError());

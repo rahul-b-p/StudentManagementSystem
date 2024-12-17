@@ -16,6 +16,7 @@ const services_1 = require("../services");
 const winston_1 = require("../utils/winston");
 const validations_1 = require("../validations");
 const errors_1 = require("../errors");
+const successResponse_1 = require("../utils/successResponse");
 const signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const isValidReqBody = (0, validations_1.validateSignupBody)(req.body);
@@ -36,7 +37,7 @@ const signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
         };
         yield (0, services_1.insertUser)(newUser);
         res.statusMessage = "Signup Successfull";
-        res.status(200).json({ message: 'New Account Created Successfully', ResponseData: { id, username, email } });
+        res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)('Signup Successfull', { id, username, email }));
     }
     catch (error) {
         winston_1.loggers.error(error);
@@ -62,12 +63,7 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         (0, services_1.updateUserById)(existingUser.id, existingUser);
         res.cookie('jwt', RefreshToken, { httpOnly: true, maxAge: 12 * 30 * 24 * 60 * 60 * 1000 });
         res.statusMessage = "Login Successfull";
-        res.status(200).json({
-            message: 'Login Successfull',
-            auth: true,
-            AccessToken,
-            RefreshToken
-        });
+        res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)('Login Successful', { AccessToken, RefreshToken }));
     }
     catch (error) {
         winston_1.loggers.error(error);
@@ -95,7 +91,7 @@ const refreshToken = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         (0, services_1.updateUserById)(existingUser.id, existingUser);
         res.cookie('jwt', newRefreshToken, { httpOnly: true, maxAge: 12 * 30 * 24 * 60 * 60 * 1000 });
         res.statusMessage = "Refreshed";
-        res.status(200).json({ AccessToken, RefreshToken: newRefreshToken });
+        res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)('Refresh Successful', { AccessToken, RefreshToken: newRefreshToken }));
     }
     catch (error) {
         winston_1.loggers.error(error);
@@ -125,7 +121,7 @@ const logout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
             return next(new errors_1.NotFoundError());
         res.clearCookie('jwt', { httpOnly: true });
         res.statusMessage = "Logout Successfull";
-        res.status(200).json({ message: 'Succsessfully completed your logout with invalidation of accesstoken' });
+        res.status(200).json(yield (0, successResponse_1.sendSuccessResponse)('Logout Successfull with Invalidation of all access'));
     }
     catch (error) {
         winston_1.loggers.error(error);

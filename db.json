@@ -108,6 +108,25 @@
         "chemistry": 78,
         "maths": 87
       }
+    },
+    {
+      "id": "94d47c0baa2b193d2cc63ed",
+      "userId": "21eb948161bd193b3f604cb",
+      "name": "abay",
+      "email": "abay@gmail.com",
+      "age": 21,
+      "subjects": [
+        "physics",
+        "chemistry",
+        "maths",
+        "computer science"
+      ],
+      "marks": {
+        "physics": 70,
+        "chemistry": 72,
+        "maths": 85,
+        "computer science": 90
+      }
     }
   ],
   "users": [
@@ -117,7 +136,7 @@
       "email": "admin1@gmail.com",
       "hashPassword": "$2b$10$SjsxHJK9YgOwx8goMUORuOmN.FMfP.8nbmoZl4iMowXF4HwkTUZsy",
       "role": "admin",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIxZWI5NDgxNjFiZDE5M2IzZjYwNGNiIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzM0MzQwMTIzLCJleHAiOjE3MzQ5NDQ5MjN9.1UdqFxci78bnBDKOuVp57zFvWVbySsZstoWOJ2LsRXk"
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIxZWI5NDgxNjFiZDE5M2IzZjYwNGNiIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzM0NDA4Mjg5LCJleHAiOjE3MzUwMTMwODl9.OPHNnDcbDM002w0cKXsYzmLrp0mw9l5p3q3qbH9UW0A"
     },
     {
       "id": "69921096bc46193b3fdf90f",
@@ -180,6 +199,13 @@
       "username": "User4",
       "email": "user4@gmail.com",
       "hashPassword": "$2b$10$suswEJkAxBZ5YYRpAlsDe.ogteDWNZ5Dsu48IDkYRI5LlOvpnLoEK",
+      "role": "user"
+    },
+    {
+      "id": "ba2ff831207d193d2c5b099",
+      "username": "user7",
+      "email": "user7@gmail.com",
+      "hashPassword": "$2b$10$AeZumQLJe2ChV2do4.Gch.z.unEJG8JOVyvbjwvNzrhjciJGqt.7y",
       "role": "user"
     }
   ],

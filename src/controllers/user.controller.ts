@@ -5,6 +5,7 @@ import { loggers } from "../utils/winston";
 import { blackListToken, generateId, getEncryptedPassword, verifyPassword } from "../config";
 import { validateSignupBody, validateUpdateUserBody, validateUpdateUserByAdminBody } from "../validations";
 import { InternalServerError, NotFoundError, BadRequestError, RersourceNotFoundError, ConflictError, PasswordAuthenticationError } from "../errors";
+import { sendSuccessResponse } from "../utils/successResponse";
 
 
 
@@ -34,7 +35,7 @@ export const createUser = async (req: customRequestWithPayload<{ role: roles }, 
 
         await insertUser(newUser);
         res.statusMessage = "New admin created";
-        res.status(200).json({ message: 'New Admin Created Successfully', ResponseData: { id, username, email } });
+        res.status(200).json(await sendSuccessResponse(`New ${role} Created Successfully`, { id, username, email }));
 
     } catch (error) {
         loggers.error(error);
@@ -53,7 +54,7 @@ export const readAllUsers = async (req: customRequestWithPayload, res: Response,
         const users = await findUsersByrole('user');
         type Response = Omit<User, 'hashPassword' | 'refreshToken' | 'role'>;
         const ResponseData: Response[] = users.map(({ id, username, email }) => ({ id, email, username }));
-        res.status(200).json({ message: "Found all users", ResponseData });
+        res.status(200).json(await sendSuccessResponse('Fetched all users', ResponseData));
     } catch (error) {
         loggers.error(error);
         next(new InternalServerError());
@@ -71,7 +72,7 @@ export const readAllAdmins = async (req: customRequestWithPayload, res: Response
         const admins = await findUsersByrole('admin');
         type Response = Omit<User, 'hashPassword' | 'refreshToken' | 'role'>;
         const ResponseData: Response[] = admins.map(({ id, username, email }) => ({ id, email, username }));
-        res.status(200).json({ message: "Found all users", ResponseData });
+        res.status(200).json(await sendSuccessResponse('Fetched all users with adminrole', ResponseData));
     } catch (error) {
         loggers.error(error);
         next(new InternalServerError());
@@ -99,7 +100,7 @@ export const updateUser = async (req: customRequestWithPayload<{}, any, updateUs
 
         await updateUserById(id, existingUser);
         res.statusMessage = "Updated Successfully";
-        res.status(200).json({ messege: 'user updated successfully', body: { username: existingUser.username, email: existingUser.email } })
+        res.status(200).json(await sendSuccessResponse('user updated successfully', { username: existingUser.username, email: existingUser.email }))
     } catch (error) {
         loggers.error(error);
         next(new InternalServerError());
@@ -132,7 +133,7 @@ export const updateUserByAdmin = async (req: customRequestWithPayload<{ id: stri
         const result = await updateUserById(id, updatingUser);
         if (result) {
             res.statusMessage = "Updated Successfully";
-            res.status(200).json({ messege: 'user updated successfully', body: { username: updatingUser.username, email: updatingUser.email } });
+            res.status(200).json(await sendSuccessResponse('user updated successfully', { username: updatingUser.username, email: updatingUser.email }));
         }
         else return next(new RersourceNotFoundError());
 
@@ -157,7 +158,7 @@ export const deleteUser = async (req: customRequestWithPayload, res: Response, n
             if (isBlacklistedAccess && isBlacklilstedRefresh) {
                 await deleteUserAccount(id);
                 res.statusMessage = "Successfully Deleted";
-                res.status(200).json({ message: 'Your Account has been removed successfully' });
+                res.status(200).json(await sendSuccessResponse('Your Account has been deleted successfully'));
             } else {
                 next(new InternalServerError());
             }
@@ -181,7 +182,7 @@ export const deleteUserByAdmin = async (req: customRequestWithPayload<{ id: stri
 
         if (isDeleted) {
             res.statusMessage = "Deleted Successful";
-            res.status(200).json({ message: "Deleted user with given Id" });
+            res.status(200).json(await sendSuccessResponse('Deleted User with given Id'));
         }
         else return next(new RersourceNotFoundError());
     } catch (error) {
