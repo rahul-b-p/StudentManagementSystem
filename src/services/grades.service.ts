@@ -160,8 +160,10 @@ export const fetchStudentsWithGradeByUserId = async (id: string): Promise<Studen
         const studentsWithGrades: StudentWithGrades[] = await Promise.all(
             students.map(async (item) => {
                 let grades = {}
+                let averageGrade: string = "";
                 if (item.marks) {
                     grades = await fetchGrades(item.marks);
+                    averageGrade = await findAverageGrade(item.marks)
                 }
                 return {
                     id: item.id,
@@ -170,6 +172,7 @@ export const fetchStudentsWithGradeByUserId = async (id: string): Promise<Studen
                     age: item.age,
                     email: item.email,
                     grades,
+                    averageGrade
                 } as StudentWithGrades;
             })
         );
