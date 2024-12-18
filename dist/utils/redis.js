@@ -11,7 +11,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@redis/client");
 const winston_1 = require("./winston");
-const redisClient = (0, client_1.createClient)();
+const redisClient = (0, client_1.createClient)({
+    url: 'redis://:your_secure_password@127.0.0.1:6379',
+});
 (() => __awaiter(void 0, void 0, void 0, function* () {
     if (!redisClient.isOpen) {
         try {

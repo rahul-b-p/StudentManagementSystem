@@ -1,7 +1,9 @@
 import { createClient } from '@redis/client';
 import { loggers } from './winston';
 
-const redisClient = createClient();
+const redisClient = createClient({
+    url: 'redis://:your_secure_password@127.0.0.1:6379',
+});
 
 
 (async () => {
