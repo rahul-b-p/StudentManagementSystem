@@ -1,0 +1,9 @@
+version: '1'
+services:
+  student-management-system:
+    image: rahulbp17/student-management-system:0.5
+    ports:
+      - "4000:3000"
+    env_file:
+      - .env
+    restart: always
